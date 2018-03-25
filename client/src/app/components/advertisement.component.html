@@ -1,0 +1,15 @@
+<h1>advertisement Component</h1>
+
+<div *ngIf="advertisement === null">
+  <h2>No advertisement set</h2>
+</div>
+
+<div *ngIf="advertisement !== null">
+  <h2>title: {{ advertisement.title }}</h2>
+  <br />
+  <h2>description: {{ advertisement.description }}</h2>
+  <br />
+  <div>some image:
+    <img src="{{advertisement.imageURL}}"><br />
+  </div>
+</div>

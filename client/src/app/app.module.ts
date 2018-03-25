@@ -5,13 +5,15 @@ import { RouterModule } from '@angular/router';
 import { CUSTOM_ROUTES } from './routes';
 import { MainPageComponent, EditBoardsComponent } from './components';
 import { RouterService } from './services/router.service';
+import { AdvirtisementComponent } from './components/advertisement.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
-    EditBoardsComponent
+    EditBoardsComponent,
+    AdvirtisementComponent,
   ],
   imports: [
     BrowserModule,

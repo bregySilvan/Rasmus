@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IAdvertisement } from '../reducer/advertisement.reducer';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./edit-boards.component.css']
 })
 export class EditBoardsComponent {
+  public defaultAdvertisementKey = '1';
+
 
 }
