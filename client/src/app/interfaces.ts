@@ -5,7 +5,7 @@ export interface IListElement {
 }
 
 export interface IAdvertisement extends IListElement {
-  name: string;
+  title: string;
   description: string;
   imageURL: string;
 }
