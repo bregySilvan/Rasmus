@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IAdvertisement } from '../reducer/advertisement.reducer';
+import { IListElement } from '../interfaces';
+import { listElements } from '../dummy-store';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -8,7 +9,12 @@ import { IAdvertisement } from '../reducer/advertisement.reducer';
   styleUrls: ['./edit-boards.component.css']
 })
 export class EditBoardsComponent {
+
   public defaultAdvertisementKey = '1';
 
+  elements: IListElement[] = listElements;
 
+  constructor() {
+
+  }
 }

@@ -1,0 +1,11 @@
+<h5>listElement Component</h5>
+
+<div *ngIf="element.type === 'advertisement'">
+
+  <ras-advertisement [key]="element.key"></ras-advertisement>
+</div>
+
+<div *ngIf="element.type !== 'advertisement'">
+
+  <h6>its not an advertisement--</h6>
+</div>

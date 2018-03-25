@@ -3,9 +3,10 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ROUTES } from './routes';
-import { MainPageComponent, EditBoardsComponent } from './components';
+import { MainPageComponent, EditBoardsComponent, ElementListComponent } from './components';
 import { RouterService } from './services/router.service';
 import { AdvirtisementComponent } from './components/advertisement.component';
+import { ListElementComponent } from './components/list-element.component';
 
 
 @NgModule({
@@ -14,6 +15,8 @@ import { AdvirtisementComponent } from './components/advertisement.component';
     MainPageComponent,
     EditBoardsComponent,
     AdvirtisementComponent,
+    ElementListComponent,
+    ListElementComponent
   ],
   imports: [
     BrowserModule,

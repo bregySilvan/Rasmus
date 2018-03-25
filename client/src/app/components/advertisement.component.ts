@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IAdvertisement } from '../reducer/advertisement.reducer';
 import { advertisementList } from '../dummy-store';
+import { IAdvertisement } from '../interfaces';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -10,8 +10,7 @@ import { advertisementList } from '../dummy-store';
 })
 export class AdvirtisementComponent implements OnInit {
 
-  @Input()
-  advertisementKey: string;
+  @Input() key: string;
   advertisement: IAdvertisement = null;
 
   constructor() {
@@ -20,7 +19,7 @@ export class AdvirtisementComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('taking advertisement with key: ', this.advertisementKey);
-    this.advertisement = advertisementList.find((adv: IAdvertisement) => adv.key === this.advertisementKey);
+    console.log('taking advertisement with key: ', this.key);
+    this.advertisement = advertisementList.find((adv: IAdvertisement) => adv.key === this.key);
   }
 }
