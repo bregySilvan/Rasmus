@@ -1,0 +1,15 @@
+
+.wrapper {
+  width: 100%;
+}
+
+.title {
+  font-size: 110%;
+  border-bottom: groove lightgray 1px;
+
+
+}
+.center {
+  text-align: center;
+  display: block;
+}
