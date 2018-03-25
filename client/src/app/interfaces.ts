@@ -10,6 +10,11 @@ export interface IAdvertisement extends IListElement {
   imageURL: string;
 }
 
+export interface IBoard {
+  id: string;
+  keys: string[];
+}
+
  // export type ElementTypes = 'advertisement';
 
 export enum ElementTypes {
