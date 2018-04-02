@@ -1,5 +1,5 @@
 
-import { IListElement, IAdvertisement, ElementTypes } from './interfaces';
+import { IListElement, IAdvertisement, ElementTypes } from '../../../interfaces';
 
 export const advertisementList: IAdvertisement[] =
 [{

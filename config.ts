@@ -1,6 +1,7 @@
 
 export interface ILocationMap {
     element_$id: string;
+    element: string;
     elements: string;
     board_$id: string;
     boards: string;
@@ -8,8 +9,9 @@ export interface ILocationMap {
 }
 
 export const locations: ILocationMap = {
+    element: '/element',
     element_$id: '/element/:id',
-    elements: 'board',
+    elements: 'elements',
     board_$id: '/board/:id',
     boards: '/boards',
     activeBoard: '/active-board'
