@@ -4,7 +4,7 @@ import { QueueService } from './queue-service';
 
 export class DataService {
 
-    private elementFilePath = '../var/elements.json';
+    private elementsFilePath = '../var/elements.json';
     private queueService: QueueService;
 
     constructor() {
@@ -13,9 +13,8 @@ export class DataService {
 
     public saveElement(element: IListElement, callback: (error?: any) => void): void {
         this.queueService.addToQueue((next) => {
-            this._saveElement(this.elementFilePath, element, (err?: any) => {
+            this._saveElement(this.elementsFilePath, element, (err?: any) => {
                 callback(err);
-                console.log('calling next...');
                 next();
             });
         });
@@ -43,19 +42,17 @@ export class DataService {
 
     private setupJsonFile(file: string, callback: (error?: any) => void): void {
         fse.exists(file, async (exists: boolean) => {
-            console.log('isExist file: ?= ', exists);
             if (exists) {
                 return callback(null);
             }
             await fse.createFile(file);
-            await fse.writeJson(file, {});
             return callback(null);
         });
     }
 
     private updateJson(file: string, obj: any, key: string, callback: (error?: any) => void): void {
         fse.readJSON(file, async (error: Error, jsonData: any) => {
-            console.log('received jsondata:', jsonData);
+            jsonData = jsonData || { };
             jsonData[key] = obj;
             fse.writeJson(file, jsonData, (error: Error) => {
                 if (error) {

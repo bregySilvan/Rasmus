@@ -8,6 +8,7 @@ export class QueueService {
 
     public constructor() {
         this.queue = [];
+        this.isActive = false;
     }
 
     public addToQueue(fn: (next: () => void) => void): void {
@@ -16,18 +17,19 @@ export class QueueService {
     }
 
     private startQueue() {
-        if (!this.isActive) {
+        if (!this.isActive && this.queue.length) {
             this.isActive = true;
             this.next();
         }
     }
 
-    private next() {
+    public next() {
         if (!this.queue.length) {
+            this.isActive = false;
             return;
         }
         this.queue.shift()(() => {
             this.next();
-        })
+        });
     }
 }
