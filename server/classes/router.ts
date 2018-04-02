@@ -19,8 +19,7 @@ export const locations: ILocationMap = {
 
     activateRoutes() {
         this.router.post(locations.elements, (req, res, next) => {
-            
-        }
+        });
 
 
 
