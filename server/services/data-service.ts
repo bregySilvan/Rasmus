@@ -68,7 +68,7 @@ export class DataService {
     // @toDo: take filepaths from constructor.
     // }
 }
-
+/*
 let dataService: DataService = new DataService();
 let element: IListElement = { key: 'firstKey', type: ElementTypes.advertisement };
 let element2: IListElement = { key: 'secondKEy', type: ElementTypes.advertisement };
@@ -97,4 +97,4 @@ function testDataService() {
     //  service.saveElement({key: 'third key', type: ElementTypes.advertisement});
 }
 
-testDataService();
+testDataService();*/
