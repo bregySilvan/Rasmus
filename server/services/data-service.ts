@@ -1,66 +1,68 @@
 import { IListElement, ElementTypes } from '../../interfaces';
 import * as fse from 'fs-extra';
+import { QueueService } from './queue-service';
 
 export class DataService {
 
     private elementFilePath = '../var/elements.json';
+    private queueService: QueueService;
 
     constructor() {
-
+        this.queueService = new QueueService();
     }
 
-    public async saveElement(element: IListElement): Promise<void> {
-        if (element === null) {
-            return Promise.reject(new Error('element is null so it wasn\'t saved'));
-        }
-        this.setupJsonFile(this.elementFilePath).catch((error: Error) => {
-            return Promise.reject(error);
-        }).then(() => {
-            setTimeout(() => {
-                return this.updateOrAppendJson(this.elementFilePath, element, element.key);
-            }, 4000);
+    public saveElement(element: IListElement, callback: (error?: any) => void): void {
+        this.queueService.addToQueue((next) => {
+            this._saveElement(this.elementFilePath, element, (err?: any) => {
+                callback(err);
+                console.log('calling next...');
+                next();
+            });
         });
     }
 
-    private async setupJsonFile(file: string): Promise<void> {
-        fse.exists(file, (exists: boolean) => {
+    private _saveElement(file: string, element: IListElement, callback: (error?: any) => void): void {
+        if (element === null) {
+            return callback(new Error('object is null so it wasn\'t saved'));
+        }
+        try {
+            return this.saveElementNoChecks(file, element, callback);
+        } catch (err) {
+            return callback(err);
+        }
+    }
+
+    private saveElementNoChecks(file: string, element: IListElement, callback: (error?: any) => void) {
+        this.setupJsonFile(file, (error?: any) => {
+            if (error) {
+                return callback(error);
+            }
+            return this.updateJson(file, element, element.key, callback);
+        });
+    }
+
+    private setupJsonFile(file: string, callback: (error?: any) => void): void {
+        fse.exists(file, async (exists: boolean) => {
             console.log('isExist file: ?= ', exists);
             if (exists) {
-                return Promise.resolve();
+                return callback(null);
             }
-            fse.createFileSync(file);
-            fse.writeFileSync(file, {});
-            return Promise.resolve();
-
-
-         //   fse.createFile(file).then(() => {
-         //       console.log('file created');
-          //      return fse.writeJson(file, {});
-         //   }).catch(Promise.reject);
-
-       //     return Promise.resolve();
-           /* fse.outputJSON(file, { name: 'silvan'}, (error: Error) => {
-                console.log('outputJson is done...');
-                if(error) {
-                    console.log(error);
-                    return Promise.reject(error);
-                }
-                return Promise.resolve();
-            });*/
+            await fse.createFile(file);
+            await fse.writeJson(file, {});
+            return callback(null);
         });
     }
 
-    private async updateOrAppendJson(file: string, obj: any, key: string): Promise<void> {
-
-        fse.readJSON(file, (error: Error, jsonData: any) => {
+    private updateJson(file: string, obj: any, key: string, callback: (error?: any) => void): void {
+        fse.readJSON(file, async (error: Error, jsonData: any) => {
             console.log('received jsondata:', jsonData);
-            jsonData.key = obj;
+            jsonData[key] = obj;
             fse.writeJson(file, jsonData, (error: Error) => {
-                if(error) {
+                if (error) {
                     // logger.log(error);
-                    return Promise.reject(error);
+                    return callback(error);
                 }
-                return Promise.resolve();
+                return callback();
             });
         });
     }
@@ -70,8 +72,32 @@ export class DataService {
     // }
 }
 
-let service: DataService = new DataService();
+let dataService: DataService = new DataService();
+let element: IListElement = { key: 'firstKey', type: ElementTypes.advertisement };
+let element2: IListElement = { key: 'secondKEy', type: ElementTypes.advertisement };
+let element3: IListElement = { key: 'thirdKey', type: ElementTypes.advertisement };
 
-service.saveElement({key: 'first key', type: ElementTypes.advertisement});
-service.saveElement({key: 'second key', type: ElementTypes.advertisement});
-service.saveElement({key: 'third key', type: ElementTypes.advertisement});
+function testDataService() {
+    dataService.saveElement(element, (error?: any) => {
+        console.log('elemetn saved');
+        if(error) {
+            console.log('error? => ', error);
+        }
+    });
+    dataService.saveElement(element2, (error?: any) => {
+        console.log('elemetn saved');
+        if(error) {
+            console.log('error? => ', error);
+        }
+    });
+    dataService.saveElement(element3, (error?: any) => {
+        console.log('elemetn saved');
+        if(error) {
+            console.log('error? => ', error);
+        }
+    });
+    //  service.saveElement({key: 'second key', type: ElementTypes.advertisement});
+    //  service.saveElement({key: 'third key', type: ElementTypes.advertisement});
+}
+
+testDataService();
