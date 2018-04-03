@@ -15,8 +15,4 @@ export interface IBoard {
   keys: string[];
 }
 
- // export type ElementTypes = 'advertisement';
-
-export enum ElementTypes {
-  advertisement =  'advertisement'
-}
+export type ElementTypes = 'advertisement';
