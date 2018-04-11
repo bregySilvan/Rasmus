@@ -11,9 +11,36 @@ export class DataService {
         this.queueService = new QueueService();
     }
 
-    public saveElement(element: IListElement, callback: (error?: any) => void): void {
+    public getElements(keys: string[], callback: (error: Error, element: IListElement[]) => void): void {
         this.queueService.addToQueue((next) => {
-            this._saveElement(this.elementsFilePath, element, (err?: any) => {
+            this._getElements(this.elementsFilePath, keys, (err: Error, elements: any[]) => {
+                callback(err, elements as IListElement[]);
+                next();
+            });
+        });
+    }   
+
+    private _getElements(filePath: string, keys: string[], callback: (error: Error, elements: any[]) => void): void {
+        fse.readJSON(this.elementsFilePath, async (readFileError: Error, jsonData: any) => {
+            let elements: IListElement[] = [];
+            if(readFileError) {
+                return callback(readFileError, elements);
+            }
+            let jsonDataKeys = Object.keys(jsonData);
+            keys.forEach((elementKey: string) => {
+                let index = jsonDataKeys.indexOf(elementKey);
+                if(index > -1) {
+                    elements.push(jsonData[jsonDataKeys[index]]);
+                }
+            });
+            callback(null, elements);
+        });
+    }
+
+
+    public saveElement(element: IListElement, callback: (error: any) => void): void {
+        this.queueService.addToQueue((next) => {
+            this._saveElement(this.elementsFilePath, element, (err: any) => {
                 callback(err);
                 next();
             });
@@ -70,9 +97,9 @@ export class DataService {
 }
 /*
 let dataService: DataService = new DataService();
-let element: IListElement = { key: 'firstKey', type: ElementTypes.advertisement };
-let element2: IListElement = { key: 'secondKEy', type: ElementTypes.advertisement };
-let element3: IListElement = { key: 'thirdKey', type: ElementTypes.advertisement };
+let element: IListElement = { key: 'firstKey', type: 'advertisement' };
+let element2: IListElement = { key: 'secondKEy', type: 'advertisement' };
+let element3: IListElement = { key: 'thirdKey', type: 'advertisement' };
 
 function testDataService() {
     dataService.saveElement(element, (error?: any) => {
@@ -96,5 +123,17 @@ function testDataService() {
     //  service.saveElement({key: 'second key', type: ElementTypes.advertisement});
     //  service.saveElement({key: 'third key', type: ElementTypes.advertisement});
 }
-
-testDataService();*/
+function readOutDataService() {
+    let dataService: DataService = new DataService();
+    let elementKeys = ['secondKEy', 'firstKey'];
+    dataService.getElements(elementKeys, (error: Error, elements: IListElement[]) => {
+        if(error) {
+            console.log('error occured:: ', error);
+            
+        } else {
+            console.log('listElements:: ', elements);
+        }
+    });
+}
+readOutDataService();
+//testDataService();*/
