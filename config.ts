@@ -9,11 +9,13 @@ export interface ILocationMap {
 }
 
 export const locations: ILocationMap = {
-    element: '/element',
-    element_$id: '/element/:id',
+    element: 'element',
+    element_$id: 'element/:id',
     elements: 'elements',
-    board_$id: '/board/:id',
-    boards: '/boards',
-    activeBoard: '/active-board'
+    board_$id: 'board/:id',
+    boards: 'boards',
+    activeBoard: 'active-board'
 }
+
+export const DEFAULT_PORT = 5001;
 

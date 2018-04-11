@@ -12,31 +12,56 @@ export class RequestHandlerService {
         this.dataService = new DataService();
     }
 
-    public onPostElement(req: express.Request, res: express.Response, next: express.NextFunction) {
-        let listElement: IListElement = req.query;
-        // if( isListElement(listElement)) ... else return err;
-        this.dataService.saveElement(req.query, (error: any) => {
-            let message, status;
-            // pls check response status since they are probably wrong
-            if(error) {
-                message = JSON.stringify(error);
-                status = 403;
-            } else {
-                status =  200;
-                message ='saved element successfully';
-            }
-            res.status(status);
-            res.end(message);
-        });
-        
+    private _respond(res: express.Response, responseInfo: { response: any, error?: Error }, responseStati: { bad: number, good: number}, next: express.NextFunction) {
+        let response, status;
+        if(responseInfo.error) {
+            status = responseStati.bad;
+            response = responseInfo.error;
+        } else {
+            status = responseStati.good;
+            response = responseInfo.response;
+        }
+        res.status(status);
+        res.end(JSON.stringify(response));
+        console.log('responding to request: ');
+        console.log('status:', status);
+        console.log('response: ', response);
+        next();
     }
 
-    //req: express.Request, res: express.Response, next: express.NextFunction
-    public onGetElement(req: express.Request, res: express.Response, next: express.NextFunction) {
-        console.log('someone wants to have element with key ', req.query);
-        res.status(200);
-        res.end('sry. NOT implemented');
-        next();
+    // payload: { element: IListElement }
+    public onPostElement(req: express.Request, res: express.Response, next: express.NextFunction) {
+        let listElement: IListElement = req.query;
+        Object.keys(req).forEach((key: string) => {
+            console.log(key, '=>', /*(req as any)[key]*/);
+        });
+        console.log('req.query', req.query);
+        console.log('req.param', req.param);
+        console.log('req.statusMessage', req.statusMessage);
+
+        console.log('listElement: ', listElement);
+    //    console.log('req:: ', req);
+        this.dataService.saveElement(listElement, (error: Error) => {
+            let responseData = 'saved element Successfully';
+            let responseInfo = { response: responseData, error: error };
+            let responseStati = { bad: 403, good: 200 };
+            this._respond(res, responseInfo, responseStati, next);
+        });
+    }
+
+    // payload: { keys?: string }
+    public onGetElements(req: express.Request, res: express.Response, next: express.NextFunction) {
+        let keys: string[] = [];
+        Object.keys(req.query).forEach((key) => {
+            keys.push(req.query[key]);
+        })
+        console.log('req.query:: ', req.query);
+        this.dataService.getElements(keys, (error: Error, elements: IListElement[]) => {
+            let responseData = elements;
+            let responseInfo = { response: responseData, error: error };
+            let responseStati = { bad: 403, good: 200 };
+            this._respond(res, responseInfo, responseStati, next);
+        });
     }  
 }
 

@@ -12,7 +12,7 @@ export interface IAdvertisement extends IListElement {
 
 export interface IBoard {
   id: string;
-  keys: string[];
+  elements: IListElement[];
 }
 
 export type ElementTypes = 'advertisement';

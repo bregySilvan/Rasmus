@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { CustomRouter } from './router';
-
+import { DEFAULT_PORT } from '../../config';
 
 
 export class Server {
@@ -10,11 +10,12 @@ export class Server {
     }
 
     public start(port?: number) {
-        let usedPort = port || 5001;
+        let usedPort = port || DEFAULT_PORT;
         var app = express();
         var customRouter: CustomRouter = new CustomRouter(app);
         app.listen(usedPort, () => {
             console.log('listening on port 5001');
+            console.log(`request url: http://localhost:${usedPort}`);
         });
     }
 }

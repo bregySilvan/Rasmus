@@ -18,8 +18,8 @@ export class CustomRouter {
     }
 
     activateRoutes() {
-        this.router.post(locations.element, this.requestHandler.onPostElement.bind(this.requestHandler));
-        this.router.get(locations.element, this.requestHandler.onGetElement);
+        this.router.post('/'+locations.element, this.requestHandler.onPostElement.bind(this.requestHandler));
+        this.router.get('/'+locations.elements, this.requestHandler.onGetElements.bind(this.requestHandler));
     }
 
 }

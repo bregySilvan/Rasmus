@@ -1,6 +1,7 @@
 
 
 import { Server } from './classes/server';
+import { DEFAULT_PORT } from '../config';
 //import { IListElement } from '../interfaces';
 //import * as fse from 'fs-extra';
 
@@ -8,4 +9,4 @@ import { Server } from './classes/server';
 //var file = './log.json';
 //fse.createFileSync(file);
 //fse.writeJsonSync(file, a);
-new Server().start();
+new Server().start(DEFAULT_PORT);
