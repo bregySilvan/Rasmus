@@ -9,6 +9,9 @@ export class DataService {
 
     constructor() {
         this.queueService = new QueueService();
+        if(!fse.existsSync(this.elementsFilePath)) {
+            fse.createFileSync(this.elementsFilePath);
+        }
     }
 
     public getElements(keys: string[], callback: (error: Error, element: IListElement[]) => void): void {
@@ -18,7 +21,16 @@ export class DataService {
                 next();
             });
         });
-    }   
+    }
+
+    public saveElement(element: IListElement, callback: (error: any) => void): void {
+        this.queueService.addToQueue((next) => {
+            this._saveElement(this.elementsFilePath, element, (err: any) => {
+                callback(err);
+                next();
+            });
+        });
+    }
 
     private _getElements(filePath: string, keys: string[], callback: (error: Error, elements: any[]) => void): void {
         fse.readJSON(this.elementsFilePath, async (readFileError: Error, jsonData: any) => {
@@ -34,16 +46,6 @@ export class DataService {
                 }
             });
             callback(null, elements);
-        });
-    }
-
-
-    public saveElement(element: IListElement, callback: (error: any) => void): void {
-        this.queueService.addToQueue((next) => {
-            this._saveElement(this.elementsFilePath, element, (err: any) => {
-                callback(err);
-                next();
-            });
         });
     }
 
@@ -129,7 +131,7 @@ function readOutDataService() {
     dataService.getElements(elementKeys, (error: Error, elements: IListElement[]) => {
         if(error) {
             console.log('error occured:: ', error);
-            
+
         } else {
             console.log('listElements:: ', elements);
         }

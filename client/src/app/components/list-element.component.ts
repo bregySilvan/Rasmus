@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IListElement, ElementTypes } from '../interfaces';
+import { IListElement, ElementTypes } from '../../../../interfaces';
 /**
  * responsible for holding either
  * an advertisement

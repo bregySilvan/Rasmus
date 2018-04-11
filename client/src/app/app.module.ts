@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { CUSTOM_ROUTES } from './routes';
 import { MainPageComponent, EditBoardsComponent, ElementListComponent } from './components';
 import { RouterService } from './services/router.service';
-import { AdvirtisementComponent } from './components/advertisement.component';
+import { AdvertisementComponent } from './components/advertisement.component';
 import { ListElementComponent } from './components/list-element.component';
 
 
@@ -14,7 +14,7 @@ import { ListElementComponent } from './components/list-element.component';
     AppComponent,
     MainPageComponent,
     EditBoardsComponent,
-    AdvirtisementComponent,
+    AdvertisementComponent,
     ElementListComponent,
     ListElementComponent
   ],

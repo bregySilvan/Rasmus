@@ -25,13 +25,13 @@ export const advertisementList: IAdvertisement[] =
 }, {
   key: '4',
   type: 'advertisement',
-  name: 'Finished last wedn.',
+  name: 'Some nice stuff',
   description: 'some ad description this is',
   imageURL: 'http://hanassets.nd.gov/images/product/test.png'
 }, {
   key: '5',
   type: 'advertisement',
-  name: 'Finished last wedn.',
+  name: 'I know what you did...',
   description: 'some ad description this is',
   imageURL: 'https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png'
 }];
@@ -41,18 +41,18 @@ export const advertisementKeys: string[] = ['1', '2', '3'];
 export const listElements: IListElement[] = [
   {
     key: '1',
-    type: ElementTypes.advertisement
+    type: 'advertisement'
   }, {
     key: '2',
-    type: ElementTypes.advertisement
+    type: 'advertisement'
   },  {
     key: '3',
-    type: ElementTypes.advertisement
+    type: 'advertisement'
   }, {
     key: '4',
-    type: ElementTypes.advertisement
+    type: 'advertisement'
   }, {
     key: '5',
-    type: ElementTypes.advertisement
+    type: 'advertisement'
   }
 ];

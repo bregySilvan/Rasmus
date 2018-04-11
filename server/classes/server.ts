@@ -4,7 +4,7 @@ import { DEFAULT_PORT } from '../../config';
 
 
 export class Server {
-    
+
     constructor() {
         //
     }

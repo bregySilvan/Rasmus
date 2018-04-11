@@ -62,7 +62,7 @@ export class RequestHandlerService {
             let responseStati = { bad: 403, good: 200 };
             this._respond(res, responseInfo, responseStati, next);
         });
-    }  
+    }
 }
 
 
