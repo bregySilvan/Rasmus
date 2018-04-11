@@ -7,6 +7,7 @@ import { MainPageComponent, EditBoardsComponent, ElementListComponent } from './
 import { RouterService } from './services/router.service';
 import { AdvertisementComponent } from './components/advertisement.component';
 import { ListElementComponent } from './components/list-element.component';
+import { RequestService } from './services/request.service';
 
 
 @NgModule({
@@ -16,13 +17,14 @@ import { ListElementComponent } from './components/list-element.component';
     EditBoardsComponent,
     AdvertisementComponent,
     ElementListComponent,
-    ListElementComponent
+    ListElementComponent,
+    RequestService
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(CUSTOM_ROUTES)
   ],
-  providers: [RouterService],
+  providers: [RouterService, RequestService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

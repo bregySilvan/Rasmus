@@ -22,7 +22,8 @@ export class RequestHandlerService {
             response = responseInfo.response;
         }
         res.status(status);
-        res.end(JSON.stringify(response));
+        res.send(response);
+        res.end();
         console.log('responding to request: ');
         console.log('status:', status);
         console.log('response: ', response);
@@ -40,7 +41,7 @@ export class RequestHandlerService {
         console.log('req.statusMessage', req.statusMessage);
 
         console.log('listElement: ', listElement);
-    //    console.log('req:: ', req);
+
         this.dataService.saveElement(listElement, (error: Error) => {
             let responseData = 'saved element Successfully';
             let responseInfo = { response: responseData, error: error };
@@ -54,7 +55,7 @@ export class RequestHandlerService {
         let keys: string[] = [];
         Object.keys(req.query).forEach((key) => {
             keys.push(req.query[key]);
-        })
+        });
         console.log('req.query:: ', req.query);
         this.dataService.getElements(keys, (error: Error, elements: IListElement[]) => {
             let responseData = elements;

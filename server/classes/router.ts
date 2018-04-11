@@ -5,22 +5,45 @@ import { DataService } from '../services/data-service';
 
 export class CustomRouter {
 
-    private router: express.Router;
-    private requestHandler: RequestHandlerService;
-    private dataService: DataService;
+    private _router: express.Router;
+    private _requestHandler: RequestHandlerService;
+    private _dataService: DataService;
+    private _activeLocations: string[];
 
-    constructor(private app: express.Express) {
-        this.app = this.app || express();
-        this.router = express.Router();
-        this.requestHandler = new RequestHandlerService();
-        this.activateRoutes();
-        this.app.use(this.router);
+    constructor(private _app: express.Express) {
+        this._app = this._app || express();
+        this._router = express.Router();
+        this._requestHandler = new RequestHandlerService();
+        this._activeLocations = [];
+        this._activateRoutes();
+        this._app.use(this._router);
     }
 
-    activateRoutes() {
-        this.router.post('/'+locations.element, this.requestHandler.onPostElement.bind(this.requestHandler));
-        this.router.get('/'+locations.elements, this.requestHandler.onGetElements.bind(this.requestHandler));
+    get activeLocations(): string[] {
+        return this._activeLocations;
     }
+
+    private _activateRoutes() {
+
+        // post
+        this._addRoute(locations.element, 'post', this._requestHandler, this._requestHandler.onPostElement);
+
+        // get
+        this._addRoute(locations.elements, 'get', this._requestHandler, this._requestHandler.onGetElements);
+    }
+
+    private _addRoute(
+        location: string,
+        method: 'post' | 'get',
+        requestHandler: RequestHandlerService,
+        requestHandlerFn: (req: express.Request, res: express.Response, next: express.NextFunction) => void): void {
+
+            location = location.startsWith('/') ? location : `/${location}`;
+            this._activeLocations.push(location);
+            this._router[method](location, requestHandlerFn.bind(requestHandler));
+    }
+
+
 
 }
 
