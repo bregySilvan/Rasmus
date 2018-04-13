@@ -7,6 +7,23 @@ import { RASMUS_COMPONENTS } from './components/index';
 import { AdvertisementComponent } from './components/advertisement.component';
 import { ListElementComponent } from './components/list-element.component';
 import { RASMUS_PROVIDERS } from './services/index';
+import { StoreModule } from '@ngrx/store';
+import { AppReducer } from './app.state';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterEffects } from './effects/index';
+
+declare var window, console, localStorage;
+
+// For AoT compilation to work:
+export function win() {
+  return window;
+}
+export function storage() {
+  return localStorage;
+}
+export function cons() {
+  return console;
+}
 
 @NgModule({
   declarations: [
@@ -15,7 +32,9 @@ import { RASMUS_PROVIDERS } from './services/index';
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(CUSTOM_ROUTES)
+    RouterModule.forRoot(CUSTOM_ROUTES),
+    StoreModule.provideStore(AppReducer),
+    EffectsModule.run(RouterEffects)
   ],
   providers: [RASMUS_PROVIDERS],
   bootstrap: [AppComponent]

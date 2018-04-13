@@ -6,8 +6,13 @@ export interface IRouterState {
     requestedUrl: string;
 }
 
+const initialState: IRouterState = {
+  currentUrl: '',
+  isNavigating: false,
+  requestedUrl: ''
+};
 
-export function reducer(state: IRouterState = initialState, action: actions.RouterActions): IRouterState {
+export function routerReducer(state: IRouterState = initialState, action: actions.RouterActions): IRouterState {
     switch (action.type) {
       case actions.ActionTypes.NAVIGATE_TO:
         return Object.assign({}, state, {
