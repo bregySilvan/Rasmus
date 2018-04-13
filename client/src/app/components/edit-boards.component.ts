@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IListElement } from '../interfaces';
+import { IListElement } from '../../../../interfaces';
 import { listElements } from '../dummy-store';
 
 @Component({

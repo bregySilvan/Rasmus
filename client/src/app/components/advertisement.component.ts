@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { advertisementList } from '../dummy-store';
-import { IAdvertisement } from '../interfaces';
+import { IAdvertisement } from '../../../../interfaces';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -8,7 +8,7 @@ import { IAdvertisement } from '../interfaces';
   templateUrl: './advertisement.component.html',
   styleUrls: ['./advertisement.component.css']
 })
-export class AdvirtisementComponent implements OnInit {
+export class AdvertisementComponent implements OnInit {
 
   @Input() key: string;
   advertisement: IAdvertisement = null;
