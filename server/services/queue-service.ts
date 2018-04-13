@@ -19,17 +19,17 @@ export class QueueService {
     private _startQueue() {
         if (!this.isActive && this.queue.length) {
             this.isActive = true;
-            this.next();
+            this._next();
         }
     }
 
-    public next() {
+    private _next() {
         if (!this.queue.length) {
             this.isActive = false;
             return;
         }
         this.queue.shift()(() => {
-            this.next();
+            this._next();
         });
     }
 }

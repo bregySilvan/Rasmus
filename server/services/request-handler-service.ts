@@ -33,15 +33,6 @@ export class RequestHandlerService {
     // payload: { element: IListElement }
     public onPostElement(req: express.Request, res: express.Response, next: express.NextFunction) {
         let listElement: IListElement = req.query;
-        Object.keys(req).forEach((key: string) => {
-            console.log(key, '=>', /*(req as any)[key]*/);
-        });
-        console.log('req.query', req.query);
-        console.log('req.param', req.param);
-        console.log('req.statusMessage', req.statusMessage);
-
-        console.log('listElement: ', listElement);
-
         this.dataService.saveElement(listElement, (error: Error) => {
             let responseData = 'saved element Successfully';
             let responseInfo = { response: responseData, error: error };

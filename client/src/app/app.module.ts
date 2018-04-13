@@ -3,28 +3,21 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ROUTES } from './routes';
-import { MainPageComponent, EditBoardsComponent, ElementListComponent } from './components';
-import { RouterService } from './services/router.service';
+import { RASMUS_COMPONENTS } from './components/index';
 import { AdvertisementComponent } from './components/advertisement.component';
 import { ListElementComponent } from './components/list-element.component';
-import { RequestService } from './services/request.service';
-
+import { RASMUS_PROVIDERS } from './services/index';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainPageComponent,
-    EditBoardsComponent,
-    AdvertisementComponent,
-    ElementListComponent,
-    ListElementComponent,
-    RequestService
+    ...RASMUS_COMPONENTS
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(CUSTOM_ROUTES)
   ],
-  providers: [RouterService, RequestService],
+  providers: [RASMUS_PROVIDERS],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
