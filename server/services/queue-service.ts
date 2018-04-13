@@ -13,10 +13,10 @@ export class QueueService {
 
     public addToQueue(fn: (next: () => void) => void): void {
         this.queue.push(fn);
-        this.startQueue();
+        this._startQueue();
     }
 
-    private startQueue() {
+    private _startQueue() {
         if (!this.isActive && this.queue.length) {
             this.isActive = true;
             this.next();

@@ -54,22 +54,22 @@ export class DataService {
             return callback(new Error('object is null so it wasn\'t saved'));
         }
         try {
-            return this.saveElementNoChecks(file, element, callback);
+            return this._saveElementNoChecks(file, element, callback);
         } catch (err) {
             return callback(err);
         }
     }
 
-    private saveElementNoChecks(file: string, element: IListElement, callback: (error?: any) => void) {
-        this.setupJsonFile(file, (error?: any) => {
+    private _saveElementNoChecks(file: string, element: IListElement, callback: (error?: any) => void) {
+        this._setupJsonFile(file, (error?: any) => {
             if (error) {
                 return callback(error);
             }
-            return this.updateJson(file, element, element.key, callback);
+            return this._updateJson(file, element, element.key, callback);
         });
     }
 
-    private setupJsonFile(file: string, callback: (error?: any) => void): void {
+    private _setupJsonFile(file: string, callback: (error?: any) => void): void {
         fse.exists(file, async (exists: boolean) => {
             if (exists) {
                 return callback(null);
@@ -79,7 +79,7 @@ export class DataService {
         });
     }
 
-    private updateJson(file: string, obj: any, key: string, callback: (error?: any) => void): void {
+    private _updateJson(file: string, obj: any, key: string, callback: (error?: any) => void): void {
         fse.readJSON(file, async (error: Error, jsonData: any) => {
             jsonData = jsonData || { };
             jsonData[key] = obj;
