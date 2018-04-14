@@ -22,6 +22,6 @@ export class ListElementComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.warn('this.element: ', this.element);
+    //console.warn('this.element: ', this.element);
   }
 }

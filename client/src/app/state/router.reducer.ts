@@ -20,16 +20,17 @@ export function routerReducer(state: IRouterState = initialState, action: action
             requestedUrl: action.payload
         });
 
-        case actions.ActionTypes.NAVIGATE_TO:
+        case actions.ActionTypes.NAVIGATION_SUCCESS:
           return Object.assign({}, state, {
-            isNavigating: true,
-            requestedUrl: action.payload
+            isNavigating: false,
+            currentUrl: action.payload,
+            requestedUrl: ''
         });
-            
-        case actions.ActionTypes.NAVIGATE_TO:
+
+        case actions.ActionTypes.NAVIGATION_ERROR:
           return Object.assign({}, state, {
-            isNavigating: true,
-            requestedUrl: action.payload
+            isNavigating: false,
+            requestedUrl: ''
           });
 
         default:

@@ -1,6 +1,10 @@
 
 <!-- toolbar -->
 
-<a routerLink="edit-boards" routerLinkActive="active">Edit boards</a>
-<a routerLink="main" routerLinkActive="active">Main page</a>
+<!--<a routerLink="edit-boards" routerLinkActive="active">Edit boards</a>
+<a routerLink="main" routerLinkActive="active">Main page</a>-->
+
+<div (click)="navigateToEditBoard()">Edit boards</div>
+<div (click)="navigateToMain()">Main page</div>
+
 <router-outlet></router-outlet>

@@ -5,10 +5,6 @@ import { MainPageComponent } from './components/mainpage.component';
 export const CUSTOM_ROUTES: Routes = [
   { path: 'edit-boards', component: EditBoardsComponent },
   { path: 'main', component: MainPageComponent },
-  /* path: 'heroes',
-   component: HeroListComponent,
-   data: { title: 'Heroes List' }
- },*/
   {
     path: '',
     redirectTo: 'main',

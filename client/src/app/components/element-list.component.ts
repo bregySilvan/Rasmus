@@ -27,6 +27,5 @@ export class ElementListComponent implements OnInit {
 
   constructor(private store: Store<IAppStore>) {
     //
-    this.store.dispatch( new router.NavigateTo('abc'));
   }
 }

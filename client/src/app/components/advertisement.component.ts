@@ -20,7 +20,7 @@ export class AdvertisementComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('taking advertisement with key: ', this.key);
+  //  console.log('taking advertisement with key: ', this.key);
     this.advertisement = advertisementList.find((adv: IAdvertisement) => adv.key === this.key);
   }
 }

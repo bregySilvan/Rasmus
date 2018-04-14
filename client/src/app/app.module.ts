@@ -11,6 +11,7 @@ import { StoreModule } from '@ngrx/store';
 import { AppReducer } from './app.state';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterEffects } from './effects/index';
+import { DebugEffect } from './effects/debug.effects';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { RouterEffects } from './effects/index';
     BrowserModule,
     RouterModule.forRoot(CUSTOM_ROUTES),
     StoreModule.provideStore(AppReducer),
-    EffectsModule.run(RouterEffects)
+    EffectsModule.run(RouterEffects),
+    EffectsModule.run(DebugEffect)
   ],
   providers: [RASMUS_PROVIDERS],
   bootstrap: [AppComponent]
