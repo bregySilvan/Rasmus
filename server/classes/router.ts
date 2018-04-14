@@ -30,6 +30,9 @@ export class CustomRouter {
 
         // get
         this._addRoute(locations.elements, 'get', this._requestHandler, this._requestHandler.onGetElements);
+
+        //is alive
+        this._addRoute(locations.isAlive, 'get', this._requestHandler, this._requestHandler.onGetIsAlive);
     }
 
     private _addRoute(

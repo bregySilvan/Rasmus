@@ -6,6 +6,7 @@ export interface ILocationMap {
     board_$id: string;
     boards: string;
     activeBoard: string;
+    isAlive: string;
 }
 
 export const locations: ILocationMap = {
@@ -14,7 +15,8 @@ export const locations: ILocationMap = {
     elements: 'elements',
     board_$id: 'board/:id',
     boards: 'boards',
-    activeBoard: 'active-board'
+    activeBoard: 'active-board',
+    isAlive: 'is-alive'
 }
 
 export const DEFAULT_PORT = 5001;

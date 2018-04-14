@@ -41,6 +41,12 @@ export class RequestHandlerService {
         });
     }
 
+    public onGetIsAlive(req: express.Request, res: express.Response, next: express.NextFunction) {
+        let responseInfo = { response: { isAlive: true }, error: null};
+        let responseStati = { good: 200, bad: 400 };
+        this._respond(res, responseInfo, responseStati, next);
+    }
+
     // payload: { keys?: string }
     public onGetElements(req: express.Request, res: express.Response, next: express.NextFunction) {
         let keys: string[] = [];
