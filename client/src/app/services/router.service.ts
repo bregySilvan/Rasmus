@@ -10,7 +10,6 @@ export class RouterService {
 
     public navigateTo(url: string) {
       this.store$.dispatch(new router.NavigateTo(url));
-      this.logService.log('dispatching navigateTo::');
     }
 
     constructor(private store$: Store<IAppStore>,

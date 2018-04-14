@@ -19,7 +19,6 @@ export class AppComponent {
   }
 
   public _navigateTo(url: string) {
-    this.logService.log('navigating to: ', url);
     url = url.startsWith('/') ? url : '/'+url;
     this.routerService.navigateTo(url);
   }
