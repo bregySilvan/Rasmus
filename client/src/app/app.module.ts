@@ -12,18 +12,6 @@ import { AppReducer } from './app.state';
 import { EffectsModule } from '@ngrx/effects';
 import { RouterEffects } from './effects/index';
 
-declare var window, console, localStorage;
-
-// For AoT compilation to work:
-export function win() {
-  return window;
-}
-export function storage() {
-  return localStorage;
-}
-export function cons() {
-  return console;
-}
 
 @NgModule({
   declarations: [
