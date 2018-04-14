@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IListElement, ElementTypes } from '../../../../interfaces';
+import { Store } from '@ngrx/store';
+import { IAppStore } from '../app.state';
+import * as router from '../actions/router.actions';
 
+declare var window, console, localStorage;
 export type ListAlignments = 'horizontal' | 'vertical';
 
 @Component({
@@ -19,5 +23,9 @@ export class ElementListComponent implements OnInit {
 
   ngOnInit() {
     console.log('elements in elementList: ', this.elements);
+  }
+
+  constructor(private store: Store<IAppStore>) {
+    //
   }
 }

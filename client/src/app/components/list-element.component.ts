@@ -6,6 +6,7 @@ import { IListElement, ElementTypes } from '../../../../interfaces';
  * a boardType for example..
  * an element-list
  */
+declare var window, console, localStorage;
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ras-list-element',
@@ -21,6 +22,6 @@ export class ListElementComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.warn('this.element: ', this.element);
+    //console.warn('this.element: ', this.element);
   }
 }

@@ -7,6 +7,12 @@ import { RASMUS_COMPONENTS } from './components/index';
 import { AdvertisementComponent } from './components/advertisement.component';
 import { ListElementComponent } from './components/list-element.component';
 import { RASMUS_PROVIDERS } from './services/index';
+import { StoreModule } from '@ngrx/store';
+import { AppReducer } from './app.state';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterEffects } from './effects/index';
+import { DebugEffect } from './effects/debug.effects';
+
 
 @NgModule({
   declarations: [
@@ -15,7 +21,10 @@ import { RASMUS_PROVIDERS } from './services/index';
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(CUSTOM_ROUTES)
+    RouterModule.forRoot(CUSTOM_ROUTES),
+    StoreModule.provideStore(AppReducer),
+    EffectsModule.run(RouterEffects),
+    EffectsModule.run(DebugEffect)
   ],
   providers: [RASMUS_PROVIDERS],
   bootstrap: [AppComponent]

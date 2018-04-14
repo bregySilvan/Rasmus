@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IListElement } from '../../../../interfaces';
 import { listElements } from '../dummy-store';
+import { RouterService } from '../services/router.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -14,7 +15,8 @@ export class EditBoardsComponent {
 
   elements: IListElement[] = listElements;
 
-  constructor() {
+  constructor(private routerSrevice: RouterService) {
 
   }
+
 }

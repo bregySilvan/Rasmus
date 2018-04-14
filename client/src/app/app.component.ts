@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { RouterService } from './services/router.service';
+import { LogService } from './services/log.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,23 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+
+  public navigateToEditBoard() {
+    this._navigateTo('edit-boards');
+  }
+
+  public navigateToMain() {
+    this._navigateTo('main');
+  }
+
+  public _navigateTo(url: string) {
+    url = url.startsWith('/') ? url : '/'+url;
+    this.routerService.navigateTo(url);
+  }
+
+  constructor(private routerService: RouterService,
+              private logService: LogService) {
+
+  }
+
 }
