@@ -2,14 +2,16 @@
 
 import { IRouterState, routerReducer } from './state/router.reducer';
 import { ActionReducer, combineReducers } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { INetworkState, networkReducer } from './state/network.reducer';
 
 export interface IAppStore {
     router: IRouterState;
+    network: INetworkState;
 }
 
 export const RASMUS_STORE = {
-    router: routerReducer
+    router: routerReducer,
+    nework: networkReducer
 }
 
 const reducers = RASMUS_STORE;

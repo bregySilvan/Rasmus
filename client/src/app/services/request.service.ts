@@ -10,13 +10,13 @@ export class RequestService {
 
     }
 
-    public get(url: string, payload: any): Observable<http.Response> {
+    public get(url: string, payload?: any): Observable<http.Response> {
       let options = { params: payload };
       return this.httpClient.get(url, options);
 
     }
 
-    public post(url: string, payload: any): Observable<http.Response> {
+    public post(url: string, payload?: any): Observable<http.Response> {
       let options = { params: payload };
       return this.httpClient.post(url, options);
     }
