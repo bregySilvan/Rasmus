@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { locations } from '../../config';
+import { LOCATIONS } from '../../config';
 import { RequestHandlerService } from '../services/request-handler-service';
 import { DataService } from '../services/data-service';
 
@@ -26,13 +26,13 @@ export class CustomRouter {
     private _activateRoutes() {
 
         // post
-        this._addRoute(locations.element, 'post', this._requestHandler, this._requestHandler.onPostElement);
+        this._addRoute(LOCATIONS.element, 'post', this._requestHandler, this._requestHandler.onPostElement);
 
         // get
-        this._addRoute(locations.elements, 'get', this._requestHandler, this._requestHandler.onGetElements);
+        this._addRoute(LOCATIONS.elements, 'get', this._requestHandler, this._requestHandler.onGetElements);
 
         //is alive
-        this._addRoute(locations.isAlive, 'get', this._requestHandler, this._requestHandler.onGetIsAlive);
+        this._addRoute(LOCATIONS.isAlive, 'get', this._requestHandler, this._requestHandler.onGetIsAlive);
     }
 
     private _addRoute(

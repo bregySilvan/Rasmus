@@ -15,8 +15,13 @@ export class EditBoardsComponent {
 
   elements: IListElement[] = listElements;
 
-  constructor(private routerSrevice: RouterService) {
 
+  public onTestHosts(event: any) {
+
+  }
+
+  constructor(private routerService: RouterService) {
+    this.
   }
 
 }

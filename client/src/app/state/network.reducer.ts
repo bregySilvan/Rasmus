@@ -2,19 +2,21 @@ import * as actions from '../actions/network.actions';
 
 export interface IHost {
   ipAddress: string;
-  hostname: false;
+  hostname?: string;
   isPending: boolean;
   isAlive: boolean;
 }
 
 export interface INetworkState {
-  knownHosts: IHost[];
+  foundHosts: IHost[];
   isDetecting: boolean;
+  possibleAddresses: string[];
 }
 
 const initialState: INetworkState = {
-  knownHosts: [],
-  isDetecting: false
+  foundHosts: [],
+  isDetecting: false,
+  possibleAddresses: null
 };
 
 export function networkReducer(state: INetworkState = initialState, action: actions.NetworkActions): INetworkState {
@@ -31,7 +33,7 @@ export function networkReducer(state: INetworkState = initialState, action: acti
 
     case actions.ActionTypes.HOSTS_UPDATE:
       return Object.assign({}, state, {
-        knownHosts: action.payload
+        foundHosts: action.payload
       });
 
     default:

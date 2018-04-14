@@ -9,7 +9,7 @@ export interface ILocationMap {
     isAlive: string;
 }
 
-export const locations: ILocationMap = {
+export const LOCATIONS: ILocationMap = {
     element: 'element',
     element_$id: 'element/:id',
     elements: 'elements',
@@ -19,5 +19,12 @@ export const locations: ILocationMap = {
     isAlive: 'is-alive'
 }
 
+export const SERVER_ADDRESSES = [
+    "192.168.1.254"
+];
+
+export const LOCAL_ADDRESS = "192.168.1.254";
+export const LOCAL_SUBNET_MASK = "255.255.255.0";
+export const KEEP_ALIVE_INTERVAL = 7000;
 export const DEFAULT_PORT = 5001;
 

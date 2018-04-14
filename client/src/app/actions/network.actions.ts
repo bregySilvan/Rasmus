@@ -8,13 +8,15 @@ const HOST_UPDATE: 'NETWORK: HOST_UPDATE' = 'NETWORK: HOST_UPDATE';
 const TEST_HOST: 'NETWORK: TEST_HOST_CONNECTION' = 'NETWORK: TEST_HOST_CONNECTION';
 const STOP_DETECTION: 'NETWORK: STOP_DETECTION' = 'NETWORK: STOP_DETECTION';
 const HOSTS_UPDATE: 'NETWORK: HOSTS_UPDATE' = 'NETWORK: HOSTS_UPDATE';
+const CHECK_POSSIBLE_HOSTS: 'NETWORK: CHECK_POSSIBLE_HOSTS' = 'NETWORK: CHECK_POSSIBLE_HOSTS';
 
 export const ActionTypes = {
-  HOST_UPDATE: type(HOST_UPDATE),
+HOST_UPDATE: type(HOST_UPDATE),
   START_DETECTION: type(START_DETECTION),
   STOP_DETECTION: type(STOP_DETECTION),
   TEST_HOST: type(TEST_HOST),
-  HOSTS_UPDATE: type(HOSTS_UPDATE)
+  HOSTS_UPDATE: type(HOSTS_UPDATE),
+  CHECK_POSSIBLE_HOSTS: type(CHECK_POSSIBLE_HOSTS)
 };
 
 export class HostUpdateAction implements Action {
@@ -45,7 +47,12 @@ export class StartDetectionAction implements Action {
     //
   }
 }
-
+export class CheckPossibleHostsAction implements Action {
+  type: typeof ActionTypes.CHECK_POSSIBLE_HOSTS = ActionTypes.CHECK_POSSIBLE_HOSTS;
+  constructor() {
+    //
+  }
+}
 export class TestHostAction implements Action {
   type: typeof ActionTypes.TEST_HOST = ActionTypes.TEST_HOST;
   payload: IHost;
