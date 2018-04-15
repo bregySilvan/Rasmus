@@ -11,7 +11,7 @@ export interface IAppStore {
 
 export const RASMUS_STORE = {
     router: routerReducer,
-    nework: networkReducer
+    network: networkReducer
 }
 
 const reducers = RASMUS_STORE;

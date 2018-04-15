@@ -7,6 +7,7 @@ import { Response } from '@angular/http';
 import * as networkActions from '../actions/network.actions';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
+import { LogService } from './log.service';
 
 @Injectable()
 export class NetworkService {
@@ -19,11 +20,13 @@ export class NetworkService {
     this.store$.dispatch(new networkActions.TestHostAction(host));
   }
 
+  public calculatePossibleAddresses(localAddress: string, localSubnetMask: string) {
+    let possibleAddresses: string[] = this._calculatePossibleAdresses(localAddress, localSubnetMask);
+    this.store$.dispatch(new networkActions.PossibleAddressesCalculatedAction(possibleAddresses));
+  }
+
   //@ todo: change implementation :)
-  public calculatePossibleAdresses(localAddress: string, localSubnetMask: string): string[] {
-    if(this.possibleAddressesCache !== null) {
-      return this.possibleAddressesCache;
-    }
+  private _calculatePossibleAdresses(localAddress: string, localSubnetMask: string): string[] {
     let possibleAddresses: string[] = [];
     let networkPart = localAddress.substring(0, localAddress.lastIndexOf("."));
     if(localSubnetMask === '255.255.255.0') {
@@ -31,7 +34,7 @@ export class NetworkService {
         possibleAddresses.push(`${networkPart}.${i}`);
       }
     }
-    return possibleAddresses;
+    return ['192.168.1.254'];
   }
 
   public updateOrAdd(hosts: IHost[], updatedHost: IHost) {
@@ -55,7 +58,7 @@ export class NetworkService {
 
     return this.requestService.get(url).switchMap((response => {
       let resObj = JSON.parse(response.text.toString());
-
+      this.logService.log('received response: ', response.text);
       let newHost: IHost = {
         ipAddress: host.ipAddress,
         hostname: host.hostname,
@@ -63,13 +66,13 @@ export class NetworkService {
         isPending: false
       };
 
-      return Observable.of(newHost);
+      return Observable.create(newHost);
     }));
   }
 
   constructor(private requestService: RequestService,
-              private store$: Store<IAppStore>) {
-
+              private store$: Store<IAppStore>,
+              private logService: LogService) {
   }
 
 }

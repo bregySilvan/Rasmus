@@ -12,7 +12,7 @@ declare var window, console, localStorage;
 export class AdvertisementComponent implements OnInit {
 
   @Input() key: string;
-  advertisement: IAdvertisement = null;
+  advertisement: IAdvertisement | null = null;
 
   constructor() {
 
@@ -21,6 +21,9 @@ export class AdvertisementComponent implements OnInit {
 
   ngOnInit() {
   //  console.log('taking advertisement with key: ', this.key);
-    this.advertisement = advertisementList.find((adv: IAdvertisement) => adv.key === this.key);
+    let advertisement = advertisementList.find((adv: IAdvertisement) => adv.key === this.key);
+    if(advertisement) {
+      this.advertisement = advertisement;
+    }
   }
 }

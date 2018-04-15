@@ -25,6 +25,10 @@ export const SERVER_ADDRESSES = [
 
 export const LOCAL_ADDRESS = "192.168.1.254";
 export const LOCAL_SUBNET_MASK = "255.255.255.0";
-export const KEEP_ALIVE_INTERVAL = 7000;
+export const KEEP_ALIVE_INTERVAL = 7500;
 export const DEFAULT_PORT = 5001;
+
+// The amount of milliseconds which is waited for queued up requests
+// to one location
+export const GENERAL_REQUEST_DELAY_MS = 35;
 

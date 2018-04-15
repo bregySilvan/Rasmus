@@ -8,7 +8,6 @@
     "noLib": false,
     "checkJs": true,
     "allowJs": true,
-    "strict": true,
     "moduleResolution": "node",
     "module": "commonjs",
     "emitDecoratorMetadata": true,

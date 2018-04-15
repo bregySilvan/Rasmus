@@ -13,6 +13,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { RouterEffects } from './effects/index';
 import { DebugEffect } from './effects/debug.effects';
 import { NetworkEffects } from './effects/network.effects';
+import { HttpModule } from '@angular/http';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { NetworkEffects } from './effects/network.effects';
   ],
   imports: [
     BrowserModule,
+    HttpModule ,
     RouterModule.forRoot(CUSTOM_ROUTES),
     StoreModule.provideStore(AppReducer),
     EffectsModule.run(RouterEffects),

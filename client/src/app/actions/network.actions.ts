@@ -9,6 +9,7 @@ const TEST_HOST: 'NETWORK: TEST_HOST_CONNECTION' = 'NETWORK: TEST_HOST_CONNECTIO
 const STOP_DETECTION: 'NETWORK: STOP_DETECTION' = 'NETWORK: STOP_DETECTION';
 const HOSTS_UPDATE: 'NETWORK: HOSTS_UPDATE' = 'NETWORK: HOSTS_UPDATE';
 const CHECK_POSSIBLE_HOSTS: 'NETWORK: CHECK_POSSIBLE_HOSTS' = 'NETWORK: CHECK_POSSIBLE_HOSTS';
+const POSSIBLE_ADDRESSES_CALCULATED: 'NETWORK: POSSIBLE_ADDRESSES_CALCULATED' = 'NETWORK: POSSIBLE_ADDRESSES_CALCULATED';
 
 export const ActionTypes = {
 HOST_UPDATE: type(HOST_UPDATE),
@@ -16,7 +17,8 @@ HOST_UPDATE: type(HOST_UPDATE),
   STOP_DETECTION: type(STOP_DETECTION),
   TEST_HOST: type(TEST_HOST),
   HOSTS_UPDATE: type(HOSTS_UPDATE),
-  CHECK_POSSIBLE_HOSTS: type(CHECK_POSSIBLE_HOSTS)
+  CHECK_POSSIBLE_HOSTS: type(CHECK_POSSIBLE_HOSTS),
+  POSSIBLE_ADDRESSES_CALCULATED: type(POSSIBLE_ADDRESSES_CALCULATED)
 };
 
 export class HostUpdateAction implements Action {
@@ -61,4 +63,11 @@ export class TestHostAction implements Action {
   }
 }
 
-export type NetworkActions = HostUpdateAction| HostsUpdateAction | StartDetectionAction | StopDetectionAction | TestHostAction;
+export class PossibleAddressesCalculatedAction implements Action {
+  type: typeof ActionTypes.POSSIBLE_ADDRESSES_CALCULATED = ActionTypes.POSSIBLE_ADDRESSES_CALCULATED;
+  payload: string[];
+  constructor(hosts: string[]) {
+    this.payload = hosts;
+  }
+}
+export type NetworkActions = HostUpdateAction| HostsUpdateAction | StartDetectionAction | StopDetectionAction | TestHostAction | PossibleAddressesCalculatedAction;
