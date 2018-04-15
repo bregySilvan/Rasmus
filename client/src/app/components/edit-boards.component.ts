@@ -19,11 +19,11 @@ export class EditBoardsComponent {
   elements: IListElement[] = listElements;
 
 
-  public onStartHostDetection(event: any) {
+  public onStartHostDetection(event: any): void {
     this.store$.dispatch(new networkActions.StartDetectionAction());
   }
 
-  public onStopHostDetection(event: any) {
+  public onStopHostDetection(event: any): void {
     this.store$.dispatch(new networkActions.StopDetectionAction());
   }
 

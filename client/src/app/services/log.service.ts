@@ -5,19 +5,19 @@ declare var window, console: any;
 @Injectable()
 export class LogService {
 
-  public warn(...text: any[]) {
+  public warn(...text: any[]): void {
     console.warn(...text);
   }
 
-  public log(...text: any[]) {
+  public log(...text: any[]): void {
     console.log(...text);
   }
 
-  public error(...text: any[]) {
+  public error(...text: any[]): void {
     console.error(...text);
   }
 
-  public info(...text: any[]) {
+  public info(...text: any[]): void {
     console.info(...text);
   }
 }

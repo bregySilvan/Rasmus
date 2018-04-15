@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { advertisementList } from '../dummy-store';
 import { IAdvertisement } from '../../../../interfaces';
 
-declare var window, console, localStorage;
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ras-advertisement',
@@ -11,7 +10,7 @@ declare var window, console, localStorage;
 })
 export class AdvertisementComponent implements OnInit {
 
-  @Input() key: string;
+  @Input() key: string = '';
   advertisement: IAdvertisement | null = null;
 
   constructor() {
@@ -21,6 +20,9 @@ export class AdvertisementComponent implements OnInit {
 
   ngOnInit() {
   //  console.log('taking advertisement with key: ', this.key);
+    if(!this.key) {
+      return;
+    }
     let advertisement = advertisementList.find((adv: IAdvertisement) => adv.key === this.key);
     if(advertisement) {
       this.advertisement = advertisement;

@@ -10,15 +10,15 @@ import { LogService } from './services/log.service';
 export class AppComponent {
   title = 'app';
 
-  public navigateToEditBoard() {
+  public navigateToEditBoard(): void {
     this._navigateTo('edit-boards');
   }
 
-  public navigateToMain() {
+  public navigateToMain(): void {
     this._navigateTo('main');
   }
 
-  public _navigateTo(url: string) {
+  public _navigateTo(url: string): void {
     url = url.startsWith('/') ? url : '/'+url;
     this.routerService.navigateTo(url);
   }

@@ -3,8 +3,9 @@
 import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
 import { interval } from 'rxjs/observable/interval';
+import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL, PARALLEL_REQUEST_LIMIT, HOST_DETECTION_INTERVAL } from '../../../../config';
+import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL_MS, PARALLEL_REQUEST_LIMIT, HOST_DETECTION_INTERVAL_MS } from '../../../../config';
 import { NetworkActions, HostUpdateAction } from '../actions/network.actions';
 import { RequestService } from '../services/request.service';
 import { IHost } from '../state/network.reducer';
@@ -49,48 +50,49 @@ export class NetworkEffects {
   startDetection$ = this.actions$.ofType(networkActions.ActionTypes.START_DETECTION)
     .do(() => this.networkService.calculatePossibleAddresses(LOCAL_ADDRESS, LOCAL_SUBNET_MASK))
     .delay(1200)
-    .switchMap(() => interval(KEEP_ALIVE_INTERVAL))
+  //  .switchMap(() => interval(KEEP_ALIVE_INTERVAL))
     .do(() => this.logService.log('checkPossibleHostsActionTriggered'))
-    .withLatestFrom(this.store$, (action, state) => state.network.isDetecting)
-    .filter(isDetecting => isDetecting)
     .map(() => new networkActions.CheckPossibleHostsAction())
 
-  @Effect()
-  //@ts-ignore
-  checkPossibleHostsDone$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS_DONE)
-    .map<any, string>(toPayload)
-    .withLatestFrom(this.store$, (payload, state) => ({
-      isDetecting: state.network.isDetecting,
-      requestType: payload,
-      calculatedAddresses: state.network.possibleAddresses,
-      preferedAddresses: SERVER_ADDRESSES
-    }))
-    .filter(x => x.isDetecting)
-    .do((x) => {
-      if(x.requestType === 'keep-alive') {
-        timer(0, KEEP_ALIVE_INTERVAL).subscribe(() => {
-          this.networkService.testAddresses(x.preferedAddresses, PARALLEL_REQUEST_LIMIT / 2 || 1, 'keep-alive');
-        }).unsubscribe();
-      } else if(x.requestType === 'once') {
-        timer(0, HOST_DETECTION_INTERVAL).subscribe(() => {
-          this.networkService.testAddresses(x.preferedAddresses, PARALLEL_REQUEST_LIMIT / 2 || 1, 'once');
-        }).unsubscribe();
-      }
-    });
 
   @Effect({ dispatch: false })
   //@ts-ignore
-  checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS)
+  checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS, networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS_DONE)
     .withLatestFrom(this.store$, (action, state) => ({
       calculatedAddresses: state.network.possibleAddresses,
-      preferedAddresses: SERVER_ADDRESSES,
-      parallelRequestLimit: PARALLEL_REQUEST_LIMIT
+      foundHosts: state.network.foundHosts,
+      isDetecting: state.network.isDetecting,
+      preferedAddresses: [...SERVER_ADDRESSES],
+      parallelRequestLimit: PARALLEL_REQUEST_LIMIT,
+      payload: action.payload
     }))
-    //@ts-ignore
-    .do(x => this.networkService.testAddresses(x.preferedAddresses, x.parallelRequestLimit / 2 || 1, 'keep-alive'))
-    .delay(PARALLEL_REQUEST_LIMIT / 2 * 30)
-    //@ts-ignore
-    .do(x => this.networkService.testAddresses(x.calculatedAddresses, x.parallelRequestLimit / 2 || 1, 'once'));
+    .filter(x => x.isDetecting)
+    .do(x => {
+      let keepAliveDelay = 0;
+      let discoveryDelay = 0;
+      let runKeepAlive= true, runDiscovery = true;
+      this.logService.log('payload: ', x.payload);
+      this.logService.log('x: ', x);
+
+      let foundHostAddresses: string[] = x.foundHosts.map((host: IHost) => host.ipAddress);
+      if (x.payload) {
+        keepAliveDelay = KEEP_ALIVE_INTERVAL_MS;
+        discoveryDelay = HOST_DETECTION_INTERVAL_MS;
+        runKeepAlive = x.payload === 'keep-alive';
+        runDiscovery = x.payload === 'discovery';
+      }
+      let requestLimit = x.parallelRequestLimit / 2 || 1;
+      if (runKeepAlive) {
+        timer(keepAliveDelay).subscribe(() => {
+          this.networkService.testAddresses(_.concat(foundHostAddresses, x.preferedAddresses), requestLimit, 'keep-alive');
+        });
+      }
+      if (runDiscovery) {
+        timer(discoveryDelay).subscribe(() => {
+          this.networkService.testAddresses(x.calculatedAddresses, requestLimit, 'discovery');
+        });
+      }
+    });
 
   constructor(
     private actions$: Actions,

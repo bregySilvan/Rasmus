@@ -8,7 +8,7 @@ import { LogService } from './log.service';
 @Injectable()
 export class RouterService {
 
-    public navigateTo(url: string) {
+    public navigateTo(url: string): void {
       this.store$.dispatch(new router.NavigateTo(url));
     }
 

@@ -25,11 +25,11 @@ export const SERVER_ADDRESSES = [
 
 export const LOCAL_ADDRESS = "192.168.1.254";
 export const LOCAL_SUBNET_MASK = "255.255.255.0";
-export const KEEP_ALIVE_INTERVAL = 15000;
-export const HOST_DETECTION_INTERVAL = 75;
+export const KEEP_ALIVE_INTERVAL_MS = 13 * 1000;
+export const HOST_DETECTION_INTERVAL_MS = 63 * 1000;
 export const DEFAULT_PORT = 5001;
 
 // 2 parallel requests will be exectued at least with any configuration.
-export const PARALLEL_REQUEST_LIMIT = 4;
+export const PARALLEL_REQUEST_LIMIT = 14;
 
 
