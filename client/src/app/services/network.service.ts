@@ -9,6 +9,8 @@ import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
 import { LogService } from './log.service';
 
+declare var window: any;
+
 @Injectable()
 export class NetworkService {
 
@@ -29,21 +31,20 @@ export class NetworkService {
   private _calculatePossibleAdresses(localAddress: string, localSubnetMask: string): string[] {
     let possibleAddresses: string[] = [];
     let networkPart = localAddress.substring(0, localAddress.lastIndexOf("."));
-    if(localSubnetMask === '255.255.255.0') {
-      for(let i = 1; i < 255; i++) {
+    if (localSubnetMask === '255.255.255.0') {
+      for (let i = 1; i < 20; i++) {
         possibleAddresses.push(`${networkPart}.${i}`);
       }
     }
-    return ['192.168.1.254'];
+    possibleAddresses.push(localAddress);
+    return possibleAddresses;
   }
 
   public updateOrAdd(hosts: IHost[], updatedHost: IHost) {
 
-    let index = hosts.findIndex((host => {
-      return host.ipAddress === updatedHost.ipAddress;
-    }));
+    let index = hosts.findIndex((host => host.ipAddress === updatedHost.ipAddress));
 
-    if(index > -1) {
+    if (index > -1) {
       hosts[index] = updatedHost;
     } else {
       hosts.push(updatedHost);
@@ -52,6 +53,42 @@ export class NetworkService {
     return hosts;
   }
 
+  public testAddresses(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'once') {
+    let activeRequestCount = 0;
+    let _next = (next: () => void) => {
+      let ipAddress;
+      if (ipAddress = addresses.pop()) {
+        activeRequestCount++;
+        let host: IHost = {
+          ipAddress: ipAddress,
+          isAlive: false,
+          isPending: false,
+        };
+        this.logService.log('testing host_ ', host.ipAddress);
+        this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
+          this.store$.dispatch(new networkActions.HostUpdateAction(updatedHost));
+          activeRequestCount--;
+          next();
+        });
+      } else {
+        next();
+      }
+    }
+
+    let _done = () => {
+      this.store$.dispatch(new networkActions.CheckPossibleHostsDone(connectionType));
+    };
+
+    for (let i = maxParallelRequests - 1; i > -1; i--) {
+      let executeOne = () => {
+        if(activeRequestCount === 0 && addresses.length!) {
+          return _done();
+        } else {
+          _next(executeOne);
+        }
+      }
+    }
+  }
 
   public testAndUpdateHost(host: IHost): Observable<IHost> {
     let url = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.isAlive}`;
@@ -71,8 +108,8 @@ export class NetworkService {
   }
 
   constructor(private requestService: RequestService,
-              private store$: Store<IAppStore>,
-              private logService: LogService) {
+    private store$: Store<IAppStore>,
+    private logService: LogService) {
   }
 
 }

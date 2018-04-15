@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
 import { interval } from 'rxjs/observable/interval';
 import { Observable } from 'rxjs/Observable';
-import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL, GENERAL_REQUEST_DELAY_MS } from '../../../../config';
+import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL, GENERAL_REQUEST_DELAY_MS, PARALLEL_SIMILAR_REQUEST_LIMIT } from '../../../../config';
 import { NetworkActions, HostUpdateAction } from '../actions/network.actions';
 import { RequestService } from '../services/request.service';
 import { IHost } from '../state/network.reducer';
@@ -29,6 +29,9 @@ export class NetworkEffects {
       hosts: state.network.foundHosts,
       updatedHost: payload
     }))
+    .do((x) => this.logService.log('HOST_UPDATE yay.. BEFORE check'))
+    .filter(x => x.updatedHost.isAlive)
+    .do((x) => this.logService.log('HOST_UPDATE yay.. AFTER check'))
     .map(x => {
       let hosts = this.networkService.updateOrAdd(x.hosts, x.updatedHost);
       return new networkActions.HostsUpdateAction(hosts);
@@ -52,27 +55,33 @@ export class NetworkEffects {
     .filter(isDetecting => isDetecting)
     .map(() => new networkActions.CheckPossibleHostsAction())
 
+  @Effect()
+  //@ts-ignore
+  checkPossibleHostsDone$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS_DONE)
+    .map<any, string>(toPayload)
+    .withLatestFrom(this.store$, (payload, state) => ({
+      isDetecting: state.network.isDetecting,
+      requestType: payload,
+      calculatedAddresses: state.network.possibleAddresses,
+      preferedAddresses: SERVER_ADDRESSES
+    }))
+    .filter(x => x.isDetecting)
+    .do((x) => {
+        let requestType: 'once' | 'keep-alive' = x.requestType === 'once' ? 'once' : 'keep-alive';
+        let addresses = requestType=== 'once' ? x.calculatedAddresses : x.preferedAddresses;
+        this.networkService.testAddresses(addresses, PARALLEL_SIMILAR_REQUEST_LIMIT, requestType);
+    });
+
   @Effect({ dispatch: false })
   //@ts-ignore
   checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS)
-    .withLatestFrom(this.store$, (action, state) => state.network.possibleAddresses)
-    .map(possibleAddresses => possibleAddresses
-      .map((address: string) => ({
-        ipAddress: address,
-        hostname: '',
-        isPending: true,
-        isAlive: false
-      })))
-    .do((hosts: IHost[]) => {
-      let delay = 0;
-      let interval = GENERAL_REQUEST_DELAY_MS;
-      hosts.forEach(host => {
-        timer(delay).subscribe(() => {
-          this.networkService.testHost(host);
-        });
-        delay += interval+1;
-      });
-    });
+    .withLatestFrom(this.store$, (action, state) => ({
+      calculatedAddresses: state.network.possibleAddresses,
+      preferedAddresses: SERVER_ADDRESSES
+    }))
+    .do(x => this.networkService.testAddresses(x.preferedAddresses, PARALLEL_SIMILAR_REQUEST_LIMIT, 'keep-alive'))
+    .delay(3000)
+    .do(x => this.networkService.testAddresses(x.calculatedAddresses, PARALLEL_SIMILAR_REQUEST_LIMIT, 'once'));
 
   constructor(
     private actions$: Actions,
