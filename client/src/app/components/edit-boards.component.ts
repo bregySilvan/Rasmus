@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { IListElement } from '../../../../interfaces';
 import { listElements } from '../dummy-store';
 import { RouterService } from '../services/router.service';
+import { Store } from '@ngrx/store';
+import * as networkActions from '../actions/network.actions';
+import { IAppStore } from '../app.state';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -12,11 +15,20 @@ import { RouterService } from '../services/router.service';
 export class EditBoardsComponent {
 
   public defaultAdvertisementKey = '1';
-
+  private isDetecting = false;
   elements: IListElement[] = listElements;
 
-  constructor(private routerSrevice: RouterService) {
 
+  public onStartHostDetection(event: any): void {
+    this.store$.dispatch(new networkActions.StartDetectionAction());
+  }
+
+  public onStopHostDetection(event: any): void {
+    this.store$.dispatch(new networkActions.StopDetectionAction());
+  }
+
+  constructor(private routerService: RouterService,
+              private store$: Store<IAppStore> ) {
   }
 
 }

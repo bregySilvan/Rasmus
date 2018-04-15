@@ -34,13 +34,13 @@ function doPost(URL, payload): void {
 
 function testPostElement() {
     let listElement = { key: 'myFirstSentListElement', type: 'advertisement' };
-    let url = `http://localhost:${DEFAULT_PORT}/${locations.element}`;
+    let url = `http://localhost:${DEFAULT_PORT}/${LOACTIONS.element}`;
     doPost(url, listElement);
 }
 
 function testGetElements() {
     let payload = ['myFirstSentListElement'];
-    let URL = `http://localhost:${DEFAULT_PORT}/${locations.elements}`;
+    let URL = `http://localhost:${DEFAULT_PORT}/${LOACTIONS.elements}`;
     doGet(URL, payload);
 }
 

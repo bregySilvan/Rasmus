@@ -12,17 +12,23 @@ export class RequestHandlerService {
         this.dataService = new DataService();
     }
 
-    private _respond(res: express.Response, responseInfo: { response: any, error?: Error }, responseStati: { bad: number, good: number}, next: express.NextFunction) {
+    private _respond(res: express.Response, responseInfo: { response: any, error?: Error }, responseStati: { bad: number, good: number }, next: express.NextFunction) {
         let response, status;
-        if(responseInfo.error) {
+        if (responseInfo.error) {
             status = responseStati.bad;
             response = responseInfo.error;
         } else {
             status = responseStati.good;
             response = responseInfo.response;
         }
+        res.set({
+            'Accept': 'application/json',
+            'Access-Control-Allow-Origin': ['*'],
+            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+            'Access-Control-Allow-Headers': 'Content-Type'
+        });
         res.status(status);
-        res.send(response);
+        res.json(response);
         res.end();
         console.log('responding to request: ');
         console.log('status:', status);
@@ -39,6 +45,12 @@ export class RequestHandlerService {
             let responseStati = { bad: 403, good: 200 };
             this._respond(res, responseInfo, responseStati, next);
         });
+    }
+
+    public onGetIsAlive(req: express.Request, res: express.Response, next: express.NextFunction) {
+        let responseInfo = { response: { isAlive: true }, error: null };
+        let responseStati = { good: 200, bad: 400 };
+        this._respond(res, responseInfo, responseStati, next);
     }
 
     // payload: { keys?: string }

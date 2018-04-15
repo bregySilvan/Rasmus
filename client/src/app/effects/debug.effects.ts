@@ -7,9 +7,10 @@ import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/do'
 @Injectable()
 export class DebugEffect {
-
+  //@ts-ignore
   @Effect({ dispatch: false }) debug$ = this.actions$.withLatestFrom(this.store, (action, state) => ({ action, state }))
-    .do(x => this.logger.log(new Date().toISOString(), x.action.type, x.state));
+  //  .do(x => this.logger.log(new Date().toISOString(), x.action.type, x.action, x.state));
+    .do(x => this.logger.log(new Date().toISOString(), x));
 
   constructor(private store: Store<IAppStore>, private actions$: Actions, private logger: LogService) {
   }

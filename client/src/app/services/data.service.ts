@@ -1,10 +1,10 @@
 import { IListElement, ElementTypes } from '../../../../interfaces';
-import * as fse from 'fs-extra';
+//import * as fse from 'fs-extra';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DataService {
-
+/*
   private elementsFilePath = '../var/elements.json';
 
   constructor() {
@@ -81,7 +81,7 @@ export class DataService {
       });
     });
   }
-
+*/
   //  constructor(private elementFilePath: string) {
   // @toDo: take filepaths from constructor.
   // }
@@ -128,3 +128,4 @@ function readOutDataService() {
 }
 readOutDataService();
 //testDataService();*/
+
