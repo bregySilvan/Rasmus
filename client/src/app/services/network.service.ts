@@ -8,7 +8,8 @@ import * as networkActions from '../actions/network.actions';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
 import { LogService } from './log.service';
-
+import * as async from 'async';
+import { ObservableInput } from 'rxjs/Observable';
 declare var window: any;
 
 @Injectable()
@@ -36,7 +37,6 @@ export class NetworkService {
         possibleAddresses.push(`${networkPart}.${i}`);
       }
     }
-    possibleAddresses.push(localAddress);
     return possibleAddresses;
   }
 
@@ -54,57 +54,55 @@ export class NetworkService {
   }
 
   public testAddresses(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'once') {
-    let activeRequestCount = 0;
-    let _next = (next: () => void) => {
-      let ipAddress;
-      if (ipAddress = addresses.pop()) {
-        activeRequestCount++;
-        let host: IHost = {
-          ipAddress: ipAddress,
-          isAlive: false,
-          isPending: false,
-        };
-        this.logService.log('testing host_ ', host.ipAddress);
-        this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
-          this.store$.dispatch(new networkActions.HostUpdateAction(updatedHost));
-          activeRequestCount--;
-          next();
-        });
-      } else {
-        next();
-      }
-    }
 
-    let _done = () => {
+    async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
+      let host: IHost = {
+        ipAddress: address || '',
+        isAlive: false,
+        isPending: false,
+      };
+      this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
+        this.store$.dispatch(new networkActions.HostUpdateAction(updatedHost));
+        eachCb();
+      });
+    }, (error) => {
+      if (error) {
+        this.logService.error('failed to reach host: ');
+      }
       this.store$.dispatch(new networkActions.CheckPossibleHostsDone(connectionType));
-    };
-
-    for (let i = maxParallelRequests - 1; i > -1; i--) {
-      let executeOne = () => {
-        if(activeRequestCount === 0 && addresses.length!) {
-          return _done();
-        } else {
-          _next(executeOne);
-        }
-      }
-    }
+    });
   }
 
   public testAndUpdateHost(host: IHost): Observable<IHost> {
     let url = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.isAlive}`;
-
-    return this.requestService.get(url).switchMap((response => {
-      let resObj = JSON.parse(response.text.toString());
-      this.logService.log('received response: ', response.text);
-      let newHost: IHost = {
-        ipAddress: host.ipAddress,
-        hostname: host.hostname,
-        isAlive: resObj.isAlive,
-        isPending: false
-      };
-
+    this.logService.log('testAndUpadteHostCalled');
+    let newHost: IHost = {
+      ipAddress: host.ipAddress,
+      hostname: host.hostname,
+      isAlive: false,
+      isPending: false
+    };
+    try {
+      return this.requestService.get(url).map((response => {
+        this.logService.log('received response: ', response);
+        let resObj = response.json();
+        this.logService.log('resObj::',   resObj);
+        newHost.isAlive = resObj.isAlive || false;
+        this.logService.log('responded in TestandUpdateHost');
+        return newHost;
+      }));
+    } catch (error) {
       return Observable.create(newHost);
-    }));
+    }
+
+    /*.catch((error: any, caught: Observable<IHost>) => {
+        return Observable.create(<IHost>{
+          ipAddress: host.ipAddress,
+          hostname: host.hostname,
+          isAlive: false,
+          isPending: false
+        });
+      });*/
   }
 
   constructor(private requestService: RequestService,

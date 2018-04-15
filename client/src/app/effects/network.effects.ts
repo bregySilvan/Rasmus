@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
 import { interval } from 'rxjs/observable/interval';
 import { Observable } from 'rxjs/Observable';
-import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL, GENERAL_REQUEST_DELAY_MS, PARALLEL_SIMILAR_REQUEST_LIMIT } from '../../../../config';
+import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL, PARALLEL_REQUEST_LIMIT, HOST_DETECTION_INTERVAL } from '../../../../config';
 import { NetworkActions, HostUpdateAction } from '../actions/network.actions';
 import { RequestService } from '../services/request.service';
 import { IHost } from '../state/network.reducer';
@@ -67,9 +67,15 @@ export class NetworkEffects {
     }))
     .filter(x => x.isDetecting)
     .do((x) => {
-        let requestType: 'once' | 'keep-alive' = x.requestType === 'once' ? 'once' : 'keep-alive';
-        let addresses = requestType=== 'once' ? x.calculatedAddresses : x.preferedAddresses;
-        this.networkService.testAddresses(addresses, PARALLEL_SIMILAR_REQUEST_LIMIT, requestType);
+      if(x.requestType === 'keep-alive') {
+        timer(0, KEEP_ALIVE_INTERVAL).subscribe(() => {
+          this.networkService.testAddresses(x.preferedAddresses, PARALLEL_REQUEST_LIMIT / 2 || 1, 'keep-alive');
+        }).unsubscribe();
+      } else if(x.requestType === 'once') {
+        timer(0, HOST_DETECTION_INTERVAL).subscribe(() => {
+          this.networkService.testAddresses(x.preferedAddresses, PARALLEL_REQUEST_LIMIT / 2 || 1, 'once');
+        }).unsubscribe();
+      }
     });
 
   @Effect({ dispatch: false })
@@ -77,11 +83,14 @@ export class NetworkEffects {
   checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS)
     .withLatestFrom(this.store$, (action, state) => ({
       calculatedAddresses: state.network.possibleAddresses,
-      preferedAddresses: SERVER_ADDRESSES
+      preferedAddresses: SERVER_ADDRESSES,
+      parallelRequestLimit: PARALLEL_REQUEST_LIMIT
     }))
-    .do(x => this.networkService.testAddresses(x.preferedAddresses, PARALLEL_SIMILAR_REQUEST_LIMIT, 'keep-alive'))
-    .delay(3000)
-    .do(x => this.networkService.testAddresses(x.calculatedAddresses, PARALLEL_SIMILAR_REQUEST_LIMIT, 'once'));
+    //@ts-ignore
+    .do(x => this.networkService.testAddresses(x.preferedAddresses, x.parallelRequestLimit / 2 || 1, 'keep-alive'))
+    .delay(PARALLEL_REQUEST_LIMIT / 2 * 30)
+    //@ts-ignore
+    .do(x => this.networkService.testAddresses(x.calculatedAddresses, x.parallelRequestLimit / 2 || 1, 'once'));
 
   constructor(
     private actions$: Actions,
