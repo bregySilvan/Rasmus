@@ -2,12 +2,28 @@
   display: inline-block;
 }
 
-.third {
-  width: 30%
-}
+
 
 .oneth {
   width: 100%
+}
+.second {
+  width: 50%;
+}
+.third {
+  width: 33%
+}
+
+.fifth {
+  width: 20%;
+}
+
+sixth {
+  width: 16%;
+}
+
+.tenth {
+  width: 10%;
 }
 
 .border {
@@ -21,3 +37,9 @@
 .blue {
   background-color: blue;
 }
+
+.container {
+  padding: 5px;
+}
+
+
