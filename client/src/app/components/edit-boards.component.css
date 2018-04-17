@@ -1,0 +1,23 @@
+.ui {
+  display: inline-block;
+}
+
+.third {
+  width: 30%
+}
+
+.oneth {
+  width: 100%
+}
+
+.border {
+  border: solid black 0.5px;
+}
+
+.right {
+  text-align: right;
+}
+
+.blue {
+  background-color: blue;
+}

@@ -1,3 +1,32 @@
+<div id="top-row"  class="ui oneth right blue">
+  <ras-option class="third ui border" id="select-adv-countper-site-cb">select adv coiunt</ras-option>
+  <ras-option class="third ui border" id="select-board-cb">select board</ras-option>
+</div>
+
+<div>
+  <div>
+    <ras-element-list [elements]="elements"></ras-element-list>
+  </div>
+  <div>
+    <div id="header-spacer">
+      <div class="third" id="top-spacer"></div>
+      <div>
+        <div id="innerfirstleftcolumn"></div>
+        <div class="third" id="elemenetListWrapper">
+          <ras-element-list [elements]="elements"></ras-element-list>
+        </div>
+      </div>
+      <div class="third" id="footer-spacer">
+        <ras-navigation></ras-navigation>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--
+
 <h1>Edit board component</h1>
 <div class="element-list-wrapper">
 <ras-element-list [elements]="elements">
@@ -5,3 +34,4 @@
 <button (click)="onStartHostDetection($event)">start detection</button>
 <button (click)="onStopHostDetection($event)">stop detection</button>
 </div>
+-->

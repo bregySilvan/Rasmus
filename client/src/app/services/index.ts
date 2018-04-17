@@ -5,4 +5,11 @@ import { LogService } from './log.service';
 import { NetworkService } from './network.service';
 import { DataService } from './data.service';
 
-export const RASMUS_PROVIDERS = [RouterService, RequestService, ElementService, LogService, NetworkService, DataService];
+export const RASMUS_PROVIDERS = [
+  RouterService,
+  RequestService,
+  ElementService,
+  LogService,
+  NetworkService,
+  DataService
+];
