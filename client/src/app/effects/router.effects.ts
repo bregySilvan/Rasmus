@@ -16,6 +16,7 @@ declare var console: any;
 export class RouterEffects {
 
   @Effect()
+  // @ts-ignore
   navigateTo$ = this.actions$.ofType(routerActions.ActionTypes.NAVIGATE_TO)
     .withLatestFrom(this.store$, (action, state) => ({
       currentUrl: state.router.currentUrl,

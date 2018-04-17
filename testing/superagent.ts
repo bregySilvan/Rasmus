@@ -1,5 +1,5 @@
 import * as superagent from 'superagent';
-import { locations, DEFAULT_PORT } from '../config';
+import { LOCATIONS, DEFAULT_PORT } from '../config';
 
 
 function defaultResponseHandler(err: any, res: superagent.Response) {
@@ -34,13 +34,13 @@ function doPost(URL, payload): void {
 
 function testPostElement() {
     let listElement = { key: 'myFirstSentListElement', type: 'advertisement' };
-    let url = `http://localhost:${DEFAULT_PORT}/${LOACTIONS.element}`;
+    let url = `http://localhost:${DEFAULT_PORT}/${LOCATIONS.element}`;
     doPost(url, listElement);
 }
 
 function testGetElements() {
     let payload = ['myFirstSentListElement'];
-    let URL = `http://localhost:${DEFAULT_PORT}/${LOACTIONS.elements}`;
+    let URL = `http://localhost:${DEFAULT_PORT}/${LOCATIONS.elements}`;
     doGet(URL, payload);
 }
 
