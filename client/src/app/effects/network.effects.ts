@@ -68,7 +68,7 @@ export class NetworkEffects {
       let discoveryDelay = 0;
       let runKeepAlive= true, runDiscovery = true;
 
-      let requestLimit = x.parallelRequestLimit / 2 || 1;
+      let requestLimit = x.parallelRequestLimit;
       let foundHostAddresses: string[] = x.foundHosts.map((host: IHost) => host.ipAddress);
       if (x.payload) {
         keepAliveDelay = KEEP_ALIVE_INTERVAL_MS;
@@ -86,7 +86,7 @@ export class NetworkEffects {
       if (runDiscovery) {
         this.logService.warn('let\'s run discovery ping');
         timer(discoveryDelay).subscribe(() => {
-          this.networkService.testAddresses(x.calculatedAddresses, requestLimit, 'discovery');
+        this.networkService.testAddresses(x.calculatedAddresses, requestLimit, 'discovery');
         });
       }
     });

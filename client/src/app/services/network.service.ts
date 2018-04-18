@@ -1,6 +1,7 @@
 import { RequestService } from './request.service';
 import { Injectable } from '@angular/core';
 import { IHost } from '../state/network.reducer';
+import 'rxjs/add/observable/of';
 import { DEFAULT_PORT, LOCATIONS } from '../../../../config';
 import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
@@ -79,9 +80,9 @@ export class NetworkService {
     this.logService.log('testAdrress start');
     try {
       this._testAddressesNoChecks(addresses, maxParallelRequests, connectionType);
-    } catch(error) {
+    } catch (error) {
       this.logService.warn('catched some error when testingAddressesNoChecks');
-    }  
+    }
   }
 
   public testAndUpdateHost(host: IHost): Observable<IHost> {
@@ -92,22 +93,22 @@ export class NetworkService {
       ipAddress: host.ipAddress,
       isAlive: false
     };
-    try {
+  //  try {
       this.logService.log('start with requestservice:: ');
       return this.requestService.get(url).map((response => {
         this.logService.log('received response: ', response);
         let resObj = response.json();
         newHost.isAlive = resObj.isAlive || false;
         return newHost;
-      }));
-    } catch (error) {
-      return Observable.create(newHost);
+      })).catch(error => {
+        this.logService.warn('creating empty newHost:: ');
+        return Observable.of(newHost);
+      });
     }
-  }
 
   constructor(private requestService: RequestService,
-    private store$: Store<IAppStore>,
-    private logService: LogService) {
-  }
+      private store$: Store < IAppStore >,
+      private logService: LogService) {
+    }
 
-}
+  }
