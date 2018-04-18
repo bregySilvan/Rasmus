@@ -21,6 +21,14 @@ export class NetworkService {
     this.store$.dispatch(new networkActions.StartDetectionAction());
   }
 
+  public keepAliveActiveHosts(): void {
+    this.store$.dispatch(new networkActions.KeepAliveActiveHostsAction());
+  }
+
+  public checkPossibleHosts(): void {
+    this.store$.dispatch(new networkActions.CheckPossibleHostsAction());
+  }
+
   public hostsUpdateDone(host: IHost[]): void {
     this.store$.dispatch(new networkActions.HostsUpdateAction(host));
   }
