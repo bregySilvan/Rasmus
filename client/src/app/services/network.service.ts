@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { LogService } from './log.service';
 import * as async from 'async';
 import { timer } from 'rxjs/observable/timer';
+
 declare var window: any;
 
 @Injectable()
@@ -53,26 +54,34 @@ export class NetworkService {
     return hosts;
   }
 
-  public testAddresses(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'discovery'): void {
-     this.logService.log('testAdrress start');
-      async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
-        let host: IHost = {
-          ipAddress: address || '',
-          isAlive: false,
-        };
-        this.logService.log('in eachCB, host: ', host);
-        this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
-          this.store$.dispatch(new networkActions.HostUpdateAction(updatedHost));
-          eachCb();
-        });
-      }, (error) => {
-        if (error) {
-          this.logService.error('failed to reach host: ');
-        }
-        this.logService.warn('disüpatching checkkpopssibleHostDoneACron...');
-        this.store$.dispatch(new networkActions.CheckPossibleHostsDoneAction(connectionType));
-
+  private _testAddressesNoChecks(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'discovery'): void {
+    async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
+      let host: IHost = {
+        ipAddress: address || '',
+        isAlive: false,
+      };
+      this.logService.log('in eachCB, host: ', host);
+      this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
+        this.store$.dispatch(new networkActions.HostUpdateAction(updatedHost));
+        eachCb();
       });
+    }, (error) => {
+      if (error) {
+        this.logService.error('failed to reach host: ');
+      }
+      this.logService.warn('disüpatching checkkpopssibleHostDoneACron...');
+      this.store$.dispatch(new networkActions.CheckPossibleHostsDoneAction(connectionType));
+
+    });
+  }
+
+  public testAddresses(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'discovery'): void {
+    this.logService.log('testAdrress start');
+    try {
+      this._testAddressesNoChecks(addresses, maxParallelRequests, connectionType);
+    } catch(error) {
+      this.logService.warn('catched some error when testingAddressesNoChecks');
+    }  
   }
 
   public testAndUpdateHost(host: IHost): Observable<IHost> {

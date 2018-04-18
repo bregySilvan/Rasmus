@@ -78,11 +78,13 @@ export class NetworkEffects {
       }
 
       if (runKeepAlive) {
+        this.logService.warn('let\'s run keep-alive ping');
         timer(keepAliveDelay).subscribe(() => {
           this.networkService.testAddresses(_.concat(foundHostAddresses, x.preferedAddresses), requestLimit, 'keep-alive');
         });
       }
       if (runDiscovery) {
+        this.logService.warn('let\'s run discovery ping');
         timer(discoveryDelay).subscribe(() => {
           this.networkService.testAddresses(x.calculatedAddresses, requestLimit, 'discovery');
         });
