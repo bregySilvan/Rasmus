@@ -21,13 +21,13 @@ export class NetworkService {
     this.store$.dispatch(new networkActions.StartDetectionAction());
   }
 
-  public testHost(host: IHost): void {
-    this.store$.dispatch(new networkActions.TestHostAction(host));
+  public hostsUpdateDone(host: IHost[]): void {
+    this.store$.dispatch(new networkActions.HostsUpdateAction(host));
   }
 
   public calculatePossibleAddresses(localAddress: string, localSubnetMask: string): void {
-    let possibleAddresses: string[] = this._calculatePossibleAdresses(localAddress, localSubnetMask);
-    this.store$.dispatch(new networkActions.PossibleAddressesCalculatedAction(possibleAddresses));
+    let possibleAddresses: IHost[] = this._calculatePossibleAdresses(localAddress, localSubnetMask).map(address => ({ipAddress: address, isAlive: false}));
+    this.store$.dispatch(new networkActions.HostsUpdateAction(possibleAddresses));
   }
 
   //@ todo: change implementation :)
@@ -55,7 +55,8 @@ export class NetworkService {
     return hosts;
   }
 
-  private _testAddressesNoChecks(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'discovery'): void {
+  public testAddresses(addresses: string[], maxParallelRequests: number = 6): void {
+    this.logService.log('testAdrress start');
     async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
       let host: IHost = {
         ipAddress: address || '',
@@ -63,7 +64,7 @@ export class NetworkService {
       };
       this.logService.log('in eachCB, host: ', host);
       this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
-        this.store$.dispatch(new networkActions.HostUpdateAction(updatedHost));
+        this.store$.dispatch(new networkActions.TryHostUpdateAction(updatedHost));
         eachCb();
       });
     }, (error) => {
@@ -71,18 +72,7 @@ export class NetworkService {
         this.logService.error('failed to reach host: ');
       }
       this.logService.warn('disüpatching checkkpopssibleHostDoneACron...');
-      this.store$.dispatch(new networkActions.CheckPossibleHostsDoneAction(connectionType));
-
     });
-  }
-
-  public testAddresses(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'discovery'): void {
-    this.logService.log('testAdrress start');
-    try {
-      this._testAddressesNoChecks(addresses, maxParallelRequests, connectionType);
-    } catch (error) {
-      this.logService.warn('catched some error when testingAddressesNoChecks');
-    }
   }
 
   public testAndUpdateHost(host: IHost): Observable<IHost> {

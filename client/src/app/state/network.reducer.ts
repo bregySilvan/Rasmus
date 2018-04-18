@@ -6,15 +6,13 @@ export interface IHost {
 }
 
 export interface INetworkState {
-  foundHosts: IHost[];
+  hosts: IHost[];
   isDetecting: boolean;
-  possibleAddresses: string[];
 }
 
 const initialState: INetworkState = {
-  foundHosts: [],
+  hosts: [],
   isDetecting: false,
-  possibleAddresses: []
 };
 
 export function networkReducer(state: INetworkState = initialState, action: actions.NetworkActions): INetworkState {
@@ -29,14 +27,9 @@ export function networkReducer(state: INetworkState = initialState, action: acti
         isDetecting: false
       });
 
-    case actions.ActionTypes.HOSTS_UPDATE:
+    case actions.ActionTypes.HOSTS_UPDATE_DONE:
       return Object.assign({}, state, {
-        foundHosts: action.payload
-      });
-
-    case actions.ActionTypes.POSSIBLE_ADDRESSES_CALCULATED:
-      return Object.assign({}, state, {
-        possibleAddresses: action.payload
+        hosts: action.payload
       });
 
     default:
