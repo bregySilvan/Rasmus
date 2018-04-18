@@ -54,13 +54,11 @@ export class NetworkService {
   }
 
   public testAddresses(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'discovery'): void {
-     // timerSub.unsubscribe();
      this.logService.log('testAdrress start');
       async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
         let host: IHost = {
           ipAddress: address || '',
           isAlive: false,
-          isPending: false,
         };
         this.logService.log('in eachCB, host: ', host);
         this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
@@ -83,9 +81,7 @@ export class NetworkService {
     this.logService.log('testAndUpadteHostCalled');
     let newHost: IHost = {
       ipAddress: host.ipAddress,
-      hostname: host.hostname,
-      isAlive: false,
-      isPending: false
+      isAlive: false
     };
     try {
       this.logService.log('start with requestservice:: ');

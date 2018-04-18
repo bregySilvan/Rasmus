@@ -2,8 +2,6 @@ import * as actions from '../actions/network.actions';
 
 export interface IHost {
   ipAddress: string;
-  hostname?: string;
-  isPending: boolean;
   isAlive: boolean;
 }
 

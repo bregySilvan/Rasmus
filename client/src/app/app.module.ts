@@ -9,12 +9,12 @@ import { ListElementComponent } from './components/list-element.component';
 import { RASMUS_PROVIDERS } from './services/index';
 import { StoreModule } from '@ngrx/store';
 import { AppReducer } from './app.state';
-import { EffectsModule } from '@ngrx/effects';
+import { EffectsModule, Effect } from '@ngrx/effects';
 import { RouterEffects } from './effects/index';
 import { DebugEffect } from './effects/debug.effects';
 import { NetworkEffects } from './effects/network.effects';
 import { HttpModule } from '@angular/http';
-
+import { ElementEffects } from './effects/element.effects';
 
 @NgModule({
   declarations: [
@@ -28,7 +28,8 @@ import { HttpModule } from '@angular/http';
     StoreModule.provideStore(AppReducer),
     EffectsModule.run(RouterEffects),
     EffectsModule.run(DebugEffect),
-    EffectsModule.run(NetworkEffects)
+    EffectsModule.run(NetworkEffects),
+    EffectsModule.run(ElementEffects)
   ],
   providers: [RASMUS_PROVIDERS],
   bootstrap: [AppComponent]
