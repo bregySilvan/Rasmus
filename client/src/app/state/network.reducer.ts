@@ -27,7 +27,7 @@ export function networkReducer(state: INetworkState = initialState, action: acti
         isDetecting: false
       });
 
-    case actions.ActionTypes.HOSTS_UPDATE_DONE:
+    case actions.ActionTypes.HOSTS_UPDATE:
       return Object.assign({}, state, {
         hosts: action.payload
       });

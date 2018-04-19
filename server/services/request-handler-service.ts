@@ -55,11 +55,8 @@ export class RequestHandlerService {
 
     // payload: { keys?: string }
     public onGetElements(req: express.Request, res: express.Response, next: express.NextFunction) {
-        let keys: string[] = [];
-        Object.keys(req.query).forEach((key) => {
-            keys.push(req.query[key]);
-        });
         console.log('req.query:: ', req.query);
+        let keys: string[] = Object.keys(req.query).map((key) => req.query[key]);
         this.dataService.getElements(keys, (error: Error, elements: IListElement[]) => {
             let responseData = elements;
             let responseInfo = { response: responseData, error: error };

@@ -7,11 +7,10 @@ export class CustomRouter {
 
     private _router: express.Router;
     private _requestHandler: RequestHandlerService;
-    private _dataService: DataService;
     private _activeLocations: string[];
 
-    constructor(private _app: express.Express) {
-        this._app = this._app || express();
+    constructor(private _app?: express.Express) {
+        this._app = _app || express();
         this._router = express.Router();
         this._requestHandler = new RequestHandlerService();
         this._activeLocations = [];
@@ -31,7 +30,6 @@ export class CustomRouter {
         // get
         this._addRoute(LOCATIONS.elements, 'get', this._requestHandler, this._requestHandler.onGetElements);
 
-        //is alive
         this._addRoute(LOCATIONS.isAlive, 'get', this._requestHandler, this._requestHandler.onGetIsAlive);
     }
 
@@ -42,7 +40,7 @@ export class CustomRouter {
         requestHandlerFn: (req: express.Request, res: express.Response, next: express.NextFunction) => void): void {
 
             location = location.startsWith('/') ? location : `/${location}`;
-            this._activeLocations.push(location);
+            this._activeLocations.push(`${method.toUpperCase()}: ${location}`);
             this._router[method](location, requestHandlerFn.bind(requestHandler));
     }
 

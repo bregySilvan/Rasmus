@@ -17,7 +17,7 @@ export class Server {
             console.log(`listening on port ${usedPort}`);
             console.log(`request url: http://localhost:${usedPort}`);
             console.log('## active locations');
-            customRouter.activeLocations.forEach((location: string) => {
+            customRouter.activeLocations.sort().forEach((location: string) => {
                 console.log(location);
             });
         });
