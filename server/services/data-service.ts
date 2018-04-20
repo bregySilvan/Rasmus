@@ -16,8 +16,8 @@ export class DataService {
 
     public getElements(keys: string[], callback: (error: Error, element: IListElement[]) => void): void {
         this.queueService.addToQueue((next) => {
-            this._getElements(this.elementsFilePath, keys, (err: Error, elements: any[]) => {
-                callback(err, elements as IListElement[]);
+            this._getElements(this.elementsFilePath, keys, (err: Error, elements: IListElement[]) => {
+                callback(err, elements);
                 next();
             });
         });
@@ -32,7 +32,7 @@ export class DataService {
         });
     }
 
-    private _getElements(filePath: string, keys: string[], callback: (error: Error, elements: any[]) => void): void {
+    private _getElements(filePath: string, keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
         fse.readJSON(this.elementsFilePath, async (readFileError: Error, jsonData: any) => {
             let elements: IListElement[] = [];
             if(readFileError) {

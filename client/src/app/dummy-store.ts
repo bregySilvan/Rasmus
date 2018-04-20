@@ -21,7 +21,8 @@ export const advertisementList: IAdvertisement[] =
   type: 'advertisement',
   name: 'Finished last wedn.',
   description: 'some ad description this is',
-  imageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJn1BGUcO9mlYvq_v6PlrLzQc_G1fWtb6Z73pXsM6ubNXNoLZgZQ'
+ // imageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJn1BGUcO9mlYvq_v6PlrLzQc_G1fWtb6Z73pXsM6ubNXNoLZgZQ'
+  imageURL: 'https://www.planwallpaper.com/static/images/001_week-in-pictures-08.jpg'
 }, {
   key: '4',
   type: 'advertisement',

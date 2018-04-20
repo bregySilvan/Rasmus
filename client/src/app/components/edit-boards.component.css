@@ -1,0 +1,45 @@
+.ui {
+  display: inline-block;
+}
+
+
+
+.oneth {
+  width: 100%
+}
+.second {
+  width: 50%;
+}
+.third {
+  width: 33%
+}
+
+.fifth {
+  width: 20%;
+}
+
+sixth {
+  width: 16%;
+}
+
+.tenth {
+  width: 10%;
+}
+
+.border {
+  border: solid black 0.5px;
+}
+
+.right {
+  text-align: right;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.container {
+  padding: 5px;
+}
+
+

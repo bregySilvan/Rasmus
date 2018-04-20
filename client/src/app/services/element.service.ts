@@ -5,20 +5,24 @@ import { LOCATIONS, DEFAULT_PORT } from '../../../../config';
 import { RequestService } from './request.service';
 import { IHost } from '../state/network.reducer';
 import { Response } from '@angular/http';
+import { IListElement } from '../../../../interfaces';
+import { LogService } from './log.service';
 
 
 @Injectable()
 export class ElementService {
 
-    public constructor(private requestService: RequestService) {
+    public constructor(private requestService: RequestService,
+                       private logService: LogService) {
 
     }
 
-    public getElements(keys: string[], host: IHost): Observable<Response> {
+    public getElements(host: IHost, keys: string[]): Observable<IListElement[]> {
       let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.elements}`;
-      return this.requestService.get(URL, { keys: keys})
-
+      return this.requestService.get(URL, { keys: keys}).map(res => res.json());
     }
 
-    public postElement
+    
+
+ 
 }

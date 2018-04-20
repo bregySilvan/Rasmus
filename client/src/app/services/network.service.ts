@@ -1,6 +1,7 @@
 import { RequestService } from './request.service';
 import { Injectable } from '@angular/core';
 import { IHost } from '../state/network.reducer';
+import 'rxjs/add/observable/of';
 import { DEFAULT_PORT, LOCATIONS } from '../../../../config';
 import { Observable } from 'rxjs/Observable';
 import { Response } from '@angular/http';
@@ -10,6 +11,7 @@ import { Store } from '@ngrx/store';
 import { LogService } from './log.service';
 import * as async from 'async';
 import { timer } from 'rxjs/observable/timer';
+
 declare var window: any;
 
 @Injectable()
@@ -19,13 +21,21 @@ export class NetworkService {
     this.store$.dispatch(new networkActions.StartDetectionAction());
   }
 
-  public testHost(host: IHost): void {
-    this.store$.dispatch(new networkActions.TestHostAction(host));
+  public keepAliveActiveHosts(): void {
+    this.store$.dispatch(new networkActions.KeepAliveActiveHostsAction());
+  }
+
+  public checkPossibleHosts(): void {
+    this.store$.dispatch(new networkActions.CheckPossibleHostsAction());
+  }
+
+  public hostsUpdateDone(host: IHost[]): void {
+    this.store$.dispatch(new networkActions.HostsUpdateAction(host));
   }
 
   public calculatePossibleAddresses(localAddress: string, localSubnetMask: string): void {
-    let possibleAddresses: string[] = this._calculatePossibleAdresses(localAddress, localSubnetMask);
-    this.store$.dispatch(new networkActions.PossibleAddressesCalculatedAction(possibleAddresses));
+    let possibleAddresses: IHost[] = this._calculatePossibleAdresses(localAddress, localSubnetMask).map(address => ({ipAddress: address, isAlive: false}));
+    this.store$.dispatch(new networkActions.HostsUpdateAction(possibleAddresses));
   }
 
   //@ todo: change implementation :)
@@ -53,28 +63,24 @@ export class NetworkService {
     return hosts;
   }
 
-  public testAddresses(addresses: string[], maxParallelRequests: number = 6, connectionType: 'keep-alive' | 'discovery'): void {
-     // timerSub.unsubscribe();
-     this.logService.log('testAdrress start');
-      async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
-        let host: IHost = {
-          ipAddress: address || '',
-          isAlive: false,
-          isPending: false,
-        };
-        this.logService.log('in eachCB, host: ', host);
-        this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
-          this.store$.dispatch(new networkActions.HostUpdateAction(updatedHost));
-          eachCb();
-        });
-      }, (error) => {
-        if (error) {
-          this.logService.error('failed to reach host: ');
-        }
-        this.logService.warn('disüpatching checkkpopssibleHostDoneACron...');
-        this.store$.dispatch(new networkActions.CheckPossibleHostsDoneAction(connectionType));
-
+  public testAddresses(addresses: string[], maxParallelRequests: number = 6): void {
+    this.logService.log('testAdrress start');
+    async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
+      let host: IHost = {
+        ipAddress: address || '',
+        isAlive: false,
+      };
+      this.logService.log('in eachCB, host: ', host);
+      this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
+        this.store$.dispatch(new networkActions.TryHostUpdateAction(updatedHost));
+        eachCb();
       });
+    }, (error) => {
+      if (error) {
+        this.logService.error('failed to reach host: ');
+      }
+      this.logService.warn('disüpatching checkkpopssibleHostDoneACron...');
+    });
   }
 
   public testAndUpdateHost(host: IHost): Observable<IHost> {
@@ -83,26 +89,24 @@ export class NetworkService {
     this.logService.log('testAndUpadteHostCalled');
     let newHost: IHost = {
       ipAddress: host.ipAddress,
-      hostname: host.hostname,
-      isAlive: false,
-      isPending: false
+      isAlive: false
     };
-    try {
+  //  try {
       this.logService.log('start with requestservice:: ');
       return this.requestService.get(url).map((response => {
         this.logService.log('received response: ', response);
         let resObj = response.json();
         newHost.isAlive = resObj.isAlive || false;
         return newHost;
-      }));
-    } catch (error) {
-      return Observable.create(newHost);
+      })).catch(error => {
+        this.logService.warn('creating empty newHost:: ');
+        return Observable.of(newHost);
+      });
     }
-  }
 
   constructor(private requestService: RequestService,
-    private store$: Store<IAppStore>,
-    private logService: LogService) {
-  }
+      private store$: Store < IAppStore >,
+      private logService: LogService) {
+    }
 
-}
+  }

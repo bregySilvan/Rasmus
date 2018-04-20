@@ -1,4 +1,5 @@
 
+import { KeepAliveActiveHostsAction } from "./../actions/network.actions";
 
 import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
@@ -6,7 +7,7 @@ import { interval } from 'rxjs/observable/interval';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL_MS, PARALLEL_REQUEST_LIMIT, HOST_DETECTION_INTERVAL_MS } from '../../../../config';
-import { NetworkActions, HostUpdateAction } from '../actions/network.actions';
+import { NetworkActions } from '../actions/network.actions';
 import { RequestService } from '../services/request.service';
 import { IHost } from '../state/network.reducer';
 import { NetworkService } from '../services/network.service';
@@ -22,76 +23,77 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 @Injectable()
 export class NetworkEffects {
 
-  @Effect()
+  @Effect({ dispatch: false })
   //@ts-ignore
-  hostUpdate$ = this.actions$.ofType(networkActions.ActionTypes.HOST_UPDATE)
+  hostUpdate$ = this.actions$.ofType(networkActions.ActionTypes.TRY_HOST_UPDATE)
     .map<any, IHost>(toPayload)
     .withLatestFrom(this.store$, (payload, state) => ({
-      hosts: state.network.foundHosts,
+      currentHosts: state.network.hosts,
       updatedHost: payload
     }))
-    .do((x) => this.logService.log('HOST_UPDATE yay.. BEFORE check'))
-    .filter(x => x.updatedHost.isAlive)
-    .do((x) => this.logService.log('HOST_UPDATE yay.. AFTER check'))
     .map(x => {
-      let hosts = this.networkService.updateOrAdd(x.hosts, x.updatedHost);
-      return new networkActions.HostsUpdateAction(hosts);
-    });
+      let index = x.currentHosts.findIndex((host: IHost) => host.ipAddress === x.updatedHost.ipAddress);
+      let updatedHosts = x.currentHosts;
+      let needsUpdate = false;
+      if (index > -1) {
+        let oldHost = updatedHosts[index];
+        needsUpdate = oldHost.isAlive === x.updatedHost.isAlive;
+        updatedHosts[index] = x.updatedHost;
+      } else {
+        updatedHosts.push(x.updatedHost);
+      }
 
-  @Effect()
-  //@ts-ignore
-  testHost$ = this.actions$.ofType(networkActions.ActionTypes.TEST_HOST)
-    .map<any, IHost>(toPayload)
-    .map(host => this.networkService.testAndUpdateHost(host)
-      .subscribe((updatedHost: IHost) => new networkActions.HostUpdateAction(updatedHost)));
+      return {
+        updatedHosts: updatedHosts,
+        needsUpdate: needsUpdate
+      };
+    })
+    .filter(x => x.needsUpdate)
+    .map(x => new networkActions.HostsUpdateAction(x.updatedHosts));
+
 
   @Effect()
   //@ts-ignore
   startDetection$ = this.actions$.ofType(networkActions.ActionTypes.START_DETECTION)
     .do(() => this.networkService.calculatePossibleAddresses(LOCAL_ADDRESS, LOCAL_SUBNET_MASK))
     .delay(1200)
-  //  .switchMap(() => interval(KEEP_ALIVE_INTERVAL))
-    .do(() => this.logService.log('checkPossibleHostsActionTriggered'))
-    .map(() => new networkActions.CheckPossibleHostsAction())
-
+    .map(() => [new networkActions.CheckPossibleHostsAction(), new networkActions.KeepAliveActiveHostsAction()]);
 
   @Effect({ dispatch: false })
   //@ts-ignore
-  checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS, networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS_DONE)
+  keepAliveActiveHosts$ = this.actions$.ofType(networkActions.ActionTypes.KEEP_ALIVE_ACTIVE_HOSTS)
     .withLatestFrom(this.store$, (action, state) => ({
-      calculatedAddresses: state.network.possibleAddresses,
-      foundHosts: state.network.foundHosts,
-      isDetecting: state.network.isDetecting,
-      preferedAddresses: [...SERVER_ADDRESSES],
-      parallelRequestLimit: PARALLEL_REQUEST_LIMIT,
-      payload: action.payload
+      hosts: state.network.hosts,
+      preferedAddresses: SERVER_ADDRESSES,
+      keepAliveTimeout: KEEP_ALIVE_INTERVAL_MS,
+      requestLimit: PARALLEL_REQUEST_LIMIT,
+      isDetecting: state.network.isDetecting
     }))
     .filter(x => x.isDetecting)
-    .do(x => {
-      let keepAliveDelay = 0;
-      let discoveryDelay = 0;
-      let runKeepAlive= true, runDiscovery = true;
-      this.logService.log('payload: ', x.payload);
-      this.logService.log('x: ', x);
+    .do((x) => {
+      let activeHosts = x.hosts.filter((host: IHost) => host.isAlive);
+      this.networkService.testAddresses(_.concat(activeHosts, x.preferedAddresses), x.requestLimit);
+      timer(x.keepAliveTimeout).subscribe(() => {
+        this.networkService.keepAliveActiveHosts();
+      });
+    });
 
-      let foundHostAddresses: string[] = x.foundHosts.map((host: IHost) => host.ipAddress);
-      if (x.payload) {
-        keepAliveDelay = KEEP_ALIVE_INTERVAL_MS;
-        discoveryDelay = HOST_DETECTION_INTERVAL_MS;
-        runKeepAlive = x.payload === 'keep-alive';
-        runDiscovery = x.payload === 'discovery';
-      }
-      let requestLimit = x.parallelRequestLimit / 2 || 1;
-      if (runKeepAlive) {
-        timer(keepAliveDelay).subscribe(() => {
-          this.networkService.testAddresses(_.concat(foundHostAddresses, x.preferedAddresses), requestLimit, 'keep-alive');
-        });
-      }
-      if (runDiscovery) {
-        timer(discoveryDelay).subscribe(() => {
-          this.networkService.testAddresses(x.calculatedAddresses, requestLimit, 'discovery');
-        });
-      }
+    @Effect({ dispatch: false })
+  //@ts-ignore
+  checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS)
+    .withLatestFrom(this.store$, (action, state) => ({
+      hosts: state.network.hosts,
+      checkAllTimeout: HOST_DETECTION_INTERVAL_MS,
+      requestLimit: PARALLEL_REQUEST_LIMIT,
+      isDetecting: state.network.isDetecting
+    }))
+    .filter(x => x.isDetecting)
+    .do((x) => {
+      let inActiveHosts = x.hosts.filter((host: IHost) => !host.isAlive);
+      this.networkService.testAddresses(inActiveHosts, x.requestLimit);
+      timer(x.checkAllTimeout).subscribe(() => {
+        this.networkService.checkPossibleHosts();
+      });
     });
 
   constructor(
