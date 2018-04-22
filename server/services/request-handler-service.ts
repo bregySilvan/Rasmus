@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { IListElement, ElementTypes } from '../../interfaces';
+import { IListElement, ElementTypes, IBoard } from '../../interfaces';
 import * as express from 'express';
 import { DataService } from './data-service';
 import * as _ from 'lodash';
@@ -68,9 +68,12 @@ export class RequestHandlerService {
     // payload: { keys?: string }
     public onGetBoards(req: express.Request, res: express.Response, next: express.NextFunction) {
         console.log('req.query:: ', req.query);
-        let keys: string[] = Object.keys(req.query).map((key) => req.query[key]);
-        this.dataService.getElements(keys, (error: Error, elements: IListElement[]) => {
-            let responseData = elements;
+        let keys: string[];
+        if(req.query) {
+            keys = Object.keys(req.query).map((key) => req.query[key]);
+        } 
+        this.dataService.getBoards(keys, (error: Error, boards: IBoard[]) => {
+            let responseData = boards;
             let responseInfo = { response: responseData, error: error };
             let responseStati = { bad: 403, good: 200 };
             this._respond(res, responseInfo, responseStati, next);

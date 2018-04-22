@@ -11,8 +11,8 @@ export interface IAdvertisement extends IListElement {
 }
 
 export interface IBoard {
-  id: string;
-  elements: IListElement[];
+  key: string;
+  elementKeys: string[];
 }
 
 export type ElementTypes = 'advertisement';

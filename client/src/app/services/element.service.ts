@@ -44,7 +44,7 @@ export class ElementService {
     }
 
     public areEqualBoards(board1: IBoard, board2: IBoard) {
-      return  board1.id === board2.id;
+      return  board1.key === board2.key;
     }
 
     public areEqualElements(element1: IListElement, element2: IListElement) {

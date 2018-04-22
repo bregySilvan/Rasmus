@@ -25,23 +25,22 @@ export class CustomRouter {
     private _activateRoutes() {
 
         // post
-        this._addRoute(LOCATIONS.element, 'post', this._requestHandler, this._requestHandler.onPostElement);
+        this._addRoute(LOCATIONS.element, 'post', this._requestHandler.onPostElement);
 
         // get
-        this._addRoute(LOCATIONS.elements, 'get', this._requestHandler, this._requestHandler.onGetElements);
+        this._addRoute(LOCATIONS.elements, 'get', this._requestHandler.onGetElements);
 
-        this._addRoute(LOCATIONS.isAlive, 'get', this._requestHandler, this._requestHandler.onGetIsAlive);
+        this._addRoute(LOCATIONS.boards, 'get', this._requestHandler.onGetBoards);
+
+        this._addRoute(LOCATIONS.isAlive, 'get', this._requestHandler.onGetIsAlive);
     }
 
-    private _addRoute(
-        location: string,
-        method: 'post' | 'get',
-        requestHandler: RequestHandlerService,
+    private _addRoute(location: string, method: 'post' | 'get', 
         requestHandlerFn: (req: express.Request, res: express.Response, next: express.NextFunction) => void): void {
 
             location = location.startsWith('/') ? location : `/${location}`;
             this._activeLocations.push(`${method.toUpperCase()}: ${location}`);
-            this._router[method](location, requestHandlerFn.bind(requestHandler));
+            this._router[method](location, requestHandlerFn.bind(this._requestHandler));
     }
 
 
