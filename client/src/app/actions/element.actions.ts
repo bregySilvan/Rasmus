@@ -1,23 +1,23 @@
 
 import { Action } from '@ngrx/store';
-import { type } from "../utils/check-action-types";
 import { IListElement, IBoard } from '../../../../interfaces';
+import { type } from '../../utils/check-action-types';
 
 
 const LOAD_AVAILABLE_ELEMENTS: 'ELEMENT: LOAD_AVAILABLE_ELEMENTS' = 'ELEMENT: LOAD_AVAILABLE_ELEMENTS';
-const LOAD_AVAILABLE_ELEMENTS_DONE: 'ELEMENT: LOAD_AVAILABLE_ELEMENTS_DONE' = 'ELEMENT: LOAD_AVAILABLE_ELEMENTS_DONE';
 const LOAD_AVAILABLE_BOARDS: 'ELEMENT: LOAD_AVAILABLE_BOARDS' = 'ELEMENT: LOAD_AVAILABLE_BOARDS';
-const LOAD_AVAILABLE_BOARDS_DONE: 'ELEMENT: LOAD_AVAILABLE_BOARDS_DONE' = 'ELEMENT: LOAD_AVAILABLE_BOARDS_DONE';
-const SAVE_ELEMENT: 'ELEMENT: SAVE_ELEMENT' = 'ELEMENT: SAVE_ELEMENT';
-const SAVE_BOARD: 'ELEMENT: SAVE_BOARD' = 'ELEMENT: SAVE_BOARD';
+const TRY_UPDATE_ELEMENTS: 'ELEMENT: TRY_UPDATE_ELEMENTS' = 'ELEMENT: TRY_UPDATE_ELEMENTS';
+const TRY_UPDATE_BOARDS: 'ELEMENT: TRY_UPDATE_BOARDS' = 'ELEMENT: TRY_UPDATE_BOARDS';
+const UPDATE_ELEMENTS: 'ELEMENT: UPDATE_ELEMENTS' = 'ELEMENT: UPDATE_ELEMENTS';
+const UPDATE_BOARDS: 'ELEMENT: UPDATE_BOARDS' = 'ELEMENT: UPDATE_BOARDS';
 
 export const ActionTypes = {
   LOAD_AVAILABLE_ELEMENTS: type(LOAD_AVAILABLE_ELEMENTS),
-  LOAD_AVAILABLE_ELEMENTS_DONE: type(LOAD_AVAILABLE_ELEMENTS_DONE),
   LOAD_AVAILABLE_BOARDS: type(LOAD_AVAILABLE_BOARDS),
-  LOAD_AVAILABLE_BOARDS_DONE: type(LOAD_AVAILABLE_BOARDS_DONE),
-  SAVE_ELEMENT: type(SAVE_ELEMENT),
-  SAVE_BOARD: type(SAVE_BOARD)
+  TRY_UPDATE_ELEMENTS: type(TRY_UPDATE_ELEMENTS),
+  TRY_UPDATE_BOARDS: type(TRY_UPDATE_BOARDS),
+  UPDATE_ELEMENTS: type(UPDATE_ELEMENTS),
+  UPDATE_BOARDS: type(UPDATE_BOARDS)
 };
 
 export class LoadAvailableElementsAction implements Action {
@@ -27,14 +27,6 @@ export class LoadAvailableElementsAction implements Action {
   }
 }
 
-export class LoadAvailableElementsDoneAction implements Action {
-    type: typeof ActionTypes.LOAD_AVAILABLE_ELEMENTS_DONE = ActionTypes.LOAD_AVAILABLE_ELEMENTS_DONE;
-    payload: IListElement[];
-    constructor(elements: IListElement[]) {
-      this.payload = elements;
-    }
-  }
-
   export class LoadAvailableBoardsAction implements Action {
     type: typeof ActionTypes.LOAD_AVAILABLE_BOARDS = ActionTypes.LOAD_AVAILABLE_BOARDS;
     constructor() {
@@ -42,33 +34,41 @@ export class LoadAvailableElementsDoneAction implements Action {
     }
   }
 
-  export class LoadAvailableBoardsDoneAction implements Action {
-    type: typeof ActionTypes.LOAD_AVAILABLE_BOARDS_DONE = ActionTypes.LOAD_AVAILABLE_BOARDS_DONE;
+  export class TryUpdateElementsAction implements Action {
+    type: typeof ActionTypes.TRY_UPDATE_ELEMENTS = ActionTypes.TRY_UPDATE_ELEMENTS;
+    payload: IListElement[];
+    constructor(elements: IListElement[]) {
+      this.payload = elements;
+    }
+  }
+
+  export class TryUpdateBoardsAction implements Action {
+    type: typeof ActionTypes.TRY_UPDATE_BOARDS = ActionTypes.TRY_UPDATE_BOARDS;
     payload: IBoard[];
     constructor(boards: IBoard[]) {
       this.payload = boards;
     }
   }
 
-  export class SaveElementAction implements Action {
-    type: typeof ActionTypes.SAVE_ELEMENT = ActionTypes.SAVE_ELEMENT;
-    payload: IListElement;
-    constructor(element: IListElement) {
-      this.payload = element;
+  export class UpdateElementsAction implements Action {
+    type: typeof ActionTypes.UPDATE_ELEMENTS = ActionTypes.UPDATE_ELEMENTS;
+    payload: IListElement[];
+    constructor(elements: IListElement[]) {
+      this.payload = elements;
     }
   }
 
-  export class SaveBoardAction implements Action {
-    type: typeof ActionTypes.SAVE_BOARD = ActionTypes.SAVE_BOARD;
-    payload: IBoard;
-    constructor(board: IBoard) {
-      this.payload = board;
+  export class UpdateBoardsAction implements Action {
+    type: typeof ActionTypes.UPDATE_BOARDS = ActionTypes.UPDATE_BOARDS;
+    payload: IBoard[];
+    constructor(boards: IBoard[]) {
+      this.payload = boards;
     }
   }
 
   export type ElementActions = LoadAvailableElementsAction
-    | LoadAvailableElementsDoneAction
     | LoadAvailableBoardsAction
-    | LoadAvailableBoardsDoneAction
-    | SaveElementAction
-    | SaveBoardAction;
+    | TryUpdateElementsAction
+    | TryUpdateBoardsAction
+    | UpdateElementsAction
+    | UpdateBoardsAction;

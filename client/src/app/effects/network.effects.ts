@@ -1,18 +1,13 @@
 
-import { KeepAliveActiveHostsAction } from "./../actions/network.actions";
-
 import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
 import { interval } from 'rxjs/observable/interval';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL_MS, PARALLEL_REQUEST_LIMIT, HOST_DETECTION_INTERVAL_MS } from '../../../../config';
-import { NetworkActions } from '../actions/network.actions';
-import { RequestService } from '../services/request.service';
 import { IHost } from '../state/network.reducer';
 import { NetworkService } from '../services/network.service';
 import { LogService } from '../services/log.service';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { IAppStore } from '../app.state';
 import * as networkActions from '../actions/network.actions';
@@ -20,36 +15,21 @@ import { map, switchMap, filter } from 'rxjs/operators';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { applyChanges } from '../../utils/functions';
 @Injectable()
 export class NetworkEffects {
 
   @Effect({ dispatch: false })
   //@ts-ignore
   hostUpdate$ = this.actions$.ofType(networkActions.ActionTypes.TRY_HOST_UPDATE)
-    .map<any, IHost>(toPayload)
+    .map<any, IHost[]>(toPayload)
     .withLatestFrom(this.store$, (payload, state) => ({
       currentHosts: state.network.hosts,
       updatedHost: payload
     }))
-    .map(x => {
-      let index = x.currentHosts.findIndex((host: IHost) => host.ipAddress === x.updatedHost.ipAddress);
-      let updatedHosts = x.currentHosts;
-      let needsUpdate = false;
-      if (index > -1) {
-        let oldHost = updatedHosts[index];
-        needsUpdate = oldHost.isAlive === x.updatedHost.isAlive;
-        updatedHosts[index] = x.updatedHost;
-      } else {
-        updatedHosts.push(x.updatedHost);
-      }
-
-      return {
-        updatedHosts: updatedHosts,
-        needsUpdate: needsUpdate
-      };
-    })
-    .filter(x => x.needsUpdate)
-    .map(x => new networkActions.HostsUpdateAction(x.updatedHosts));
+    .map(x => applyChanges(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
+    .filter(x => x.hasChanged)
+    .map(x => new networkActions.HostsUpdateAction(x.unionArr));
 
 
   @Effect()
@@ -99,7 +79,6 @@ export class NetworkEffects {
   constructor(
     private actions$: Actions,
     private store$: Store<IAppStore>,
-    private router: Router,
     private logService: LogService,
     private networkService: NetworkService
   ) {

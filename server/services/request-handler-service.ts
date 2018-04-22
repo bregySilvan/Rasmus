@@ -24,7 +24,7 @@ export class RequestHandlerService {
         res.set({
             'Accept': 'application/json',
             'Access-Control-Allow-Origin': ['*'],
-            'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+            'Access-Control-Allow-Methods': 'GET, POST',
             'Access-Control-Allow-Headers': 'Content-Type'
         });
         res.status(status);

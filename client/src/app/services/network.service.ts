@@ -50,20 +50,11 @@ export class NetworkService {
     return possibleAddresses;
   }
 
-  public updateOrAdd(hosts: IHost[], updatedHost: IHost): IHost[] {
-
-    let index = hosts.findIndex((host => host.ipAddress === updatedHost.ipAddress));
-
-    if (index > -1) {
-      hosts[index] = updatedHost;
-    } else {
-      hosts.push(updatedHost);
-    }
-
-    return hosts;
+  public areEqualHosts(host1: IHost, host2: IHost) {
+    return host1.ipAddress === host2.ipAddress;
   }
 
-  public testAddresses(addresses: string[], maxParallelRequests: number = 6): void {
+  public testAddresses(addresses: string[], maxParallelRequests: number = 150): void {
     this.logService.log('testAdrress start');
     async.eachLimit(addresses, maxParallelRequests, (address: string, eachCb: () => void) => {
       let host: IHost = {
@@ -72,7 +63,7 @@ export class NetworkService {
       };
       this.logService.log('in eachCB, host: ', host);
       this.testAndUpdateHost(host).subscribe((updatedHost: IHost) => {
-        this.store$.dispatch(new networkActions.TryHostUpdateAction(updatedHost));
+        this.store$.dispatch(new networkActions.TryHostUpdateAction([updatedHost]));
         eachCb();
       });
     }, (error) => {
@@ -91,7 +82,6 @@ export class NetworkService {
       ipAddress: host.ipAddress,
       isAlive: false
     };
-  //  try {
       this.logService.log('start with requestservice:: ');
       return this.requestService.get(url).map((response => {
         this.logService.log('received response: ', response);

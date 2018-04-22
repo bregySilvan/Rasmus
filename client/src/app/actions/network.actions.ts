@@ -1,6 +1,6 @@
 
 import { Action } from '@ngrx/store';
-import { type } from "../utils/check-action-types";
+import { type } from '../../utils/check-action-types';
 import { IHost } from '../state/network.reducer';
 
 const START_DETECTION: 'NETWORK: START_DETECTION' = 'NETWORK: START_DETECTION';
@@ -50,9 +50,9 @@ export class KeepAliveActiveHostsAction implements Action {
 
 export class TryHostUpdateAction implements Action {
   type: typeof ActionTypes.TRY_HOST_UPDATE = ActionTypes.TRY_HOST_UPDATE;
-  payload: IHost;
-  constructor(host: IHost) {
-    this.payload = host;
+  payload: IHost[];
+  constructor(hosts: IHost[]) {
+    this.payload = hosts;
   }
 }
 
@@ -63,7 +63,7 @@ export class HostsUpdateAction implements Action {
     this.payload = hosts;
   }
 }
-export type NetworkActions = 
+export type NetworkActions =
     StartDetectionAction
   | StopDetectionAction
   | CheckPossibleHostsAction

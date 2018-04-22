@@ -17,12 +17,12 @@ const initialState: IElementState = {
 export function elementReducer(state: IElementState = initialState, action: actions.ElementActions): IElementState {
   switch (action.type) {
 
-    case actions.ActionTypes.LOAD_AVAILABLE_BOARDS_DONE:
+    case actions.ActionTypes.UPDATE_BOARDS:
       return Object.assign({}, state, {
         availableBoards: action.payload
       });
 
-    case actions.ActionTypes.LOAD_AVAILABLE_ELEMENTS_DONE:
+    case actions.ActionTypes.UPDATE_ELEMENTS:
       return Object.assign({}, state, {
         availableElements: action.payload
       });

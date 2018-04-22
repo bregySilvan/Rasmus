@@ -1,6 +1,6 @@
 
 import { Action } from '@ngrx/store';
-import { type } from "../utils/check-action-types";
+import { type } from '../../utils/check-action-types';
 
 const NAVIGATE_TO: 'ROUTER: NAVIGATE_TO' = 'ROUTER: NAVIGATE_TO';
 const NAVIGATION_SUCCESS: 'ROUTER: NAVIGATION_SUCCESS' = 'ROUTER: NAVIGATION_SUCCESS';
