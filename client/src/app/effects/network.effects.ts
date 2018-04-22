@@ -58,7 +58,7 @@ export class NetworkEffects {
       let activeHosts: IHost[] = x.hosts.filter((host: IHost) => host.isAlive);
       let preferedHosts: IHost[] = x.preferedAddresses.map((address: string) => ({ ipAddress: address, isAlive: false}));      
       let keepAliveHosts = applyChanges(activeHosts, preferedHosts, this.networkService.areEqualHosts).unionArr;
-      this.logService.warn(keepAliveHosts);
+
       this.networkService.testHosts(keepAliveHosts, x.requestLimit);
       timer(x.keepAliveTimeout).subscribe(() => {
         this.networkService.keepAliveActiveHosts();
@@ -75,7 +75,7 @@ export class NetworkEffects {
       isDetecting: state.network.isDetecting
     }))
     .filter(x => x.isDetecting)
-    .do((x) => {
+    .do(x => {
       let inActiveHosts: IHost[] = x.hosts.filter((host: IHost) => !host.isAlive);
       this.networkService.testHosts(inActiveHosts, x.requestLimit);
       timer(x.checkAllTimeout).subscribe(() => {

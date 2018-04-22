@@ -10,6 +10,9 @@ const TRY_UPDATE_ELEMENTS: 'ELEMENT: TRY_UPDATE_ELEMENTS' = 'ELEMENT: TRY_UPDATE
 const TRY_UPDATE_BOARDS: 'ELEMENT: TRY_UPDATE_BOARDS' = 'ELEMENT: TRY_UPDATE_BOARDS';
 const UPDATE_ELEMENTS: 'ELEMENT: UPDATE_ELEMENTS' = 'ELEMENT: UPDATE_ELEMENTS';
 const UPDATE_BOARDS: 'ELEMENT: UPDATE_BOARDS' = 'ELEMENT: UPDATE_BOARDS';
+const SAVE_ELEMENTS: 'ELEMENT: SAVE_ELEMENTS' = 'ELEMENT: SAVE_ELEMENTS';
+const SAVE_BOARDS: 'ELEMENT: SAVE_BOARDS' = 'ELEMENT: SAVE_BOARDS';
+
 
 export const ActionTypes = {
   LOAD_AVAILABLE_ELEMENTS: type(LOAD_AVAILABLE_ELEMENTS),
@@ -17,7 +20,9 @@ export const ActionTypes = {
   TRY_UPDATE_ELEMENTS: type(TRY_UPDATE_ELEMENTS),
   TRY_UPDATE_BOARDS: type(TRY_UPDATE_BOARDS),
   UPDATE_ELEMENTS: type(UPDATE_ELEMENTS),
-  UPDATE_BOARDS: type(UPDATE_BOARDS)
+  UPDATE_BOARDS: type(UPDATE_BOARDS),
+  SAVE_ELEMENTS: type(SAVE_ELEMENTS),
+  SAVE_BOARDS: type(SAVE_BOARDS)
 }; 
 
 export class LoadAvailableElementsAction implements Action {
@@ -66,9 +71,27 @@ export class LoadAvailableElementsAction implements Action {
     }
   }
 
+  export class SaveBoardAction implements Action {
+    type: typeof ActionTypes.SAVE_BOARDS = ActionTypes.SAVE_BOARDS;
+    payload: IBoard[];
+    constructor(boards: IBoard[]) {
+      this.payload = boards;
+    }
+  }
+
+  export class SaveElementAction implements Action {
+    type: typeof ActionTypes.SAVE_ELEMENTS = ActionTypes.SAVE_ELEMENTS;
+    payload: IListElement[];
+    constructor(elements: IListElement[]) {
+      this.payload = elements;
+    }
+  }
+
   export type ElementActions = LoadAvailableElementsAction
     | LoadAvailableBoardsAction
     | TryUpdateElementsAction
     | TryUpdateBoardsAction
     | UpdateElementsAction
-    | UpdateBoardsAction;
+    | UpdateBoardsAction
+    | SaveBoardAction
+    | SaveElementAction;

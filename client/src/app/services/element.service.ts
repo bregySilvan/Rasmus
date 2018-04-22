@@ -29,9 +29,19 @@ export class ElementService {
       this.store$.dispatch(new elementActions.TryUpdateBoardsAction(boards));
     }
 
+    public saveElements(elements: IListElement[]) {
+      this.store$.dispatch(new elementActions.UpdateElementsAction(elements));
+    }
+
+    public saveBoards(boards: IBoard[]) {
+      this.store$.dispatch(new elementActions.UpdateBoardsAction(boards));
+    }
+
     public getElements(host: IHost, keys?: string[]): Observable<IListElement[]> {
+      this.logService.log('getting elements');
       let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.elements}`;
       return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
+        this.logService.log('error=? ', error);
         return Observable.create([]);
       });
     }
@@ -40,7 +50,7 @@ export class ElementService {
       let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.boards}`;
       return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
         return Observable.create([]);
-      });;
+      });
     }
 
     public areEqualBoards(board1: IBoard, board2: IBoard) {

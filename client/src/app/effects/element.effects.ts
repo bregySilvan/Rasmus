@@ -6,6 +6,7 @@ import { IAppStore } from '../app.state';
 import * as elementActions from '../actions/element.actions';
 import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/mergeMap'
 import { IHost } from '../state/network.reducer';
 import { ElementService } from '../services/element.service';
 import { IListElement, IBoard } from '../../../../interfaces';
@@ -19,16 +20,20 @@ export class ElementEffects {
   loadAvailableElements$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_ELEMENTS)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
     .map(x => x.hosts.filter((host: IHost) => host.isAlive))
+    .do(x => this.logService.log('loading available elements'))
     .filter(activeHosts => !!activeHosts.length)
+    .do(x => this.logService.log('loading available elements after filter'))
     .do(activeHosts => {
+      this.logService.log('activce hosts:: ', activeHosts);
       activeHosts.forEach((host: IHost) => {
+        this.logService.log('host:: ', host);
         this.elementService.getElements(host).subscribe((elements: IListElement[]) => {
-          this.elementService.tryElementsUpdate(elements);
+          this.store$.dispatch((new elementActions.TryUpdateElementsAction(elements)));
         });
       });
     });
 
-  @Effect({ dispatch: false })
+  @Effect({dispatch: false})
   //@ts-ignore
   loadAvailableBoards$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_BOARDS)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
@@ -37,7 +42,7 @@ export class ElementEffects {
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
         this.elementService.getBoards(host).subscribe((boards: IBoard[]) => {
-          this.elementService.tryBoardsUpdate(boards);
+          this.store$.dispatch((new elementActions.TryUpdateBoardsAction(boards)));
         });
       });
     });

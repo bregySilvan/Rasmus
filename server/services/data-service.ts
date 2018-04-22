@@ -1,11 +1,11 @@
-import { IListElement, ElementTypes, IBoard } from '../../interfaces';
+import { IListElement, ElementTypes, IBoard, IAdvertisement } from '../../interfaces';
 import * as fse from 'fs-extra';
 import { QueueService } from './queue-service';
 
 export class DataService {
 
-    private elementsFilePath = '../var/elements.json';
-    private boardsFilePath = '../var/boards.json';
+    private elementsFilePath = './var/elements.json';
+    private boardsFilePath = './var/boards.json';
     private queueService: QueueService;
 
     constructor() {
@@ -126,14 +126,11 @@ export class DataService {
 }
 
 let dataService: DataService = new DataService();
-let element: IListElement = { key: 'firstKey', type: 'advertisement' };
-let element2: IListElement = { key: 'secondKEy', type: 'advertisement' };
-let element3: IListElement = { key: 'thirdKey', type: 'advertisement' };
 
-let board1 : IBoard =  { key: 'boardKey11122', elementKeys: ['firstKey', 'secondKey'] };
-let board2 : IBoard =  { key: 'boardKey22222', elementKeys: ['firstKey', 'secondKey'] };
-let board3 : IBoard =  { key: 'boardKey3', elementKeys: ['firstKey', 'secondKey'] };
-
+let board1 : IBoard =  { key: '111', elementKeys: ['firstKey', 'secondKey'] };
+let board2 : IBoard =  { key: '222', elementKeys: ['firstKey', 'secondKey'] };
+let board3 : IBoard =  { key: '333', elementKeys: ['firstKey', 'secondKey'] };
+/*
 function saveElements() {
     console.log('svae elements #######################');
     dataService.saveElement(element, (error?: any) => {
@@ -157,7 +154,56 @@ function saveElements() {
     //  service.saveElement({key: 'second key', type: ElementTypes.advertisement});
     //  service.saveElement({key: 'third key', type: ElementTypes.advertisement});
 }
-/*
+/* */
+const advertisementList: IAdvertisement[] =
+[{
+  key: '122',
+  type: 'advertisement',
+  name: 'preferred banner',
+  description: 'some ad description this is',
+  imageURL: 'https://i.imgur.com/IUxU35q.jpg'
+}, {
+  key: '233',
+  type: 'advertisement',
+  name: 'To not to use at work',
+  description: 'some ad description this is',
+//  imageURL: 'https://ae01.alicdn.com/kf/HTB1KMrVQpXXXXX3XpXXq6xXFXXXw/' +
+  //          'Sexy-Mousse-new-Lace-Bra-Set-Floral-thin-Cup-Bras-Sexy-Girls-Lingerie-Underwear-Set-Black.jpg_640x640.jpg'
+  imageURL: 'https://www.webwire.com/prmedia/7/220577/220577-1-m.jpg?201832564846'
+}, {
+  key: '344',
+  type: 'advertisement',
+  name: 'Finished last wedn.',
+  description: 'some ad description this is',
+ // imageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJn1BGUcO9mlYvq_v6PlrLzQc_G1fWtb6Z73pXsM6ubNXNoLZgZQ'
+  imageURL: 'https://www.planwallpaper.com/static/images/001_week-in-pictures-08.jpg'
+}, {
+  key: '455',
+  type: 'advertisement',
+  name: 'Some nice stuff',
+  description: 'some ad description this is',
+  imageURL: 'http://hanassets.nd.gov/images/product/test.png'
+}, {
+  key: '566',
+  type: 'advertisement',
+  name: 'I know what you did...',
+  description: 'some ad description this is',
+  imageURL: 'https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png'
+}, {
+    key: '5664323',
+    type: 'advertisement',
+    name: 'I know what you did...',
+    description: 'some ad description this is',
+    imageURL: 'https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png'
+  }];
+
+function saveAdvertisements() {
+    advertisementList.forEach((ad) => {
+        dataService.saveElement(ad, (error) => {
+            console.log('erro: ', error);
+        });
+    })
+}
 function saveBoards() {
   
     var errorCb = (error, board) => {
@@ -211,13 +257,15 @@ function getBoards() {
         console.log(JSON.stringify(boards));
     });
 }
-saveElements();
-saveBoards();
-getElements();
-getBoards();
+//saveAdvertisements();
+
+//saveElements();
+//saveBoards();
+//getElements();
+//getBoards();
 
 
-*/
+
 
 
 

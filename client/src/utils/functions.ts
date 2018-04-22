@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-declare var console: any;
+
 export function applyChanges<T>(update: Array<T>, old: Array<T>, isSameObj: (val1: T, val2: T) => boolean): { unionArr: Array<T>, hasChanged: boolean } {
   let hasChanged = false;
   let unionArr = old.concat();
@@ -16,11 +16,6 @@ export function applyChanges<T>(update: Array<T>, old: Array<T>, isSameObj: (val
       hasChanged = true;
     }
   });
-  if(hasChanged) {
-    console.warn('before:', update, old);
-   console.warn('after:', unionArr);
-  }
-  
 
   return { unionArr, hasChanged };
 }
