@@ -13,11 +13,21 @@ export class DataService {
     }
 
     public getBoards(keys: string[], callback: (error: Error, boards: IBoard[]) => void) {
-        this._getQueued(this.boardsFilePath, keys, callback);
+        this._getQueued(this.boardsFilePath, keys, (error: any, data: any) => {
+            if(error) {
+                return callback(error, []);
+            }
+            callback(error, Object.keys(data).map(key => <IBoard>data[key]));
+        });
     }
 
     public getElements(keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
-        this._getQueued(this.elementsFilePath, keys, callback);
+        this._getQueued(this.elementsFilePath, keys, (error: any, data: any) => {
+            if(error) {
+                return callback(error, []);
+            }
+            callback(error, Object.keys(data).map(key => <IListElement>data[key]));
+        });
     }
 
     public saveElement(element: IListElement, callback: (error: any) => void): void {
@@ -52,15 +62,17 @@ export class DataService {
             if (readFileError || !jsonData) {
                 return callback(new Error('no data found at ' + filePath) , requestedAvailableKeys);
             }
+
             let jsonDataKeys = Object.keys(jsonData);
-            if (!keys) {
+            if (!keys || !keys.length) {
                 requestedAvailableKeys = jsonDataKeys;
             } else {
                 requestedAvailableKeys = keys.filter(key => !!jsonData[key]);
             }
-            
+
             callback(null, requestedAvailableKeys.map(key => jsonData[key]));
-        });
+
+        });  
     }
 
     private _save(file: string, element: any, callback: (error: any) => void): void {
@@ -112,7 +124,7 @@ export class DataService {
     // @toDo: take filepaths from constructor.
     // }
 }
-/*
+
 let dataService: DataService = new DataService();
 let element: IListElement = { key: 'firstKey', type: 'advertisement' };
 let element2: IListElement = { key: 'secondKEy', type: 'advertisement' };
@@ -122,7 +134,8 @@ let board1 : IBoard =  { key: 'boardKey11122', elementKeys: ['firstKey', 'second
 let board2 : IBoard =  { key: 'boardKey22222', elementKeys: ['firstKey', 'secondKey'] };
 let board3 : IBoard =  { key: 'boardKey3', elementKeys: ['firstKey', 'secondKey'] };
 
-function testDataService() {
+function saveElements() {
+    console.log('svae elements #######################');
     dataService.saveElement(element, (error?: any) => {
         console.log('elemetn saved');
         if(error) {
@@ -144,16 +157,17 @@ function testDataService() {
     //  service.saveElement({key: 'second key', type: ElementTypes.advertisement});
     //  service.saveElement({key: 'third key', type: ElementTypes.advertisement});
 }
-
+/*
 function saveBoards() {
+  
     var errorCb = (error, board) => {
         if(error) {
-            console.log('failed to save board.', board);
+       //     console.log('failed to save board.', board);
         } else {
             console.log('board saved: ', board);
         }
     }
-    console.log('saving board: ', board1);
+    
     dataService.saveBoard(board1, (err) => {
         
         errorCb(err, board1);
@@ -169,6 +183,7 @@ function saveBoards() {
 }
 
 function readOutDataService() {
+    
     let dataService: DataService = new DataService();
     let elementKeys = ['secondKEy', 'firstKey'];
     dataService.getElements(elementKeys, (error: Error, elements: IListElement[]) => {
@@ -180,8 +195,29 @@ function readOutDataService() {
         }
     });
 }
+function getElements() {
+    
+    dataService.getElements([], (error: Error, elements: IListElement[]) => {
+        console.log('getElements #######################');
+        console.log('error: ', error);
+        console.log(JSON.stringify(elements)); 
+    });
+}
+function getBoards() {
+
+    dataService.getBoards([], (error, boards) => {
+        console.log('getBoards #######################');
+        console.log('error: ', error);
+        console.log(JSON.stringify(boards));
+    });
+}
+saveElements();
 saveBoards();
-//readOutDataService();
-//testDataService();*/
+getElements();
+getBoards();
+
+
+*/
+
 
 
