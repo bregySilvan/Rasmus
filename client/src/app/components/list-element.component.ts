@@ -15,7 +15,8 @@ declare var window, console, localStorage;
 })
 export class ListElementComponent implements OnInit {
 
-  @Input() element: IListElement | null = null;
+  @Input() 
+  element: IListElement | null = null;
 
   constructor() {
 

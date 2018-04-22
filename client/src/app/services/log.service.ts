@@ -7,7 +7,7 @@ export class LogService {
 
   public warn(...text: any[]): void {
     console.warn(...text);
-  }
+  }y
 
   public log(...text: any[]): void {
     console.log(...text);

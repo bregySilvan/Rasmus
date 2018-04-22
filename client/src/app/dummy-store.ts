@@ -1,8 +1,8 @@
 
 import { IListElement, IAdvertisement, ElementTypes } from '../../../interfaces';
 
-export const advertisementList: IAdvertisement[] =
-[{
+export const advertisementList: IAdvertisement[] = [];
+/*
   key: '1',
   type: 'advertisement',
   name: 'preferred banner',
@@ -34,8 +34,8 @@ export const advertisementList: IAdvertisement[] =
   type: 'advertisement',
   name: 'I know what you did...',
   description: 'some ad description this is',
-  imageURL: 'https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png'
-}];
+  imageURL: 'https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png'*/
+
 
 export const advertisementKeys: string[] = ['1', '2', '3'];
 

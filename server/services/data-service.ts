@@ -1,67 +1,93 @@
-import { IListElement, ElementTypes } from '../../interfaces';
+import { IListElement, ElementTypes, IBoard, IAdvertisement } from '../../interfaces';
 import * as fse from 'fs-extra';
 import { QueueService } from './queue-service';
 
 export class DataService {
 
-    private elementsFilePath = '../var/elements.json';
+    private elementsFilePath = './var/elements.json';
+    private boardsFilePath = './var/boards.json';
     private queueService: QueueService;
 
     constructor() {
         this.queueService = new QueueService();
-        if(!fse.existsSync(this.elementsFilePath)) {
-            fse.createFileSync(this.elementsFilePath);
-        }
     }
 
-    public getElements(keys: string[], callback: (error: Error, element: IListElement[]) => void): void {
+    public getBoards(keys: string[], callback: (error: Error, boards: IBoard[]) => void) {
+        this._getQueued(this.boardsFilePath, keys, (error: any, data: any) => {
+            if(error) {
+                return callback(error, []);
+            }
+            callback(error, Object.keys(data).map(key => <IBoard>data[key]));
+        });
+    }
+
+    public getElements(keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
+        this._getQueued(this.elementsFilePath, keys, (error: any, data: any) => {
+            if(error) {
+                return callback(error, []);
+            }
+            callback(error, Object.keys(data).map(key => <IListElement>data[key]));
+        });
+    }
+
+    public saveElement(element: IListElement, callback: (error: any) => void): void {
+        this._saveQueued(this.elementsFilePath, element, callback);
+    }
+
+    public saveBoard(board: IBoard, callback: (error: any) => void) {
+        this._saveQueued(this.boardsFilePath, board, callback);
+    }
+
+    private _getQueued(filePath: string, keys: string[], callback: (error: any, data: any) => void) {
         this.queueService.addToQueue((next) => {
-            this._getElements(this.elementsFilePath, keys, (err: Error, elements: IListElement[]) => {
-                callback(err, elements);
+            this._get(filePath, keys, (err: any, data: any[]) => {
+                callback(err, data);
                 next();
             });
         });
     }
 
-    public saveElement(element: IListElement, callback: (error: any) => void): void {
+    private _saveQueued(filePath: string, data: any, callback: (error: any) => void) {
         this.queueService.addToQueue((next) => {
-            this._saveElement(this.elementsFilePath, element, (err: any) => {
+            this._save(filePath, data, (err: any) => {
                 callback(err);
                 next();
             });
         });
     }
 
-    private _getElements(filePath: string, keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
-        fse.readJSON(this.elementsFilePath, async (readFileError: Error, jsonData: any) => {
-            let elements: IListElement[] = [];
-            if(readFileError) {
-                return callback(readFileError, elements);
+    private _get(filePath: string, keys: string[], callback: (error: Error, data: any[]) => void) {
+        fse.readJSON(filePath, async (readFileError: Error, jsonData: any) => {
+            let requestedAvailableKeys = [];
+            if (readFileError || !jsonData) {
+                return callback(new Error('no data found at ' + filePath) , requestedAvailableKeys);
             }
+
             let jsonDataKeys = Object.keys(jsonData);
-            keys.forEach((elementKey: string) => {
-                let index = jsonDataKeys.indexOf(elementKey);
-                if(index > -1) {
-                    elements.push(jsonData[jsonDataKeys[index]]);
-                }
-            });
-            callback(null, elements);
-        });
+            if (!keys || !keys.length) {
+                requestedAvailableKeys = jsonDataKeys;
+            } else {
+                requestedAvailableKeys = keys.filter(key => !!jsonData[key]);
+            }
+
+            callback(null, requestedAvailableKeys.map(key => jsonData[key]));
+
+        });  
     }
 
-    private _saveElement(file: string, element: IListElement, callback: (error?: any) => void): void {
+    private _save(file: string, element: any, callback: (error: any) => void): void {
         if (element === null) {
-            return callback(new Error('object is null so it wasn\'t saved'));
+            return callback(new Error('object is null so it wasn\'t saved in file ' + file));
         }
         try {
-            return this._saveElementNoChecks(file, element, callback);
+            return this._saveNoChecks(file, element, callback);
         } catch (err) {
             return callback(err);
         }
     }
 
-    private _saveElementNoChecks(file: string, element: IListElement, callback: (error?: any) => void) {
-        this._setupJsonFile(file, (error?: any) => {
+    private _saveNoChecks(file: string, element: any, callback: (error?: any) => void) {
+        this._checkJsonFile(file, (error?: any) => {
             if (error) {
                 return callback(error);
             }
@@ -69,7 +95,8 @@ export class DataService {
         });
     }
 
-    private _setupJsonFile(file: string, callback: (error?: any) => void): void {
+
+    private _checkJsonFile(file: string, callback: (error?: any) => void): void {
         fse.exists(file, async (exists: boolean) => {
             if (exists) {
                 return callback(null);
@@ -81,7 +108,7 @@ export class DataService {
 
     private _updateJson(file: string, obj: any, key: string, callback: (error?: any) => void): void {
         fse.readJSON(file, async (error: Error, jsonData: any) => {
-            jsonData = jsonData || { };
+            jsonData = jsonData || {};
             jsonData[key] = obj;
             fse.writeJson(file, jsonData, (error: Error) => {
                 if (error) {
@@ -97,13 +124,15 @@ export class DataService {
     // @toDo: take filepaths from constructor.
     // }
 }
-/*
-let dataService: DataService = new DataService();
-let element: IListElement = { key: 'firstKey', type: 'advertisement' };
-let element2: IListElement = { key: 'secondKEy', type: 'advertisement' };
-let element3: IListElement = { key: 'thirdKey', type: 'advertisement' };
 
-function testDataService() {
+let dataService: DataService = new DataService();
+
+let board1 : IBoard =  { key: '111', elementKeys: ['firstKey', 'secondKey'] };
+let board2 : IBoard =  { key: '222', elementKeys: ['firstKey', 'secondKey'] };
+let board3 : IBoard =  { key: '333', elementKeys: ['firstKey', 'secondKey'] };
+/*
+function saveElements() {
+    console.log('svae elements #######################');
     dataService.saveElement(element, (error?: any) => {
         console.log('elemetn saved');
         if(error) {
@@ -125,7 +154,82 @@ function testDataService() {
     //  service.saveElement({key: 'second key', type: ElementTypes.advertisement});
     //  service.saveElement({key: 'third key', type: ElementTypes.advertisement});
 }
+/* */
+const advertisementList: IAdvertisement[] =
+[{
+  key: '122',
+  type: 'advertisement',
+  name: 'preferred banner',
+  description: 'some ad description this is',
+  imageURL: 'https://i.imgur.com/IUxU35q.jpg'
+}, {
+  key: '233',
+  type: 'advertisement',
+  name: 'To not to use at work',
+  description: 'some ad description this is',
+//  imageURL: 'https://ae01.alicdn.com/kf/HTB1KMrVQpXXXXX3XpXXq6xXFXXXw/' +
+  //          'Sexy-Mousse-new-Lace-Bra-Set-Floral-thin-Cup-Bras-Sexy-Girls-Lingerie-Underwear-Set-Black.jpg_640x640.jpg'
+  imageURL: 'https://www.webwire.com/prmedia/7/220577/220577-1-m.jpg?201832564846'
+}, {
+  key: '344',
+  type: 'advertisement',
+  name: 'Finished last wedn.',
+  description: 'some ad description this is',
+ // imageURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJn1BGUcO9mlYvq_v6PlrLzQc_G1fWtb6Z73pXsM6ubNXNoLZgZQ'
+  imageURL: 'https://www.planwallpaper.com/static/images/001_week-in-pictures-08.jpg'
+}, {
+  key: '455',
+  type: 'advertisement',
+  name: 'Some nice stuff',
+  description: 'some ad description this is',
+  imageURL: 'http://hanassets.nd.gov/images/product/test.png'
+}, {
+  key: '566',
+  type: 'advertisement',
+  name: 'I know what you did...',
+  description: 'some ad description this is',
+  imageURL: 'https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png'
+}, {
+    key: '5664323',
+    type: 'advertisement',
+    name: 'I know what you did...',
+    description: 'some ad description this is',
+    imageURL: 'https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png'
+  }];
+
+function saveAdvertisements() {
+    advertisementList.forEach((ad) => {
+        dataService.saveElement(ad, (error) => {
+            console.log('erro: ', error);
+        });
+    })
+}
+function saveBoards() {
+  
+    var errorCb = (error, board) => {
+        if(error) {
+       //     console.log('failed to save board.', board);
+        } else {
+            console.log('board saved: ', board);
+        }
+    }
+    
+    dataService.saveBoard(board1, (err) => {
+        
+        errorCb(err, board1);
+    });
+
+    dataService.saveBoard(board2, (err) => {
+        errorCb(err, board2);
+    });
+
+    dataService.saveBoard(board3, (err) => {
+        errorCb(err, board3);
+    });
+}
+
 function readOutDataService() {
+    
     let dataService: DataService = new DataService();
     let elementKeys = ['secondKEy', 'firstKey'];
     dataService.getElements(elementKeys, (error: Error, elements: IListElement[]) => {
@@ -137,5 +241,31 @@ function readOutDataService() {
         }
     });
 }
-readOutDataService();
-//testDataService();*/
+function getElements() {
+    
+    dataService.getElements([], (error: Error, elements: IListElement[]) => {
+        console.log('getElements #######################');
+        console.log('error: ', error);
+        console.log(JSON.stringify(elements)); 
+    });
+}
+function getBoards() {
+
+    dataService.getBoards([], (error, boards) => {
+        console.log('getBoards #######################');
+        console.log('error: ', error);
+        console.log(JSON.stringify(boards));
+    });
+}
+//saveAdvertisements();
+
+//saveElements();
+//saveBoards();
+//getElements();
+//getBoards();
+
+
+
+
+
+
