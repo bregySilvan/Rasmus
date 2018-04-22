@@ -10,28 +10,47 @@ export class DataService {
 
     constructor() {
         this.queueService = new QueueService();
-        if (!fse.existsSync(this.elementsFilePath)) {
-            fse.createFileSync(this.elementsFilePath);
-        }
-        if (!fse.existsSync(this.boardsFilePath)) {
-            fse.createFileSync(this.boardsFilePath);
-        }
     }
 
     public getBoards(keys: string[], callback: (error: Error, boards: IBoard[]) => void) {
+        this._getQueued(this.boardsFilePath, keys, callback);
+    }
+
+    public getElements(keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
+        this._getQueued(this.boardsFilePath, keys, callback);
+    }
+
+    public saveElement(element: IListElement, callback: (error: any) => void): void {
+        this._saveQueued(this.elementsFilePath, element, callback);
+    }
+
+    public saveBoard(board: IBoard, callback: (error: any) => void) {
+        this._saveQueued(this.boardsFilePath, element, callback);
+    }
+
+    private _getQueued(filePath: string, keys: string[], callback: (error: any, data: any) => void) {
         this.queueService.addToQueue((next) => {
-            this._getBoards(this.boardsFilePath, keys, (err: Error, boards: IBoard[]) => {
-                callback(err, boards);
+            this._get(filePath, keys, (err: any, data: any[]) => {
+                callback(err, data);
                 next();
             });
         });
     }
 
-    private _getBoards(filePath: string, keys: string[], callback: (error: Error, element: IBoard[]) => void) {
+    private _saveQueued(filePath: string, data: any, callback: (error: any) => void) {
+        this.queueService.addToQueue((next) => {
+            this._save(filePath, element, (err: any) => {
+                callback(err);
+                next();
+            });
+        });
+    }
+
+    private _get(filePath: string, keys: string[], callback: (error: Error, data: any[]) => void) {
         fse.readJSON(filePath, async (readFileError: Error, jsonData: any) => {
             let requestedAvailableKeys = [];
             if (readFileError || !jsonData) {
-                return callback(new Error('no board data found') , requestedAvailableKeys);
+                return callback(new Error('no data found at ' + filePath) , requestedAvailableKeys);
             }
             let jsonDataKeys = Object.keys(jsonData);
             if (!keys) {
@@ -40,57 +59,23 @@ export class DataService {
                 requestedAvailableKeys = keys.filter(key => !!jsonData[key]);
             }
             
-            callback(null, requestedAvailableKeys.map(key => <IBoard>jsonData[key]));
+            callback(null, requestedAvailableKeys.map(key => jsonData[key]));
         });
     }
 
-    public getElements(keys: string[], callback: (error: Error, element: IListElement[]) => void): void {
-        this.queueService.addToQueue((next) => {
-            this._getElements(this.elementsFilePath, keys, (err: Error, elements: IListElement[]) => {
-                callback(err, elements);
-                next();
-            });
-        });
-    }
-
-    public saveElement(element: IListElement, callback: (error: any) => void): void {
-        this.queueService.addToQueue((next) => {
-            this._saveElement(this.elementsFilePath, element, (err: any) => {
-                callback(err);
-                next();
-            });
-        });
-    }
-
-    private _getElements(filePath: string, keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
-        fse.readJSON(this.elementsFilePath, async (readFileError: Error, jsonData: any) => {
-            let elements: IListElement[] = [];
-            if (readFileError || !jsonData) {
-                return callback(new Error('no board data found'), elements);
-            }
-            let jsonDataKeys = Object.keys(jsonData);
-            if (!keys) {
-                return jsonDataKeys.map(key => <IListElement>jsonData[key]);
-            }
-            keys.filter(key => !!jsonData[key]).map(key => <IListElement>jsonData[key]);
-
-            callback(null, elements);
-        });
-    }
-
-    private _saveElement(file: string, element: IListElement, callback: (error?: any) => void): void {
+    private _save(file: string, element: any, callback: (error: any) => void): void {
         if (element === null) {
-            return callback(new Error('object is null so it wasn\'t saved'));
+            return callback(new Error('object is null so it wasn\'t saved in file ' + file));
         }
         try {
-            return this._saveElementNoChecks(file, element, callback);
+            return this._saveNoChecks(file, element, callback);
         } catch (err) {
             return callback(err);
         }
     }
 
-    private _saveElementNoChecks(file: string, element: IListElement, callback: (error?: any) => void) {
-        this._setupJsonFile(file, (error?: any) => {
+    private _saveNoChecks(file: string, element: any, callback: (error?: any) => void) {
+        this._checkJsonFile(file, (error?: any) => {
             if (error) {
                 return callback(error);
             }
@@ -98,7 +83,8 @@ export class DataService {
         });
     }
 
-    private _setupJsonFile(file: string, callback: (error?: any) => void): void {
+
+    private _checkJsonFile(file: string, callback: (error?: any) => void): void {
         fse.exists(file, async (exists: boolean) => {
             if (exists) {
                 return callback(null);
