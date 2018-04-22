@@ -21,12 +21,12 @@ export const LOCATIONS: ILocationMap = {
 }
 
 export const SERVER_ADDRESSES = [
-    "192.168.1.254",
-    "10.1.34.116"
+    "192.168.1.254"
+  //  "10.1.34.116"
 ];
 
-//export const LOCAL_ADDRESS = "192.168.1.254";
-export const LOCAL_ADDRESS = '10.1.34.116';
+export const LOCAL_ADDRESS = "192.168.1.254";
+//export const LOCAL_ADDRESS = '10.1.34.116';
 export const LOCAL_SUBNET_MASK = "255.255.255.0";
 export const KEEP_ALIVE_INTERVAL_MS = 13 * 1000;
 export const HOST_DETECTION_INTERVAL_MS = 50 * 1000;

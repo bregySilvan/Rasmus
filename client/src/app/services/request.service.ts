@@ -17,7 +17,7 @@ export class RequestService {
     let options = { params: payload };
     let a: http.BaseRequestOptions
     return this.httpClient.get(url).catch((error: http.Response | any) => {
-      this.logService.error(error.message || error);
+//     this.logService.error(error.message || error);
       return _throw('Error when GET on ' + url + ' options: ' + JSON.stringify(options));
     });
   }

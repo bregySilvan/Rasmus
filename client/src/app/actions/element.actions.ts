@@ -18,7 +18,7 @@ export const ActionTypes = {
   TRY_UPDATE_BOARDS: type(TRY_UPDATE_BOARDS),
   UPDATE_ELEMENTS: type(UPDATE_ELEMENTS),
   UPDATE_BOARDS: type(UPDATE_BOARDS)
-};
+}; 
 
 export class LoadAvailableElementsAction implements Action {
   type: typeof ActionTypes.LOAD_AVAILABLE_ELEMENTS = ActionTypes.LOAD_AVAILABLE_ELEMENTS;

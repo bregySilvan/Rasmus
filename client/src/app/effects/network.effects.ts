@@ -19,11 +19,11 @@ import { applyChanges } from '../../utils/functions';
 @Injectable()
 export class NetworkEffects {
 
-  @Effect({ dispatch: false })
+  @Effect()
   //@ts-ignore
-  hostUpdate$ = this.actions$.ofType(networkActions.ActionTypes.TRY_HOST_UPDATE)
+  hostUpdate$ = this.actions$.ofType(networkActions.ActionTypes.TRY_UPDATE_HOSTS)
     .map<any, IHost[]>(toPayload)
-    .withLatestFrom(this.store$, (payload, state) => ({
+    .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentHosts: state.network.hosts,
       updatedHost: payload
     }))
@@ -32,17 +32,21 @@ export class NetworkEffects {
     .map(x => new networkActions.HostsUpdateAction(x.unionArr));
 
 
-  @Effect()
+  @Effect({ dispatch: false})
   //@ts-ignore
   startDetection$ = this.actions$.ofType(networkActions.ActionTypes.START_DETECTION)
     .do(() => this.networkService.calculatePossibleAddresses(LOCAL_ADDRESS, LOCAL_SUBNET_MASK))
     .delay(1200)
-    .map(() => [new networkActions.CheckPossibleHostsAction(), new networkActions.KeepAliveActiveHostsAction()]);
+   // .map(() => [new networkActions.CheckPossibleHostsAction(), new networkActions.KeepAliveActiveHostsAction()]);
+   .do((x => {
+     this.networkService.checkPossibleHosts();
+     this.networkService.keepAliveActiveHosts();
+   }))
 
   @Effect({ dispatch: false })
   //@ts-ignore
   keepAliveActiveHosts$ = this.actions$.ofType(networkActions.ActionTypes.KEEP_ALIVE_ACTIVE_HOSTS)
-    .withLatestFrom(this.store$, (action, state) => ({
+    .withLatestFrom(this.store$, (action: networkActions.KeepAliveActiveHostsAction, state: IAppStore) => ({
       hosts: state.network.hosts,
       preferedAddresses: SERVER_ADDRESSES,
       keepAliveTimeout: KEEP_ALIVE_INTERVAL_MS,
@@ -51,8 +55,11 @@ export class NetworkEffects {
     }))
     .filter(x => x.isDetecting)
     .do((x) => {
-      let activeHosts = x.hosts.filter((host: IHost) => host.isAlive);
-      this.networkService.testAddresses(_.concat(activeHosts, x.preferedAddresses), x.requestLimit);
+      let activeHosts: IHost[] = x.hosts.filter((host: IHost) => host.isAlive);
+      let preferedHosts: IHost[] = x.preferedAddresses.map((address: string) => ({ ipAddress: address, isAlive: false}));      
+      let keepAliveHosts = applyChanges(activeHosts, preferedHosts, this.networkService.areEqualHosts).unionArr;
+      this.logService.warn(keepAliveHosts);
+      this.networkService.testHosts(keepAliveHosts, x.requestLimit);
       timer(x.keepAliveTimeout).subscribe(() => {
         this.networkService.keepAliveActiveHosts();
       });
@@ -61,7 +68,7 @@ export class NetworkEffects {
     @Effect({ dispatch: false })
   //@ts-ignore
   checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS)
-    .withLatestFrom(this.store$, (action, state) => ({
+    .withLatestFrom(this.store$, (action, state: IAppStore) => ({
       hosts: state.network.hosts,
       checkAllTimeout: HOST_DETECTION_INTERVAL_MS,
       requestLimit: PARALLEL_REQUEST_LIMIT,
@@ -69,8 +76,8 @@ export class NetworkEffects {
     }))
     .filter(x => x.isDetecting)
     .do((x) => {
-      let inActiveHosts = x.hosts.filter((host: IHost) => !host.isAlive);
-      this.networkService.testAddresses(inActiveHosts, x.requestLimit);
+      let inActiveHosts: IHost[] = x.hosts.filter((host: IHost) => !host.isAlive);
+      this.networkService.testHosts(inActiveHosts, x.requestLimit);
       timer(x.checkAllTimeout).subscribe(() => {
         this.networkService.checkPossibleHosts();
       });

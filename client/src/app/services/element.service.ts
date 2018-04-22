@@ -31,13 +31,24 @@ export class ElementService {
 
     public getElements(host: IHost, keys?: string[]): Observable<IListElement[]> {
       let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.elements}`;
-      return this.requestService.get(URL, { keys: keys}).map(res => res.json());
+      return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
+        return Observable.create([]);
+      });
     }
 
     public getBoards(host: IHost, keys?: string[]): Observable<IBoard[]> {
       let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.boards}`;
-      return this.requestService.get(URL, { keys: keys}).map(res => res.json());
+      return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
+        return Observable.create([]);
+      });;
     }
 
+    public areEqualBoards(board1: IBoard, board2: IBoard) {
+      return  board1.id === board2.id;
+    }
+
+    public areEqualElements(element1: IListElement, element2: IListElement) {
+      return element1.key === element2.key;
+    }
 
 }

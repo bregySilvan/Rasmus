@@ -4,6 +4,7 @@ import { listElements } from '../dummy-store';
 import { RouterService } from '../services/router.service';
 import { Store } from '@ngrx/store';
 import * as networkActions from '../actions/network.actions';
+import * as elementActions from '../actions/element.actions';
 import { IAppStore } from '../app.state';
 
 @Component({
@@ -25,6 +26,14 @@ export class EditBoardsComponent {
 
   public onStopHostDetection(event: any): void {
     this.store$.dispatch(new networkActions.StopDetectionAction());
+  }
+
+  public onStartGetElements(event: any) {
+    this.store$.dispatch(new elementActions.LoadAvailableElementsAction());
+  }
+
+  public onStartGetBoards(event: any) {
+    this.store$.dispatch( new elementActions.LoadAvailableBoardsAction());
   }
 
   constructor(private routerService: RouterService,

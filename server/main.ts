@@ -9,28 +9,5 @@ import { DEFAULT_PORT } from '../config';
 //var file = './log.json';
 //fse.createFileSync(file);
 //fse.writeJsonSync(file, a);
-//new Server().start(DEFAULT_PORT);
-
-
-
-interface IHost {
-    ipAddress: string;
-    isAlive: boolean;
-}
-
-
-let currentHosts: IHost[] = [
-    {
-        ipAddress: '1.1.1.1',
-        isAlive: true,
-    }
-
-];
-let newHosts: IHost[] = [
-    {
-        ipAddress: '1.1.1.1',
-        isAlive: true,
-    }
-
-]
+new Server().start(DEFAULT_PORT);
 

@@ -7,7 +7,7 @@ const START_DETECTION: 'NETWORK: START_DETECTION' = 'NETWORK: START_DETECTION';
 const STOP_DETECTION: 'NETWORK: STOP_DETECTION' = 'NETWORK: STOP_DETECTION';
 const CHECK_POSSIBLE_HOSTS: 'NETWORK: CHECK_POSSIBLE_HOSTS' = 'NETWORK: CHECK_POSSIBLE_HOSTS';
 const KEEP_ALIVE_ACTIVE_HOSTS: 'NETWORK: KEEP_ALIVE_ACTIVE_HOSTS' = 'NETWORK: KEEP_ALIVE_ACTIVE_HOSTS';
-const TRY_HOST_UPDATE: 'NETWORK: TRY_HOST_UPDATE' = 'NETWORK: TRY_HOST_UPDATE';
+const TRY_UPDATE_HOSTS: 'NETWORK: TRY_UPDATE_HOSTS' = 'NETWORK: TRY_UPDATE_HOSTS';
 const HOSTS_UPDATE: 'NETWORK: HOSTS_UPDATE' = 'NETWORK: HOSTS_UPDATE';
 
 
@@ -17,7 +17,7 @@ export const ActionTypes = {
   STOP_DETECTION: type(STOP_DETECTION),
   CHECK_POSSIBLE_HOSTS: type(CHECK_POSSIBLE_HOSTS),
   KEEP_ALIVE_ACTIVE_HOSTS: type(KEEP_ALIVE_ACTIVE_HOSTS),
-  TRY_HOST_UPDATE: type(TRY_HOST_UPDATE),
+  TRY_UPDATE_HOSTS: type(TRY_UPDATE_HOSTS),
   HOSTS_UPDATE: type(HOSTS_UPDATE)
 };
 
@@ -48,8 +48,8 @@ export class KeepAliveActiveHostsAction implements Action {
   }
 }
 
-export class TryHostUpdateAction implements Action {
-  type: typeof ActionTypes.TRY_HOST_UPDATE = ActionTypes.TRY_HOST_UPDATE;
+export class TryUpdateHostsAction implements Action {
+  type: typeof ActionTypes.TRY_UPDATE_HOSTS = ActionTypes.TRY_UPDATE_HOSTS;
   payload: IHost[];
   constructor(hosts: IHost[]) {
     this.payload = hosts;
@@ -68,5 +68,5 @@ export type NetworkActions =
   | StopDetectionAction
   | CheckPossibleHostsAction
   | KeepAliveActiveHostsAction
-  | TryHostUpdateAction
+  | TryUpdateHostsAction
   | HostsUpdateAction
