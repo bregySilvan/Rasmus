@@ -17,7 +17,7 @@ export class DataService {
     }
 
     public getElements(keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
-        this._getQueued(this.boardsFilePath, keys, callback);
+        this._getQueued(this.elementsFilePath, keys, callback);
     }
 
     public saveElement(element: IListElement, callback: (error: any) => void): void {
@@ -25,7 +25,7 @@ export class DataService {
     }
 
     public saveBoard(board: IBoard, callback: (error: any) => void) {
-        this._saveQueued(this.boardsFilePath, element, callback);
+        this._saveQueued(this.boardsFilePath, board, callback);
     }
 
     private _getQueued(filePath: string, keys: string[], callback: (error: any, data: any) => void) {
@@ -39,7 +39,7 @@ export class DataService {
 
     private _saveQueued(filePath: string, data: any, callback: (error: any) => void) {
         this.queueService.addToQueue((next) => {
-            this._save(filePath, element, (err: any) => {
+            this._save(filePath, data, (err: any) => {
                 callback(err);
                 next();
             });
@@ -112,14 +112,14 @@ export class DataService {
     // @toDo: take filepaths from constructor.
     // }
 }
-
+/*
 let dataService: DataService = new DataService();
 let element: IListElement = { key: 'firstKey', type: 'advertisement' };
 let element2: IListElement = { key: 'secondKEy', type: 'advertisement' };
 let element3: IListElement = { key: 'thirdKey', type: 'advertisement' };
 
-let board1 : IBoard =  { key: 'boardKey1', elementKeys: ['firstKey', 'secondKey'] };
-let board2 : IBoard =  { key: 'boardKey2', elementKeys: ['firstKey', 'secondKey'] };
+let board1 : IBoard =  { key: 'boardKey11122', elementKeys: ['firstKey', 'secondKey'] };
+let board2 : IBoard =  { key: 'boardKey22222', elementKeys: ['firstKey', 'secondKey'] };
 let board3 : IBoard =  { key: 'boardKey3', elementKeys: ['firstKey', 'secondKey'] };
 
 function testDataService() {
@@ -144,6 +144,30 @@ function testDataService() {
     //  service.saveElement({key: 'second key', type: ElementTypes.advertisement});
     //  service.saveElement({key: 'third key', type: ElementTypes.advertisement});
 }
+
+function saveBoards() {
+    var errorCb = (error, board) => {
+        if(error) {
+            console.log('failed to save board.', board);
+        } else {
+            console.log('board saved: ', board);
+        }
+    }
+    console.log('saving board: ', board1);
+    dataService.saveBoard(board1, (err) => {
+        
+        errorCb(err, board1);
+    });
+
+    dataService.saveBoard(board2, (err) => {
+        errorCb(err, board2);
+    });
+
+    dataService.saveBoard(board3, (err) => {
+        errorCb(err, board3);
+    });
+}
+
 function readOutDataService() {
     let dataService: DataService = new DataService();
     let elementKeys = ['secondKEy', 'firstKey'];
@@ -156,5 +180,8 @@ function readOutDataService() {
         }
     });
 }
+saveBoards();
 //readOutDataService();
-testDataService();
+//testDataService();*/
+
+
