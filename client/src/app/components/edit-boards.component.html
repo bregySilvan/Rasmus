@@ -1,44 +1,55 @@
-
-
-
 <button (click)="onStartHostDetection($event)">start detection</button>
 <button (click)="onStopHostDetection($event)">stop detection</button>
 <br/>
 <button (click)="onStartGetElements($event)">start getElements</button>
 <button (click)="onStartGetBoards($event)">start GEtboards</button>
-
 <div class="border" [dragData]="'dragDataString'" [draggable]>Drag me </div>
 <p></p>
 <div class="border" (onDrop)="onItemDrop($event)" droppable>Drop in sme</div>
 
-<div id="top-row" class="ui oneth right blue">
-  <ras-option class="sixth ui border" id="select-adv-countper-site-cb">select adv coiunt</ras-option>
-  <ras-option class="sixth ui border" id="select-board-cb">select board</ras-option>
+
+<div id="top-row" class="row blue">
+  <div class="four"></div>
+  <ras-option class="two border" id="select-adv-countper-site-cb">select adv coiunt</ras-option>
+  <ras-option class="two border" id="select-board-cb">select board</ras-option>
 </div>
 
-<div>
-  <div class="ui fifth container border">
-    <ras-element-list [elements]="elements"></ras-element-list>
+<div class="row">
+
+  <div class="two container border">
+    <ras-element-list [elements]="elements" class="ui"></ras-element-list>
   </div>
-  <div id="right big wrapper" class="ui">
-    <div id="pictures and spacer wrapper">
-      <div id="left inner innerspacer" class="ui tenth"></div>
-      <div id="inner center wrapper" class="eighty ui">
-        <div id="inner inner top spacer"></div>
-        <div id="inner elementliostwrapper">
-          <ras-element-list [elements]="elements"></ras-element-list>
-        </div>
-        <div id="inner inner footer" style="height: 10px"></div>
+
+  <div class="six">
+    <div class="one"></div>
+
+    <div id="inner center wrapper" class="six">
+      <div id="inner inner top spacer"></div>
+      <div id="inner elementliostwrapper">
+        <ras-element-list [elements]="elements"></ras-element-list>
       </div>
-      <div id="right inner inner spacer" class="ui tenth"></div>
+      <div id="inner inner footer"></div>
     </div>
-    <div id="general footer" class="oneth">
-      footer
-    </div>
+    <div class="one"></div>
+    <div id="general footer" class="row">
+        footer
+        <div class="five"></div>
+        <div class="three">
+          <ras-navigation></ras-navigation>
+        </div>
+      </div>
   </div>
+
+  
+  
 </div>
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> master
 <!--
 
 <h1>Edit board component</h1>

@@ -50,7 +50,11 @@ export class EditBoardsComponent {
 
   ngOnInit() {
     this.store$.select(x => x.element).subscribe(x =>  {
+<<<<<<< HEAD
       this.logService.log('elements: ', x.availableElements);
+=======
+      this.changeRef.detectChanges();
+>>>>>>> master
       this.elements = x.availableElements;
       this.changeRef.detectChanges();
     });

@@ -33,6 +33,7 @@
         "name": "I know what you did...",
         "description": "some ad description this is",
         "imageURL": "https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png"
+<<<<<<< HEAD
     },
     "5664323": {
         "key": "5664323",
@@ -40,5 +41,7 @@
         "name": "I know what you did...",
         "description": "some ad description this is",
         "imageURL": "https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png"
+=======
+>>>>>>> master
     }
 }

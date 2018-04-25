@@ -13,7 +13,12 @@ export interface INetworkState {
 
 const initialState: INetworkState = {
  // hosts: [{ipAddress: '192.168.1.254', isAlive: true}],
+<<<<<<< HEAD
   hosts: SERVER_ADDRESSES.map(address => ({ ipAddress: address, isAlive: true})),
+=======
+  hosts: [{ipAddress: '10.1.38.110', isAlive: true}],
+ // hosts: [],
+>>>>>>> master
   isDetecting: false,
 };
 
