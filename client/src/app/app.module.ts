@@ -15,6 +15,7 @@ import { DebugEffect } from './effects/debug.effects';
 import { NetworkEffects } from './effects/network.effects';
 import { HttpModule } from '@angular/http';
 import { ElementEffects } from './effects/element.effects';
+import { NgDragDropModule } from 'ng-drag-drop';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ElementEffects } from './effects/element.effects';
     BrowserModule,
     HttpModule ,
     RouterModule.forRoot(CUSTOM_ROUTES),
+    NgDragDropModule.forRoot(),
     StoreModule.provideStore(AppReducer),
     EffectsModule.run(RouterEffects),
     EffectsModule.run(DebugEffect),

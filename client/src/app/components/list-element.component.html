@@ -1,7 +1,7 @@
 
 <div *ngIf="element && element.type === 'advertisement'">
 
-  <ras-advertisement [key]="element.key"></ras-advertisement>
+  <ras-advertisement [advertisement]="element"></ras-advertisement>
 </div>
 
 <div *ngIf="element && element.type !== 'advertisement'">

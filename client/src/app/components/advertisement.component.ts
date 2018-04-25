@@ -8,9 +8,9 @@ import { IAdvertisement } from '../../../../interfaces';
   templateUrl: './advertisement.component.html',
   styleUrls: ['./advertisement.component.css']
 })
-export class AdvertisementComponent implements OnInit {
+export class AdvertisementComponent {
 
-  @Input() key: string = '';
+  @Input()
   advertisement: IAdvertisement | null = null;
 
   constructor() {
@@ -18,14 +18,5 @@ export class AdvertisementComponent implements OnInit {
     // replace with select statement from store..
   }
 
-  ngOnInit() {
-  //  console.log('taking advertisement with key: ', this.key);
-    if(!this.key) {
-      return;
-    }
-    let advertisement = advertisementList.find((adv: IAdvertisement) => adv.key === this.key);
-    if(advertisement) {
-      this.advertisement = advertisement;
-    }
-  }
+
 }

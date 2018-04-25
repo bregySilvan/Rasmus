@@ -1,4 +1,5 @@
 import * as actions from '../actions/network.actions';
+import { SERVER_ADDRESSES } from '../../../../config';
 
 export interface IHost {
   ipAddress: string;
@@ -11,7 +12,8 @@ export interface INetworkState {
 }
 
 const initialState: INetworkState = {
-  hosts: [{ipAddress: '192.168.1.254', isAlive: true}],
+ // hosts: [{ipAddress: '192.168.1.254', isAlive: true}],
+  hosts: SERVER_ADDRESSES.map(address => ({ ipAddress: address, isAlive: true})),
   isDetecting: false,
 };
 

@@ -36,6 +36,10 @@ export class EditBoardsComponent {
   public onStartGetBoards(event: any) {
     this.store$.dispatch( new elementActions.LoadAvailableBoardsAction());
   }
+  
+  public onItemDrop(event: any) {
+    this.logService.log('item drop occured, event: ', event);
+  }
 
   constructor(private routerService: RouterService,
               private store$: Store<IAppStore>,
@@ -47,8 +51,8 @@ export class EditBoardsComponent {
   ngOnInit() {
     this.store$.select(x => x.element).subscribe(x =>  {
       this.logService.log('elements: ', x.availableElements);
-      this.changeRef.detectChanges();
       this.elements = x.availableElements;
+      this.changeRef.detectChanges();
     });
   }
 

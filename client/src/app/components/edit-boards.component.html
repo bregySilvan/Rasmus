@@ -1,3 +1,16 @@
+
+
+
+<button (click)="onStartHostDetection($event)">start detection</button>
+<button (click)="onStopHostDetection($event)">stop detection</button>
+<br/>
+<button (click)="onStartGetElements($event)">start getElements</button>
+<button (click)="onStartGetBoards($event)">start GEtboards</button>
+
+<div class="border" [dragData]="'dragDataString'" [draggable]>Drag me </div>
+<p></p>
+<div class="border" (onDrop)="onItemDrop($event)" droppable>Drop in sme</div>
+
 <div id="top-row" class="ui oneth right blue">
   <ras-option class="sixth ui border" id="select-adv-countper-site-cb">select adv coiunt</ras-option>
   <ras-option class="sixth ui border" id="select-board-cb">select board</ras-option>
@@ -25,12 +38,6 @@
   </div>
 </div>
 
-
-<button (click)="onStartHostDetection($event)">start detection</button>
-<button (click)="onStopHostDetection($event)">stop detection</button>
-<br/>
-<button (click)="onStartGetElements($event)">start getElements</button>
-<button (click)="onStartGetBoards($event)">start GEtboards</button>
 
 <!--
 
