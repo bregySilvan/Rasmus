@@ -15,15 +15,19 @@ import { EventEmitter } from 'protractor';
   templateUrl: './list-element.component.html',
   styleUrls: ['./list-element.component.css']
 })
-export class ListElementComponent {
+export class ListElementComponent implements OnInit {
 
   @Input() element: IListElement | null = null;
   @Input() isDragDropEnabled: boolean = false;
-  @Input() index: number = 0;
 
 
   constructor(private logService: LogService) {
 
+  }
+
+  ngOnInit() {
+    if(!this.element)
+      this.logService.log('received invalid element in ListElement comp: ', this.element);
   }
 
 }

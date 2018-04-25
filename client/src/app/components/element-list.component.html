@@ -1,6 +1,6 @@
 <div class="list">
-    <div *ngFor="let element of elements" class="list-element">
-      <ras-list-element [element]="element" (onDrop)="onDrop($event)" [draggable] droppable [dragData]="element">
-      </ras-list-element>
-    </div>
+  <div *ngFor="let element of elements; let i = index" class="list-element">
+      <ras-drag [element]="element" [index]="i">
+      </ras-drag>
+  </div>
 </div>

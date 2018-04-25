@@ -5,6 +5,7 @@ import { ElementListComponent } from './element-list.component';
 import { ListElementComponent } from './list-element.component';
 import { OptionComponent } from './option.component';
 import { NavigationComponent } from './navigation.component';
+import { DragComponent } from './drag.component';
 
 export const RASMUS_COMPONENTS = [
     MainPageComponent,
@@ -13,5 +14,6 @@ export const RASMUS_COMPONENTS = [
     ElementListComponent,
     ListElementComponent,
     OptionComponent,
-    NavigationComponent
+    NavigationComponent,
+    DragComponent
 ];

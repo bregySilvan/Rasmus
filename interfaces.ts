@@ -15,4 +15,9 @@ export interface IBoard {
   elementKeys: string[];
 }
 
+export interface IDragElementEvent {
+  element: IListElement;
+  index: number;
+}
+
 export type ElementTypes = 'advertisement';

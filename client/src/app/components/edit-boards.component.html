@@ -17,7 +17,7 @@
 <div class="row">
 
   <div class="two container border">
-    <ras-element-list [elements]="elements" [isDragDropEnabled]="true" class="ui"></ras-element-list>
+    <ras-element-list [elements]="availableElements" [isDragDropEnabled]="true" class="ui"></ras-element-list>
   </div>
 
   <div class="six">
@@ -26,7 +26,7 @@
     <div id="inner center wrapper" class="six">
       <div id="inner inner top spacer"></div>
       <div id="inner elementliostwrapper">
-        <ras-element-list [elements]="elements" [isDragDropEnabled]="true"></ras-element-list>
+        <ras-element-list [elements]="elementsInBoard" [isDragDropEnabled]="true"></ras-element-list>
       </div>
       <div id="inner inner footer"></div>
     </div>

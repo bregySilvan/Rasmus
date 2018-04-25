@@ -18,8 +18,8 @@ export class EditBoardsComponent {
   public defaultAdvertisementKey = '1';
   private isDetecting = false;
 
-  elements: IListElement[] = [];
-
+  public availableElements: IListElement[] = [];
+  public elementsInBoard: IListElement[] = [];
 
   public onStartHostDetection(event: any): void {
     this.store$.dispatch(new networkActions.StartDetectionAction());
@@ -51,7 +51,8 @@ export class EditBoardsComponent {
   ngOnInit() {
     this.store$.select(x => x.element).subscribe(x =>  {
       this.logService.log('elements: ', x.availableElements);
-      this.elements = x.availableElements;
+      this.availableElements = x.availableElements.concat();
+      this.elementsInBoard = x.availableElements.concat();
       this.changeRef.detectChanges();
     });
   }
