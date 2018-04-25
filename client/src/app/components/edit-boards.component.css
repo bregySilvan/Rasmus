@@ -1,29 +1,45 @@
-.ui {
-  display: inline-block;
+
+
+.row {
+  display: flex;
 }
 
-
-
-.oneth {
-  width: 100%
+.eight {
+  width: 100%;
 }
-.second {
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.one {
+  width: 12.5%;
+}
+
+.two {
+  width: 25%;
+}
+
+.three {
+  width: 37.5%;
+}
+.four {
   width: 50%;
 }
-.third {
-  width: 33%
+
+.five {
+  width: 62.5%;
 }
 
-.fifth {
-  width: 20%;
+.six {
+  width: 75%;
 }
 
-sixth {
-  width: 16%;
-}
-
-.tenth {
-  width: 10%;
+.seven {
+  width: 87.5%;
 }
 
 .border {
@@ -31,7 +47,7 @@ sixth {
 }
 
 .right {
-  text-align: right;
+  align-self: right;
 }
 
 .blue {

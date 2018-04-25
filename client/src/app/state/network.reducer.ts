@@ -11,7 +11,9 @@ export interface INetworkState {
 }
 
 const initialState: INetworkState = {
-  hosts: [{ipAddress: '192.168.1.254', isAlive: true}],
+ // hosts: [{ipAddress: '192.168.1.254', isAlive: true}],
+  hosts: [{ipAddress: '10.1.38.110', isAlive: true}],
+ // hosts: [],
   isDetecting: false,
 };
 
