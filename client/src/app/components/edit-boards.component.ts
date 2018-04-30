@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { IListElement } from '../../../../interfaces';
 import { RouterService } from '../services/router.service';
 import { Store } from '@ngrx/store';
@@ -6,6 +6,7 @@ import * as networkActions from '../actions/network.actions';
 import * as elementActions from '../actions/element.actions';
 import { IAppStore } from '../app.state';
 import { LogService } from '../services/log.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -13,11 +14,11 @@ import { LogService } from '../services/log.service';
   templateUrl: './edit-boards.component.html',
   styleUrls: ['./edit-boards.component.css']
 })
-export class EditBoardsComponent {
+export class EditBoardsComponent implements OnInit, OnDestroy {
 
   public defaultAdvertisementKey = '1';
   private isDetecting = false;
-
+  private elementSub: Subscription = new Subscription();
   public availableElements: IListElement[] = [];
   public elementsInBoard: IListElement[] = [];
 
@@ -49,12 +50,17 @@ export class EditBoardsComponent {
   }
 
   ngOnInit() {
-    this.store$.select(x => x.element).subscribe(x =>  {
+    
+    this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
       this.logService.log('elements: ', x.availableElements);
       this.availableElements = x.availableElements.concat();
       this.elementsInBoard = x.availableElements.concat();
-      this.changeRef.detectChanges();
+     // this.changeRef.detectChanges();
     });
+  }
+
+  ngOnDestroy() {
+    this.elementSub.unsubscribe();
   }
 
 }

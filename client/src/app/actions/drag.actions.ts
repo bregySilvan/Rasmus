@@ -1,0 +1,61 @@
+import { type } from '../../utils/check-action-types';
+import { Action } from '@ngrx/store';
+import { IListElement } from '../../../../interfaces';
+
+const START: 'DRAG: START' = 'DRAG: START';
+const DROP: 'DRAG: START' = 'DRAG: START';
+const STOP: 'DRAG: STOP' = 'DRAG: STOP';
+const HOVER_DRAGGABLE_ITEM_ENTER: 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER' = 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER';
+const HOVER_DRAGGABLE_ITEM_LEAVE: 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE' = 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE';
+
+export const ActionTypes = {
+  START: type(START),
+  DROP: type(DROP),
+  STOP: type(STOP),
+  HOVER_DRAGGABLE_ITEM_ENTER: type(HOVER_DRAGGABLE_ITEM_ENTER),
+  HOVER_DRAGGABLE_ITEM_LEAVE: type(HOVER_DRAGGABLE_ITEM_LEAVE)
+}
+
+export class DragStartAction implements Action {
+    type: typeof START = ActionTypes.START;
+    payload: IListElement;
+    constructor(draggedElement: IListElement) {
+        this.payload = draggedElement;
+    }
+}
+
+export class DropAction implements Action {
+    type: typeof ActionTypes.DROP = ActionTypes.DROP;
+    payload: string;
+    constructor(targetParentKey: string) {
+        this.payload = targetParentKey;
+    }
+}
+
+export class DragStopAction implements Action {
+    type: typeof ActionTypes.STOP = ActionTypes.STOP;
+    constructor() {
+        //
+    }
+}
+
+export class HoverDraggableItemEnterAction implements Action {
+    type: typeof ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER = ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER;
+    payload: string;
+    constructor(hoveringItemKey: string) {
+        this.payload = hoveringItemKey;
+    }
+}
+
+export class HoverDraggableItemLeaveAction implements Action {
+    type: typeof ActionTypes.HOVER_DRAGGABLE_ITEM_LEAVE = ActionTypes.HOVER_DRAGGABLE_ITEM_LEAVE;
+    constructor() {
+        //
+    }
+}
+
+export type DragActionTypes = DragStartAction
+        | DropAction
+        | DragStopAction
+        | HoverDraggableItemEnterAction
+        | HoverDraggableItemLeaveAction;

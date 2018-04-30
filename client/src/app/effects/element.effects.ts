@@ -15,7 +15,7 @@ import { applyChanges } from '../../utils/functions';
 @Injectable()
 export class ElementEffects {
 
-  @Effect()
+  @Effect({ dispatch: false })
   //@ts-ignore
   loadAvailableElements$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_ELEMENTS)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
@@ -25,13 +25,13 @@ export class ElementEffects {
       activeHosts.forEach((host: IHost) => {
         this.logService.log('host:: ', host);
          let sub = this.elementService.getElements(host).subscribe((elements: IListElement[]) => {
-          this.store$.dispatch((new elementActions.TryUpdateElementsAction(elements)));
+          this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
           sub.unsubscribe();
         });
       });
     });
 
-  @Effect()
+  @Effect({ dispatch: false})
   //@ts-ignore
   loadAvailableBoards$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_BOARDS)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
@@ -40,7 +40,7 @@ export class ElementEffects {
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
         let sub = this.elementService.getBoards(host).subscribe((boards: IBoard[]) => {
-          this.store$.dispatch((new elementActions.TryUpdateBoardsAction(boards)));
+          this.store$.dispatch(new elementActions.TryUpdateBoardsAction(boards));
           sub.unsubscribe();
         });
       });

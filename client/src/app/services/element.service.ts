@@ -38,7 +38,6 @@ export class ElementService {
     }
 
     public getElements(host: IHost, keys?: string[]): Observable<IListElement[]> {
-      this.logService.log('getting elements');
       let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.elements}`;
       return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
         this.logService.log('error=? ', error);

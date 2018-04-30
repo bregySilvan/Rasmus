@@ -13,7 +13,7 @@ import * as elementActions from '../actions/element.actions';
 
 
 @Injectable()
-export class DragAndDropService {
+export class DragService {
 
     public constructor(private requestService: RequestService,
                        private logService: LogService,
@@ -21,7 +21,7 @@ export class DragAndDropService {
 
     }
 
-    public isDroppable(fromElement: IListElement, toElement: IListElement): boolean {
+    public isDroppable(sourceParentKey: string, targetParentKey: string): boolean {
         return true;
     }
 

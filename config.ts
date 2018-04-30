@@ -22,14 +22,14 @@ export const LOCATIONS: ILocationMap = {
 
 export const SERVER_ADDRESSES = [
 
-   // "192.168.1.254"
+    '192.168.1.254'
 
   //  "10.1.34.116"
-   '10.1.34.106'
+ //  '10.1.34.106'
 ];
 
-
-export const LOCAL_ADDRESS = '10.1.34.106';
+export const NO_LIST_KEY = 'THIS_IS_NO_LIST_KEY';
+export const LOCAL_ADDRESS = '192.168.1.254';
 
 //export const LOCAL_ADDRESS = '192.168.1.254';
 

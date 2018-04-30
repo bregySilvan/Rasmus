@@ -15,9 +15,9 @@ export interface IBoard {
   elementKeys: string[];
 }
 
-export interface IDragElementEvent {
+export interface IDragInfo {
   element: IListElement;
   index: number;
 }
 
-export type ElementTypes = 'advertisement';
+export type ElementTypes = 'advertisement' | 'empty';

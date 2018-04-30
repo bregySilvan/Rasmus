@@ -32,16 +32,16 @@ export class NetworkEffects {
     .map(x => new networkActions.HostsUpdateAction(x.unionArr));
 
 
-  @Effect({ dispatch: false})
+  @Effect()
   //@ts-ignore
   startDetection$ = this.actions$.ofType(networkActions.ActionTypes.START_DETECTION)
     .do(() => this.networkService.calculatePossibleAddresses(LOCAL_ADDRESS, LOCAL_SUBNET_MASK))
     .delay(1200)
    // .map(() => [new networkActions.CheckPossibleHostsAction(), new networkActions.KeepAliveActiveHostsAction()]);
-   .do((x => {
-     this.networkService.checkPossibleHosts();
-     this.networkService.keepAliveActiveHosts();
-   }))
+   .flatMap(x => ([
+     new networkActions.CheckPossibleHostsAction(),
+     new networkActions.KeepAliveActiveHostsAction()]));
+     
 
   @Effect({ dispatch: false })
   //@ts-ignore

@@ -10,7 +10,7 @@ import { LogService } from './services/log.service';
 export class AppComponent {
   title = 'app';
 
-  public navigateToEditBoard(): void {
+  public navigateToEditBoards(): void {
     this._navigateTo('edit-boards');
   }
 
