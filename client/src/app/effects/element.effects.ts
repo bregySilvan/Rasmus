@@ -10,8 +10,7 @@ import 'rxjs/add/operator/mergeMap'
 import { IHost } from '../state/network.reducer';
 import { ElementService } from '../services/element.service';
 import { IElement, IBoard } from '../../../../interfaces';
-import { Observable } from 'rxjs/Observable';
-import { applyChanges } from '../../utils/functions';
+import { unionDistinct, unionElementsDistinct } from '../../utils/functions';
 @Injectable()
 export class ElementEffects {
 
@@ -54,7 +53,7 @@ export class ElementEffects {
       currentBoards: state.element.availableBoards,
       updatedBoards: payload
     }))
-    .map(x => applyChanges<IBoard>(x.updatedBoards, x.currentBoards, this.elementService.areEqualBoards))
+    .map(x => unionElementsDistinct(x.updatedBoards, x.currentBoards))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateBoardsAction(x.unionArr));
 
@@ -66,7 +65,7 @@ export class ElementEffects {
       currentElements: state.element.availableElements,
       updatedElements: payload
     }))
-    .map(x => applyChanges<IElement>(x.updatedElements, x.currentElements, this.elementService.areEqualElements))
+    .map(x => unionElementsDistinct(x.updatedElements, x.currentElements))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateElementsAction(x.unionArr));
 

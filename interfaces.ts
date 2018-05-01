@@ -1,6 +1,9 @@
 
-export interface IElement {
+export interface IComparable {
   key: string;
+}
+
+export interface IElement extends IComparable {
   type: ElementTypes;
 }
 

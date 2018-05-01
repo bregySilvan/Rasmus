@@ -15,7 +15,7 @@ import { map, switchMap, filter } from 'rxjs/operators';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
-import { applyChanges } from '../../utils/functions';
+import { unionDistinct } from '../../utils/functions';
 @Injectable()
 export class NetworkEffects {
 
@@ -27,7 +27,7 @@ export class NetworkEffects {
       currentHosts: state.network.hosts,
       updatedHost: payload
     }))
-    .map(x => applyChanges(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
+    .map(x => unionDistinct(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
     .filter(x => x.hasChanged)
     .map(x => new networkActions.HostsUpdateAction(x.unionArr));
 
@@ -57,7 +57,7 @@ export class NetworkEffects {
     .do((x) => {
       let activeHosts: IHost[] = x.hosts.filter((host: IHost) => host.isAlive);
       let preferedHosts: IHost[] = x.preferedAddresses.map((address: string) => ({ ipAddress: address, isAlive: false}));      
-      let keepAliveHosts = applyChanges(activeHosts, preferedHosts, this.networkService.areEqualHosts).unionArr;
+      let keepAliveHosts = unionDistinct(activeHosts, preferedHosts, this.networkService.areEqualHosts).unionArr;
 
       this.networkService.testHosts(keepAliveHosts, x.requestLimit);
       timer(x.keepAliveTimeout).subscribe(() => {

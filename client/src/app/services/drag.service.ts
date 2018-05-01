@@ -10,8 +10,7 @@ import { LogService } from './log.service';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
 import * as elementActions from '../actions/element.actions';
-import { UpdateDragContainerAction, RegisterDragContainerAction } from '../actions/drag.actions';
-import { DragContainer } from '../base-classes/drag-container.base';
+import { UpdateDragContainerAction } from '../actions/drag.actions';
 import { IDragInfo } from '../state/drag.reducer';
 
 
@@ -26,10 +25,6 @@ export class DragService {
 
     public isDroppable(sourceParentKey: string, targetParentKey: string): boolean {
         return true;
-    }
-
-    public register(dragContainer: DragContainer) {
-        this.store$.dispatch(new RegisterDragContainerAction(dragContainer));
     }
 
     public update(info: IDragInfo) {

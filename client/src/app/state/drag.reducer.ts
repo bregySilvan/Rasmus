@@ -2,7 +2,6 @@ import * as actions from '../actions/drag.actions';
 import { IHost } from './network.reducer';
 import { IElement, IBoard } from '../../../../interfaces';
 import { NO_ITEM_KEY } from '../../../../config';
-import { DragContainer } from '../base-classes/drag-container.base';
 
 export interface IDragInfo {
   element: IElement;
@@ -10,21 +9,25 @@ export interface IDragInfo {
   dragContainerKey: string;
 }
 
+export interface IDragSettings {
+
+}
+
 export interface IDragState {
-  dragInfo: IDragInfo;
+  currentDragInfo: IDragInfo;
   isDragging: boolean;
   canDrop: boolean;
   hoveringItemParentKey?: string;
-  draggableElements: { [key: string]: IElement[] };
+  dragContainers: { [key: string]: IDragSettings };
 }
 
 const initialListElement: IDragInfo = { element: { type: 'empty', key: '42' }, index: -1, dragContainerKey: NO_ITEM_KEY };
 
 const initialState: IDragState = {
-  dragInfo: initialListElement,
+  currentDragInfo: initialListElement,
   isDragging: false,
   canDrop: false,
-  draggableElements: {}
+  dragContainers: {}
 };
 
 export function dragReducer(state: IDragState = initialState, action: actions.DragActionTypes): IDragState {
@@ -63,31 +66,12 @@ export function dragReducer(state: IDragState = initialState, action: actions.Dr
         hoveringItemParentKey: undefined
       });
 
-    case actions.ActionTypes.REGISTER_DRAG_CONTAINER:
-      let draggables = state.draggableElements;
-      draggables[action.payload.getKey()] = action.payload.elements;
-      return Object.assign({}, state, {
-        draggableElements: draggables
-      });
-
     case actions.ActionTypes.UPDATE_DRAG_CONTAINER:
-      let _draggables = state.draggableElements;
-      let keys = Object.keys(_draggables);
-      if(!keys.includes(action.payload.dragContainerKey) || !!action.payload.element) {
-        return state;
-      }
-
-      let dragElements = _draggables[action.payload.dragContainerKey];
-      let index = dragElements.findIndex(element => element.key === action.payload.element.key)
-      if(index > -1) {
-        dragElements[index] = action.payload.element;
-      } else {
-        dragElements.push(action.payload.element);
-      }
-      _draggables[action.payload.dragContainerKey] = dragElements;
+      let _dragContainers = state.dragContainers;
+      _dragContainers[action.payload.dragContainerKey] = action.payload;
 
       return Object.assign({}, state, {
-        draggableElements: _draggables
+        dragContainers: _dragContainers
       });
 
     default:

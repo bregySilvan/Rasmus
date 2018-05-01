@@ -6,6 +6,7 @@ import { IElement, IBoard } from '../../../../interfaces';
 export interface IElementState {
     availableElements: IElement[];
     availableBoards: IBoard[];
+    
 }
 
 const initialState: IElementState = {

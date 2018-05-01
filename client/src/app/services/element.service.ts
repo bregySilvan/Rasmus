@@ -51,13 +51,4 @@ export class ElementService {
         return Observable.create([]);
       });
     }
-
-    public areEqualBoards(board1: IBoard, board2: IBoard) {
-      return  board1.key === board2.key;
-    }
-
-    public areEqualElements(element1: IElement, element2: IElement) {
-      return element1.key === element2.key;
-    }
-
 }

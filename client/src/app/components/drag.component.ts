@@ -25,19 +25,19 @@ export class DragComponent {
     }
     
     public onElementDrop(event: any) {
-        this.logService.log('oonElementDrop emitted:: ', { element: event.dragData, index: this.index, parentItemKey: this.dragContainerKey });
-        let dragInfo = { element: event.dragData, index: this.index, parentItemKey: this.dragContainerKey };
+        this.logService.log('oonElementDrop emitted:: ', { element: event.dragData, index: this.index, dragContainerKey: this.dragContainerKey });
+        let dragInfo: IDragInfo = { element: event.dragData, index: this.index, dragContainerKey: this.dragContainerKey };
         this.dragService.update(dragInfo);
     }
 
     public onElementDragStart(event: any) {
-        this.logService.log('onElementDragStart emitted:: ', { element: event.dragData, index: this.index, parentItemKey: this.dragContainerKey });
+        this.logService.log('onElementDragStart emitted:: ', { element: event.dragData, index: this.index, dragContainerKey: this.dragContainerKey });
         
     //    this.onDragStart.emit({ element: event.dragData, index: this.index, parentItemKey: this.dragContainerKey });
     }
 
     public onElementDragEnter(event: any) {
-        this.logService.log('onElementDragEnter emitted:: ', { element: event.dragData, index: this.index, parentItemKey: this.dragContainerKey });
+        this.logService.log('onElementDragEnter emitted:: ', { element: event.dragData, index: this.index, dragContainerKey: this.dragContainerKey });
     //    this.onDragEnter.emit({ element: event.dragData, index: this.index, parentItemKey: this.dragContainerKey });
     }
 }
