@@ -1,6 +1,6 @@
 <div class="list">
   <div *ngFor="let element of elements; let i = index" class="list-element">
-      <ras-drag [element]="element" [index]="i">
+      <ras-drag [element]="element" [index]="i" [dragContainerKey]="getKey()">
       </ras-drag>
   </div>
 </div>

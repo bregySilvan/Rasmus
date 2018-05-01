@@ -1,5 +1,5 @@
 
-import { IListElement, IAdvertisement, ElementTypes } from '../../../interfaces';
+import { IElement, IAdvertisement, ElementTypes } from '../../../interfaces';
 
 export const advertisementList: IAdvertisement[] = [];
 /*
@@ -39,7 +39,7 @@ export const advertisementList: IAdvertisement[] = [];
 
 export const advertisementKeys: string[] = ['1', '2', '3'];
 
-export const listElements: IListElement[] = [
+export const listElements: IElement[] = [
   {
     key: '1',
     type: 'advertisement'

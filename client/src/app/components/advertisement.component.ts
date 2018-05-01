@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IAdvertisement, IListElement } from '../../../../interfaces';
+import { IAdvertisement, IElement } from '../../../../interfaces';
 import { Store } from '@ngrx/store';
 import { IAppStore } from '../app.state';
 import { LogService } from '../services/log.service';

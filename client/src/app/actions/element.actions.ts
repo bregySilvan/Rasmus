@@ -1,6 +1,6 @@
 
 import { Action } from '@ngrx/store';
-import { IListElement, IBoard } from '../../../../interfaces';
+import { IElement, IBoard } from '../../../../interfaces';
 import { type } from '../../utils/check-action-types';
 
 
@@ -41,8 +41,8 @@ export class LoadAvailableElementsAction implements Action {
 
   export class TryUpdateElementsAction implements Action {
     type: typeof ActionTypes.TRY_UPDATE_ELEMENTS = ActionTypes.TRY_UPDATE_ELEMENTS;
-    payload: IListElement[];
-    constructor(elements: IListElement[]) {
+    payload: IElement[];
+    constructor(elements: IElement[]) {
       this.payload = elements;
     }
   }
@@ -57,8 +57,8 @@ export class LoadAvailableElementsAction implements Action {
 
   export class UpdateElementsAction implements Action {
     type: typeof ActionTypes.UPDATE_ELEMENTS = ActionTypes.UPDATE_ELEMENTS;
-    payload: IListElement[];
-    constructor(elements: IListElement[]) {
+    payload: IElement[];
+    constructor(elements: IElement[]) {
       this.payload = elements;
     }
   }
@@ -81,8 +81,8 @@ export class LoadAvailableElementsAction implements Action {
 
   export class SaveElementAction implements Action {
     type: typeof ActionTypes.SAVE_ELEMENTS = ActionTypes.SAVE_ELEMENTS;
-    payload: IListElement[];
-    constructor(elements: IListElement[]) {
+    payload: IElement[];
+    constructor(elements: IElement[]) {
       this.payload = elements;
     }
   }

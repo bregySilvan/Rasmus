@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IListElement, ElementTypes } from '../../../../interfaces';
+import { IElement, ElementTypes } from '../../../../interfaces';
 import { Store } from '@ngrx/store';
 import { IAppStore } from '../app.state';
 import * as router from '../actions/router.actions';
 import { LogService } from '../services/log.service';
+import { DragContainer } from '../base-classes/drag-container.base';
+import { DragService } from '../services/drag.service';
 
 export type ListAlignments = 'horizontal' | 'vertical';
 
@@ -15,25 +17,30 @@ export type ListAlignments = 'horizontal' | 'vertical';
 })
 
 // pls find a better name. It's confusing since list-element component also exists
-export class ElementListComponent {
+export class ElementListComponent extends DragContainer {
 
   @Input() maxElementsDisplayed: number = 15;
   @Input() alignment: ListAlignments = 'vertical';
   @Input() isDragDropEnabled = true; //is for future purposes.
-  @Input() elements: IListElement[] = [];
 
   public startIndex = 0;
+  private key = '' + Date.now() + '_' + ('' + Math.random()).substring(1, 7);;
+
   onElementDrop(event: any) {
     this.logService.log('onDrop in elementList emitted', event);
-    
-  }
-  
-
-  constructor(private store: Store<IAppStore>,
-              private logService: LogService) {
-    //
   }
 
-  
+  public getKey() {
+    return this.key;
+  }
+
+  constructor(dragService: DragService,
+    store$: Store<IAppStore>,
+    private logService: LogService) {
+    super(dragService, store$);
+
+  }
+
+
 
 }

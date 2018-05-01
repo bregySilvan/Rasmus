@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
-import { IListElement } from '../../../../interfaces';
+import { IElement } from '../../../../interfaces';
 import { RouterService } from '../services/router.service';
 import { Store } from '@ngrx/store';
 import * as networkActions from '../actions/network.actions';
@@ -16,11 +16,10 @@ import { Subscription } from 'rxjs';
 })
 export class EditBoardsComponent implements OnInit, OnDestroy {
 
-  public defaultAdvertisementKey = '1';
   private isDetecting = false;
   private elementSub: Subscription = new Subscription();
-  public availableElements: IListElement[] = [];
-  public elementsInBoard: IListElement[] = [];
+  public availableElements: IElement[] = [];
+  public elementsInBoard: IElement[] = [];
 
   public onStartHostDetection(event: any): void {
     this.store$.dispatch(new networkActions.StartDetectionAction());
@@ -57,6 +56,8 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
       this.elementsInBoard = x.availableElements.concat();
      // this.changeRef.detectChanges();
     });
+
+
   }
 
   ngOnDestroy() {

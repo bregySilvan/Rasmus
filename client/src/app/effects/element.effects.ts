@@ -9,7 +9,7 @@ import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mergeMap'
 import { IHost } from '../state/network.reducer';
 import { ElementService } from '../services/element.service';
-import { IListElement, IBoard } from '../../../../interfaces';
+import { IElement, IBoard } from '../../../../interfaces';
 import { Observable } from 'rxjs/Observable';
 import { applyChanges } from '../../utils/functions';
 @Injectable()
@@ -24,7 +24,7 @@ export class ElementEffects {
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
         this.logService.log('host:: ', host);
-         let sub = this.elementService.getElements(host).subscribe((elements: IListElement[]) => {
+         let sub = this.elementService.getElements(host).subscribe((elements: IElement[]) => {
           this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
           sub.unsubscribe();
         });
@@ -61,12 +61,12 @@ export class ElementEffects {
   @Effect()
   //@ts-ignore
   tryUpdateElements$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_ELEMENTS)
-    .map<any, IListElement[]>(toPayload)
+    .map<any, IElement[]>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentElements: state.element.availableElements,
       updatedElements: payload
     }))
-    .map(x => applyChanges<IListElement>(x.updatedElements, x.currentElements, this.elementService.areEqualElements))
+    .map(x => applyChanges<IElement>(x.updatedElements, x.currentElements, this.elementService.areEqualElements))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateElementsAction(x.unionArr));
 

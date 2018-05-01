@@ -5,7 +5,7 @@ import { LOCATIONS, DEFAULT_PORT } from '../../../../config';
 import { RequestService } from './request.service';
 import { IHost } from '../state/network.reducer';
 import { Response } from '@angular/http';
-import { IListElement, IBoard } from '../../../../interfaces';
+import { IElement, IBoard } from '../../../../interfaces';
 import { LogService } from './log.service';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
@@ -21,7 +21,7 @@ export class ElementService {
 
     }
 
-    public tryElementsUpdate(elements: IListElement[]) {
+    public tryElementsUpdate(elements: IElement[]) {
       this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
     }
 
@@ -29,7 +29,7 @@ export class ElementService {
       this.store$.dispatch(new elementActions.TryUpdateBoardsAction(boards));
     }
 
-    public saveElements(elements: IListElement[]) {
+    public saveElements(elements: IElement[]) {
       this.store$.dispatch(new elementActions.UpdateElementsAction(elements));
     }
 
@@ -37,7 +37,7 @@ export class ElementService {
       this.store$.dispatch(new elementActions.UpdateBoardsAction(boards));
     }
 
-    public getElements(host: IHost, keys?: string[]): Observable<IListElement[]> {
+    public getElements(host: IHost, keys?: string[]): Observable<IElement[]> {
       let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.elements}`;
       return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
         this.logService.log('error=? ', error);
@@ -56,7 +56,7 @@ export class ElementService {
       return  board1.key === board2.key;
     }
 
-    public areEqualElements(element1: IListElement, element2: IListElement) {
+    public areEqualElements(element1: IElement, element2: IElement) {
       return element1.key === element2.key;
     }
 

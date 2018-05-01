@@ -1,26 +1,32 @@
 import { type } from '../../utils/check-action-types';
 import { Action } from '@ngrx/store';
-import { IListElement } from '../../../../interfaces';
+import { IElement } from '../../../../interfaces';
+import { DragContainer } from '../base-classes/drag-container.base';
+import { IDragInfo } from '../state/drag.reducer';
 
 const START: 'DRAG: START' = 'DRAG: START';
 const DROP: 'DRAG: START' = 'DRAG: START';
 const STOP: 'DRAG: STOP' = 'DRAG: STOP';
 const HOVER_DRAGGABLE_ITEM_ENTER: 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER' = 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER';
 const HOVER_DRAGGABLE_ITEM_LEAVE: 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE' = 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE';
+const REGISTER_DRAG_CONTAINER: 'DRAG: REGISTER_DRAG_CONTAINER' = 'DRAG: REGISTER_DRAG_CONTAINER';
+const UPDATE_DRAG_CONTAINER: 'DRAG: UPDATE_DRAG_CONTAINER' = 'DRAG: UPDATE_DRAG_CONTAINER';
 
 export const ActionTypes = {
   START: type(START),
   DROP: type(DROP),
   STOP: type(STOP),
   HOVER_DRAGGABLE_ITEM_ENTER: type(HOVER_DRAGGABLE_ITEM_ENTER),
-  HOVER_DRAGGABLE_ITEM_LEAVE: type(HOVER_DRAGGABLE_ITEM_LEAVE)
+  HOVER_DRAGGABLE_ITEM_LEAVE: type(HOVER_DRAGGABLE_ITEM_LEAVE),
+  REGISTER_DRAG_CONTAINER: type(REGISTER_DRAG_CONTAINER),
+  UPDATE_DRAG_CONTAINER: type(UPDATE_DRAG_CONTAINER)
 }
 
 export class DragStartAction implements Action {
     type: typeof START = ActionTypes.START;
-    payload: IListElement;
-    constructor(draggedElement: IListElement) {
-        this.payload = draggedElement;
+    payload: IDragInfo;
+    constructor(dragInfo: IDragInfo) {
+        this.payload = dragInfo;
     }
 }
 
@@ -54,8 +60,26 @@ export class HoverDraggableItemLeaveAction implements Action {
     }
 }
 
+export class UpdateDragContainerAction implements Action {
+    type: typeof ActionTypes.UPDATE_DRAG_CONTAINER = ActionTypes.UPDATE_DRAG_CONTAINER;
+    payload: IDragInfo;
+    constructor(info: IDragInfo) {
+        this.payload = info;
+    }
+}
+
+export class RegisterDragContainerAction implements Action {
+    type: typeof ActionTypes.REGISTER_DRAG_CONTAINER = ActionTypes.REGISTER_DRAG_CONTAINER;
+    payload: DragContainer;
+    constructor(dragContainer: DragContainer) {
+        this.payload = dragContainer;
+    }
+}
+
 export type DragActionTypes = DragStartAction
         | DropAction
         | DragStopAction
         | HoverDraggableItemEnterAction
-        | HoverDraggableItemLeaveAction;
+        | HoverDraggableItemLeaveAction
+        | RegisterDragContainerAction
+        | UpdateDragContainerAction;

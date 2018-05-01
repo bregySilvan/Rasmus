@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { IListElement, ElementTypes, IBoard } from '../../interfaces';
+import { IElement, ElementTypes, IBoard } from '../../interfaces';
 import * as express from 'express';
 import { DataService } from './data-service';
 import * as _ from 'lodash';
@@ -38,7 +38,7 @@ export class RequestHandlerService {
 
     // payload: { element: IListElement }
     public onPostElement(req: express.Request, res: express.Response, next: express.NextFunction) {
-        let listElement: IListElement = req.query;
+        let listElement: IElement = req.query;
         this.dataService.saveElement(listElement, (error: Error) => {
             let responseData = 'saved element Successfully';
             let responseInfo = { response: responseData, error: error };
@@ -57,7 +57,7 @@ export class RequestHandlerService {
     public onGetElements(req: express.Request, res: express.Response, next: express.NextFunction) {
         console.log('req.query:: ', req.query);
         let keys: string[] = Object.keys(req.query).map((key) => req.query[key]);
-        this.dataService.getElements(keys, (error: Error, elements: IListElement[]) => {
+        this.dataService.getElements(keys, (error: Error, elements: IElement[]) => {
             let responseData = elements;
             let responseInfo = { response: responseData, error: error };
             let responseStati = { bad: 403, good: 200 };

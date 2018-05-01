@@ -1,23 +1,17 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
-import { IListElement, ElementTypes } from '../../../../interfaces';
+import { IElement, ElementTypes } from '../../../../interfaces';
 import { LogService } from '../services/log.service';
 import { EventEmitter } from 'protractor';
-/**
- * responsible for holding either
- * an advertisement
- * a boardType for example..
- * an element-list
- */
 
 @Component({
   // tslint:disable-next-line:component-selector
-  selector: 'ras-list-element',
-  templateUrl: './list-element.component.html',
-  styleUrls: ['./list-element.component.css']
+  selector: 'ras-element',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.css']
 })
-export class ListElementComponent implements OnInit {
+export class ElementComponent implements OnInit {
 
-  @Input() element: IListElement | null = null;
+  @Input() element: IElement | null = null;
   @Input() isDragDropEnabled: boolean = false;
 
 

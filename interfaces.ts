@@ -1,10 +1,10 @@
 
-export interface IListElement {
+export interface IElement {
   key: string;
   type: ElementTypes;
 }
 
-export interface IAdvertisement extends IListElement {
+export interface IAdvertisement extends IElement {
   name: string;
   description: string;
   imageURL: string;
@@ -15,9 +15,6 @@ export interface IBoard {
   elementKeys: string[];
 }
 
-export interface IDragInfo {
-  element: IListElement;
-  index: number;
-}
+
 
 export type ElementTypes = 'advertisement' | 'empty';
