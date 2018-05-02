@@ -10,7 +10,8 @@ export interface IDragInfo {
 }
 
 export interface IDragSettings {
-
+    source: 'keep' | 'remove',
+    target: 'replace' | 'insert' | 'add' | 'remove' 
 }
 
 export interface IDragState {
@@ -18,7 +19,6 @@ export interface IDragState {
   isDragging: boolean;
   canDrop: boolean;
   hoveringItemParentKey?: string;
-  dragContainers: { [key: string]: IDragSettings };
 }
 
 const initialListElement: IDragInfo = { element: { type: 'empty', key: '42' }, index: -1, dragContainerKey: NO_ITEM_KEY };
@@ -26,8 +26,7 @@ const initialListElement: IDragInfo = { element: { type: 'empty', key: '42' }, i
 const initialState: IDragState = {
   currentDragInfo: initialListElement,
   isDragging: false,
-  canDrop: false,
-  dragContainers: {}
+  canDrop: false
 };
 
 export function dragReducer(state: IDragState = initialState, action: actions.DragActionTypes): IDragState {
@@ -56,7 +55,7 @@ export function dragReducer(state: IDragState = initialState, action: actions.Dr
 
     case actions.ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER:
       return Object.assign({}, state, {
-        canDrop: true,
+        canDrop: true, // add check if can drop here..
         hoveringItemParentKey: action.payload,
       });
 
@@ -64,14 +63,6 @@ export function dragReducer(state: IDragState = initialState, action: actions.Dr
       return Object.assign({}, state, {
         canDrop: false,
         hoveringItemParentKey: undefined
-      });
-
-    case actions.ActionTypes.UPDATE_DRAG_CONTAINER:
-      let _dragContainers = state.dragContainers;
-      _dragContainers[action.payload.dragContainerKey] = action.payload;
-
-      return Object.assign({}, state, {
-        dragContainers: _dragContainers
       });
 
     default:

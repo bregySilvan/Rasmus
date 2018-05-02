@@ -13,7 +13,7 @@ export interface IAdvertisement extends IElement {
   imageURL: string;
 }
 
-export interface IBoard {
+export interface IBoard extends IElement {
   key: string;
   elementKeys: string[];
 }

@@ -10,7 +10,7 @@ import { LogService } from './log.service';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
 import * as elementActions from '../actions/element.actions';
-import { UpdateDragContainerAction } from '../actions/drag.actions';
+import { UpdateDragContainerAction, HoverDraggableItemEnterAction, HoverDraggableItemLeaveAction } from '../actions/drag.actions';
 import { IDragInfo } from '../state/drag.reducer';
 
 
@@ -31,4 +31,11 @@ export class DragService {
         this.store$.dispatch(new UpdateDragContainerAction(info));
     }
 
+    public dragHoverEnter(info: IDragInfo) {
+        this.store$.dispatch(new HoverDraggableItemEnterAction(info.dragContainerKey));
+    }
+
+    public dragHoverLeave() {
+        this.store$.dispatch(new HoverDraggableItemLeaveAction());
+    }
 }
