@@ -1,4 +1,4 @@
-//import * as actions from '../actions/element.actions';
+import * as actions from '../actions/edit.actions';
 import { IHost } from './network.reducer';
 import { IElement, IBoard } from '../../../../interfaces';
 
@@ -18,7 +18,7 @@ const initialState: IEditState = {
 };
 
 
-export function elementReducer(state: IEditState = initialState, action: actions.ElementActions): IEditState {
+export function elementReducer(state: IEditState = initialState, action: actions.EditActions): IEditState {
   switch (action.type) {
 
     default:
