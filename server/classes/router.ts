@@ -25,7 +25,9 @@ export class CustomRouter {
     private _activateRoutes() {
 
         // post
-        this._addRoute(LOCATIONS.element, 'post', this._requestHandler.onPostElement);
+        this._addRoute(LOCATIONS.elements, 'post', this._requestHandler.onPostElements);
+
+        this._addRoute(LOCATIONS.boards, 'post', this._requestHandler.onPostElements)
 
         // get
         this._addRoute(LOCATIONS.elements, 'get', this._requestHandler.onGetElements);

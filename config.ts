@@ -20,16 +20,10 @@ export const LOCATIONS: ILocationMap = {
     isAlive: 'is-alive'
 }
 
-export const SERVER_ADDRESSES = [
-    '10.1.34.106'
-   // "192.168.1.254",
-    //'10.1.38.110'
-  //  "10.1.34.116"
-];
 
 //export const LOCAL_ADDRESS = '192.168.1.254';
 //export const LOCAL_ADDRESS = '10.1.34.116';
-export const LOCAL_ADDRESS = '10.1.34.106';
+export const LOCAL_ADDRESS = '192.168.178.23';
 export const LOCAL_SUBNET_MASK = '255.255.255.0';
 export const KEEP_ALIVE_INTERVAL_MS = 20 * 1000;
 export const HOST_DETECTION_INTERVAL_MS = 62 * 1000;
@@ -39,3 +33,9 @@ export const AUTO_DATA_LOADING = false;
 export const PARALLEL_REQUEST_LIMIT = 500;
 
 
+export const SERVER_ADDRESSES = [
+    LOCAL_ADDRESS
+   // "192.168.1.254",
+    //'10.1.38.110'
+  //  "10.1.34.116"
+];

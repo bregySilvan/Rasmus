@@ -10,9 +10,8 @@ export interface IAdvertisement extends IListElement {
   imageURL: string;
 }
 
-export interface IBoard {
-  key: string;
+export interface IBoard extends IListElement{
   elementKeys: string[];
 }
 
-export type ElementTypes = 'advertisement';
+export type ElementTypes = 'advertisement' | 'board';

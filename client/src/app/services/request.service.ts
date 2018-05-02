@@ -31,6 +31,7 @@ export class RequestService {
     let options = { params: payload };
     return this.httpClient.post(url, options).catch((error: http.Response | any) => {
       //     this.logService.error(error.message || error);
+      this.logService.error('error when post : ', url);
       return Observable.create('unknown error occured');
      // return _throw('Error when GET on ' + url + ' options: ' + JSON.stringify(options));
     });;

@@ -34,13 +34,13 @@ export class EditBoardsComponent {
   public onSaveBoards(event: any) {
     let board1: IBoard = { key: 'myFirstBoard', elementKeys: ['myFirstElement','mySecondElement'] };
     let board2: IBoard = { key: 'mySecondBoard', elementKeys: ['myFirstElement', 'mySecondElement'] };
-    this.dataService.saveBoards(this.host, [board1, board2]).subscribe(x => this.logService.warn('saved some boards and it acuztally responded'));
+    this.dataService.saveBoards(this.host, [board1, board2]);//.subscribe(x => this.logService.warn('saved some boards and it acuztally responded'));
   }
 
   public onSaveElements(event: any) {
     let element1: IListElement = { key: 'myFirstElement',type: 'advertisement' };
     let element2: IListElement = { key: 'mySecondElement',type: 'advertisement' };
-    this.dataService.saveElements(this.host, [element1, element2]).subscribe(x => this.logService.warn('saved some elements and it acuztally responded'));;
+    this.dataService.saveElements(this.host, [element1, element2]);//.subscribe(x => this.logService.warn('saved some elements and it acuztally responded'));;
   }
 
   constructor(private routerService: RouterService,
