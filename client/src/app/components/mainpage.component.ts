@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NetworkService } from '../services/network.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -8,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class MainPageComponent {
 
+  constructor() {
+    //
+  }
 }

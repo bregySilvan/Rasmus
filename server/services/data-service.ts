@@ -11,7 +11,7 @@ export class DataService {
     constructor() {
         this.queueService = new QueueService();
     }
-
+    
     public getBoards(keys: string[], callback: (error: Error, boards: IBoard[]) => void) {
         this._getQueued(this.boardsFilePath, keys, (error: any, data: any) => {
             if(error) {
@@ -31,10 +31,12 @@ export class DataService {
     }
 
     public saveElement(element: IListElement, callback: (error: any) => void): void {
+        console.warn('saving element on server::');
         this._saveQueued(this.elementsFilePath, element, callback);
     }
 
     public saveBoard(board: IBoard, callback: (error: any) => void) {
+
         this._saveQueued(this.boardsFilePath, board, callback);
     }
 

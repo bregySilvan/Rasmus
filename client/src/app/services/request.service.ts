@@ -13,18 +13,26 @@ export class RequestService {
 
   }
 
+  public readFile(file: string): Observable<any> {
+    return this.httpClient.get(file).map(res => res.json());
+  }
+
   public get(url: string, payload?: any): Observable<http.Response> {
     let options = { params: payload };
     let a: http.BaseRequestOptions
     return this.httpClient.get(url).catch((error: http.Response | any) => {
-//     this.logService.error(error.message || error);
+      //     this.logService.error(error.message || error);
       return _throw('Error when GET on ' + url + ' options: ' + JSON.stringify(options));
     });
   }
 
   public post(url: string, payload?: any): Observable<any> {
-    this.logService.log('POST in srequestservice with requestservice:: ');
+    this.logService.log('POST in srequestservice with requestservice:: ', url);
     let options = { params: payload };
-    return this.httpClient.post(url, options);
+    return this.httpClient.post(url, options).catch((error: http.Response | any) => {
+      //     this.logService.error(error.message || error);
+      return Observable.create('unknown error occured');
+     // return _throw('Error when GET on ' + url + ' options: ' + JSON.stringify(options));
+    });;
   }
 }

@@ -37,22 +37,6 @@ export class ElementService {
       this.store$.dispatch(new elementActions.UpdateBoardsAction(boards));
     }
 
-    public getElements(host: IHost, keys?: string[]): Observable<IListElement[]> {
-      this.logService.log('getting elements');
-      let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.elements}`;
-      return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
-        this.logService.log('error=? ', error);
-        return Observable.create([]);
-      });
-    }
-
-    public getBoards(host: IHost, keys?: string[]): Observable<IBoard[]> {
-      let URL = `http://${host.ipAddress}:${DEFAULT_PORT}/${LOCATIONS.boards}`;
-      return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
-        return Observable.create([]);
-      });
-    }
-
     public areEqualBoards(board1: IBoard, board2: IBoard) {
       return  board1.key === board2.key;
     }
