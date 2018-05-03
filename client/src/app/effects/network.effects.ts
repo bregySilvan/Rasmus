@@ -15,7 +15,7 @@ import { map, switchMap, filter } from 'rxjs/operators';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
-import { applyChanges } from '../../utils/functions';
+import { unionDistinct } from '../../utils/functions';
 @Injectable()
 export class NetworkEffects {
 
@@ -27,21 +27,21 @@ export class NetworkEffects {
       currentHosts: state.network.hosts,
       updatedHost: payload
     }))
-    .map(x => applyChanges(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
+    .map(x => unionDistinct(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
     .filter(x => x.hasChanged)
     .map(x => new networkActions.HostsUpdateAction(x.unionArr));
 
 
-  @Effect({ dispatch: false})
+  @Effect()
   //@ts-ignore
   startDetection$ = this.actions$.ofType(networkActions.ActionTypes.START_DETECTION)
     .do(() => this.networkService.calculatePossibleAddresses(LOCAL_ADDRESS, LOCAL_SUBNET_MASK))
     .delay(1200)
    // .map(() => [new networkActions.CheckPossibleHostsAction(), new networkActions.KeepAliveActiveHostsAction()]);
-   .do((x => {
-     this.networkService.checkPossibleHosts();
-     this.networkService.keepAliveActiveHosts();
-   }))
+   .flatMap(x => ([
+     new networkActions.CheckPossibleHostsAction(),
+     new networkActions.KeepAliveActiveHostsAction()]));
+     
 
   @Effect({ dispatch: false })
   //@ts-ignore
@@ -57,7 +57,7 @@ export class NetworkEffects {
     .do((x) => {
       let activeHosts: IHost[] = x.hosts.filter((host: IHost) => host.isAlive);
       let preferedHosts: IHost[] = x.preferedAddresses.map((address: string) => ({ ipAddress: address, isAlive: false}));      
-      let keepAliveHosts = applyChanges(activeHosts, preferedHosts, this.networkService.areEqualHosts).unionArr;
+      let keepAliveHosts = unionDistinct(activeHosts, preferedHosts, this.networkService.areEqualHosts).unionArr;
 
       this.networkService.testHosts(keepAliveHosts, x.requestLimit);
       timer(x.keepAliveTimeout).subscribe(() => {

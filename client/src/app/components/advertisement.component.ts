@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IAdvertisement, IListElement } from '../../../../interfaces';
+import { IAdvertisement, IElement } from '../../../../interfaces';
 import { Store } from '@ngrx/store';
 import { IAppStore } from '../app.state';
+import { LogService } from '../services/log.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -11,20 +12,26 @@ import { IAppStore } from '../app.state';
 })
 export class AdvertisementComponent implements OnInit {
 
-  @Input() key: string = '';
-  listElement: IListElement | null = null;
+  @Input()
+  advertisement: IAdvertisement | null = null;
 
-  constructor(private store$: Store<IAppStore>) {
+
+  constructor(private store$: Store<IAppStore>,
+              private logService: LogService) {
 
     // replace with select statement from store..
   }
 
   ngOnInit() {
-    this.store$.select(x => x.element.availableElements).subscribe(elements =>  {
-      let element = elements.find(element => element.key === this.key);
-      if(element !== undefined) {
-        this.listElement = element;
-      }
-    }); 
+    if(!this.advertisement) {
+      this.logService.log('received invalid element in advertisement comp: ', this.advertisement);
+    }
+
+    //this.logService.log('element: ', this.advertisement);
+
+    
+    
   }
+
+
 }

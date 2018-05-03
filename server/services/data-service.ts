@@ -1,4 +1,4 @@
-import { IListElement, ElementTypes, IBoard, IAdvertisement } from '../../interfaces';
+import { IElement, ElementTypes, IBoard, IAdvertisement } from '../../interfaces';
 import * as fse from 'fs-extra';
 import { QueueService } from './queue-service';
 
@@ -21,16 +21,16 @@ export class DataService {
         });
     }
 
-    public getElements(keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
+    public getElements(keys: string[], callback: (error: Error, elements: IElement[]) => void): void {
         this._getQueued(this.elementsFilePath, keys, (error: any, data: any) => {
             if(error) {
                 return callback(error, []);
             }
-            callback(error, Object.keys(data).map(key => <IListElement>data[key]));
+            callback(error, Object.keys(data).map(key => <IElement>data[key]));
         });
     }
 
-    public saveElement(element: IListElement, callback: (error: any) => void): void {
+    public saveElement(element: IElement, callback: (error: any) => void): void {
         this._saveQueued(this.elementsFilePath, element, callback);
     }
 
@@ -232,7 +232,7 @@ function readOutDataService() {
     
     let dataService: DataService = new DataService();
     let elementKeys = ['secondKEy', 'firstKey'];
-    dataService.getElements(elementKeys, (error: Error, elements: IListElement[]) => {
+    dataService.getElements(elementKeys, (error: Error, elements: IElement[]) => {
         if(error) {
             console.log('error occured:: ', error);
 
@@ -243,7 +243,7 @@ function readOutDataService() {
 }
 function getElements() {
     
-    dataService.getElements([], (error: Error, elements: IListElement[]) => {
+    dataService.getElements([], (error: Error, elements: IElement[]) => {
         console.log('getElements #######################');
         console.log('error: ', error);
         console.log(JSON.stringify(elements)); 

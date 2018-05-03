@@ -1,6 +1,16 @@
 <div class="list">
-    <div *ngFor="let element of elements" class="list-element">
-      <ras-list-element [element]="element">
-      </ras-list-element>
+    
+  <div *ngFor="let element of elements; let i = index" class="list-element">
+
+      <div *ngIf="isDragDropEnabled">
+      <ras-drag [element]="element" [index]="i" [dragContainerKey]="key()">
+      </ras-drag>
     </div>
+    <div *ngIf="!isDragDropEnabled">
+      <ras-list-element [element]="element">
+
+      </ras-list-element>
+
+    </div>
+  </div>
 </div>

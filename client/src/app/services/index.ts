@@ -4,6 +4,8 @@ import { ElementService } from './element.service';
 import { LogService } from './log.service';
 import { NetworkService } from './network.service';
 import { DataService } from './data.service';
+import { DragService } from './drag.service';
+
 
 export const RASMUS_PROVIDERS = [
   RouterService,
@@ -11,5 +13,6 @@ export const RASMUS_PROVIDERS = [
   ElementService,
   LogService,
   NetworkService,
-  DataService
+  DataService,
+  DragService
 ];

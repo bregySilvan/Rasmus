@@ -1,11 +1,12 @@
 import * as actions from '../actions/element.actions';
 import { IHost } from './network.reducer';
-import { IListElement, IBoard } from '../../../../interfaces';
+import { IElement, IBoard } from '../../../../interfaces';
 
 
 export interface IElementState {
-    availableElements: IListElement[];
+    availableElements: IElement[];
     availableBoards: IBoard[];
+    
 }
 
 const initialState: IElementState = {

@@ -9,13 +9,12 @@ import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mergeMap'
 import { IHost } from '../state/network.reducer';
 import { ElementService } from '../services/element.service';
-import { IListElement, IBoard } from '../../../../interfaces';
-import { Observable } from 'rxjs/Observable';
-import { applyChanges } from '../../utils/functions';
+import { IElement, IBoard } from '../../../../interfaces';
+import { unionDistinct, unionElementsDistinct } from '../../utils/functions';
 @Injectable()
 export class ElementEffects {
 
-  @Effect()
+  @Effect({ dispatch: false })
   //@ts-ignore
   loadAvailableElements$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_ELEMENTS)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
@@ -24,14 +23,14 @@ export class ElementEffects {
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
         this.logService.log('host:: ', host);
-         let sub = this.elementService.getElements(host).subscribe((elements: IListElement[]) => {
-          this.store$.dispatch((new elementActions.TryUpdateElementsAction(elements)));
+         let sub = this.elementService.getElements(host).subscribe((elements: IElement[]) => {
+          this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
           sub.unsubscribe();
         });
       });
     });
 
-  @Effect()
+  @Effect({ dispatch: false})
   //@ts-ignore
   loadAvailableBoards$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_BOARDS)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
@@ -40,7 +39,7 @@ export class ElementEffects {
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
         let sub = this.elementService.getBoards(host).subscribe((boards: IBoard[]) => {
-          this.store$.dispatch((new elementActions.TryUpdateBoardsAction(boards)));
+          this.store$.dispatch(new elementActions.TryUpdateBoardsAction(boards));
           sub.unsubscribe();
         });
       });
@@ -54,19 +53,19 @@ export class ElementEffects {
       currentBoards: state.element.availableBoards,
       updatedBoards: payload
     }))
-    .map(x => applyChanges<IBoard>(x.updatedBoards, x.currentBoards, this.elementService.areEqualBoards))
+    .map(x => unionElementsDistinct(x.updatedBoards, x.currentBoards))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateBoardsAction(x.unionArr));
 
   @Effect()
   //@ts-ignore
   tryUpdateElements$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_ELEMENTS)
-    .map<any, IListElement[]>(toPayload)
+    .map<any, IElement[]>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentElements: state.element.availableElements,
       updatedElements: payload
     }))
-    .map(x => applyChanges<IListElement>(x.updatedElements, x.currentElements, this.elementService.areEqualElements))
+    .map(x => unionElementsDistinct(x.updatedElements, x.currentElements))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateElementsAction(x.unionArr));
 
