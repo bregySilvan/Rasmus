@@ -8,17 +8,21 @@ import { Observable } from 'rxjs';
 import { DEFAULT_PORT, LOCATIONS } from '../../../../config';
 import { buildRequestUrl } from '../../utils/functions';
 
+
 @Injectable()
 export class DataService implements IDatabaseService {
 
-  saveBoards(host: string, boards: IBoard[]): Observable<any> {
+  saveBoards(host: string, boards: IBoard[]): void{
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.boards);
-    return this.requestService.post(URL, boards);
+    this.requestService.post(URL, boards);//.catch(err => {
+    //  this.logService.error(err);
+  //    return Observable.create(err);
+ //   });
   }
 
-  saveElements(host: string, elements: IListElement[]): Observable<any> {
+  saveElements(host: string, elements: IListElement[]): void {
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.elements);
-    return this.requestService.post(URL, elements);
+    this.requestService.post(URL, elements);
   }
 
   getAllBoards(host: string): Observable<IBoard[]> {
@@ -30,7 +34,6 @@ export class DataService implements IDatabaseService {
   }
 
   public getElements(host: string, keys: string[]): Observable<IListElement[]> {
-    this.logService.log('getting elements');
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.elements);
     return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
       this.logService.log('error=? ', error);

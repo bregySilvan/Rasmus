@@ -22,7 +22,7 @@ export function applyChanges<T>(update: Array<T>, old: Array<T>, isSameObj: (val
 }
 
 export function buildRequestUrl(host: string, port: number, location: string) {
-  location = location.startsWith('/') ? location : `/${location};`
+  location = location.startsWith('/') ? location : `/${location}`
   return `http://${host}:${port}${location}`;
 }
 

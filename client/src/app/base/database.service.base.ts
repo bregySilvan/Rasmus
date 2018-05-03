@@ -1,6 +1,7 @@
 import { IListElement, IBoard } from "../../../../interfaces";
 import { Observable } from 'rxjs';
 import { IHost } from '../state/network.reducer';
+import { Response } from '@angular/http';
 
 
 export interface IDatabaseService {
@@ -13,8 +14,8 @@ export interface IDatabaseService {
 
     getAllElements(host: string): Observable<IListElement[]>;
 
-    saveBoards(host: string, boards: IBoard[]): Observable<any>;
+    saveBoards(host: string, boards: IBoard[]): void
 
-    saveElements(host: string, elements: IListElement[]): Observable<any>;
+    saveElements(host: string, elements: IListElement[]): void;
 
 }
