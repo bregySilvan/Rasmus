@@ -41,3 +41,8 @@ export function unionElementsDistinct(update: Array<IComparable>, old: Array<ICo
   return { unionArr, hasChanged };
 }
 
+export function buildRequestUrl(host: string, port: number, location: string) {
+  location = location.startsWith('/') ? location : `/${location}`
+  return `http://${host}:${port}${location}`;
+}
+

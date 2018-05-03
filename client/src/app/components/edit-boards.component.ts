@@ -1,11 +1,15 @@
+
+import { IElement, IBoard } from '../../../../interfaces';
 import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
-import { IElement } from '../../../../interfaces';
 import { RouterService } from '../services/router.service';
 import { Store } from '@ngrx/store';
 import * as networkActions from '../actions/network.actions';
 import * as elementActions from '../actions/element.actions';
 import { IAppStore } from '../app.state';
 import { LogService } from '../services/log.service';
+import { DataService } from '../services/data.service';
+import { IHost } from '../state/network.reducer';
+import { LOCAL_ADDRESS } from '../../../../config';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -17,24 +21,34 @@ import { Subscription } from 'rxjs';
 export class EditBoardsComponent implements OnInit, OnDestroy {
 
   private isDetecting = false;
+
+  elements: IListElement[] = [];
+  host = LOCAL_ADDRESS;
+
   private elementSub: Subscription = new Subscription();
   public availableElements: IElement[] = [];
   public elementsInBoard: IElement[] = [];
 
-  public onStartHostDetection(event: any): void {
-    this.store$.dispatch(new networkActions.StartDetectionAction());
+
+  public onGetBoards(event: any): void {
+    this.dataService.getBoards(this.host, []).subscribe(x => this.logService.log(x),
+                                                        err => this.logService.log(err));
+    
+  public onGetElements(event: any): void {
+    this.dataService.getElements(this.host, []).subscribe(x => this.logService.log(x),
+      err => this.logService.log(err));
   }
 
-  public onStopHostDetection(event: any): void {
-    this.store$.dispatch(new networkActions.StopDetectionAction());
+  public onSaveBoards(event: any) {
+    let board1: IBoard = { key: 'myFirstBoard', elementKeys: ['myFirstElement', 'mySecondElement'], type: 'board' };
+    let board2: IBoard = { key: 'mySecondBoard', elementKeys: ['myFirstElement', 'mySecondElement'], type: 'board' };
+    this.dataService.saveBoards(this.host, [board1, board2]);//.subscribe(x => this.logService.warn('saved some boards and it acuztally responded'));
   }
 
-  public onStartGetElements(event: any) {
-    this.store$.dispatch(new elementActions.LoadAvailableElementsAction());
-  }
-
-  public onStartGetBoards(event: any) {
-    this.store$.dispatch( new elementActions.LoadAvailableBoardsAction());
+  public onSaveElements(event: any) {
+    let element1: IListElement = { key: 'myFirstElement', type: 'advertisement' };
+    let element2: IListElement = { key: 'mySecondElement', type: 'advertisement' };
+    this.dataService.saveElements(this.host, [element1, element2]);//.subscribe(x => this.logService.warn('saved some elements and it acuztally responded'));;
   }
   
   public onItemDrop(event: any) {
@@ -42,19 +56,18 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
   }
 
   constructor(private routerService: RouterService,
-              private store$: Store<IAppStore>,
-              private logService: LogService,
-              private changeRef: ChangeDetectorRef) {
-              
+    private store$: Store<IAppStore>,
+    private logService: LogService,
+    private changeRef: ChangeDetectorRef,
+    private dataService: DataService) {
+
   }
 
   ngOnInit() {
-    
     this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
       this.logService.log('elements: ', x.availableElements);
       this.availableElements = x.availableElements.concat();
       this.elementsInBoard = x.availableElements.concat();
-     // this.changeRef.detectChanges();
     });
 
 

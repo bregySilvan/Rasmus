@@ -13,11 +13,8 @@ export interface IAdvertisement extends IElement {
   imageURL: string;
 }
 
-export interface IBoard extends IElement {
-  key: string;
+export interface IBoard extends IElement{
   elementKeys: string[];
 }
 
-
-
-export type ElementTypes = 'advertisement' | 'empty';
+export type ElementTypes = 'advertisement' | 'board' | 'empty';
