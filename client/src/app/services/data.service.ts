@@ -13,15 +13,15 @@ import { buildRequestUrl } from '../../utils/functions';
 @Injectable()
 export class DataService implements IDatabaseService {
 
-  saveBoards(host: string, boards: IBoard[]): void{
+  saveBoards(host: string, boards: IBoard[]): void {
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.boards);
     this.requestService.post(URL, boards);//.catch(err => {
     //  this.logService.error(err);
-  //    return Observable.create(err);
- //   });
+    //    return Observable.create(err);
+    //   });
   }
 
-  saveElements(host: string, elements: IListElement[]): void {
+  saveElements(host: string, elements: IElement[]): void {
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.elements);
     this.requestService.post(URL, elements);
   }
@@ -30,13 +30,13 @@ export class DataService implements IDatabaseService {
     return this.getBoards(host, []);
   }
 
-  getAllElements(host: string): Observable<IListElement[]> {
+  getAllElements(host: string): Observable<IElement[]> {
     return this.getElements(host, []);
   }
 
-  public getElements(host: string, keys: string[]): Observable<IListElement[]> {
+  public getElements(host: string, keys: string[]): Observable<IElement[]> {
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.elements);
-    return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
+    return this.requestService.get(URL, { keys: keys }).map(res => res.json()).catch((error: any) => {
       this.logService.log('error=? ', error);
       return Observable.create([]);
     });
@@ -44,12 +44,13 @@ export class DataService implements IDatabaseService {
 
   public getBoards(host: string, keys: string[]): Observable<IBoard[]> {
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.boards);
-    return this.requestService.get(URL, { keys: keys}).map(res => res.json()).catch((error: any) => {
+    return this.requestService.get(URL, { keys: keys }).map(res => res.json()).catch((error: any) => {
       return Observable.create([]);
     });
   }
 
   constructor(private requestService: RequestService,
-              private logService: LogService) {
-    
+    private logService: LogService) {
+
   }
+}

@@ -37,7 +37,7 @@ export class ElementEffects {
   @Effect()
   //@ts-ignore
   $saveElements = this.actions$.ofType(elementActions.ActionTypes.SAVE_ELEMENTS)
-    .map<any, IListElement[]>(toPayload)
+    .map<any, IElement[]>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({ hosts: state.network.hosts, elements: payload }))
     .map(x => ({ hosts: x.hosts.filter(host => host.isAlive), elements: x.elements }))
     .do(x => x.hosts.forEach(host => this.dataService.saveElements(host.ipAddress, x.elements)));
@@ -51,7 +51,7 @@ export class ElementEffects {
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
         this.logService.log('host:: ', host);
-        let sub = this.dataService.getAllElements(host.ipAddress).subscribe((elements: IListElement[]) => {
+        let sub = this.dataService.getAllElements(host.ipAddress).subscribe((elements: IElement[]) => {
           this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
           sub.unsubscribe();
         });
@@ -81,7 +81,7 @@ export class ElementEffects {
       currentBoards: state.element.availableBoards,
       updatedBoards: payload
     }))
-    .map(x => unionElementsDistinct(x.updatedBoards, x.currentBoards))
+    .map(x => unionElementsDistinct<IBoard>(x.updatedBoards, x.currentBoards))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateBoardsAction(x.unionArr));
 
@@ -93,7 +93,7 @@ export class ElementEffects {
       currentElements: state.element.availableElements,
       updatedElements: payload
     }))
-    .map(x => unionElementsDistinct(x.updatedElements, x.currentElements))
+    .map(x => unionElementsDistinct<IElement>(x.updatedElements, x.currentElements))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateElementsAction(x.unionArr));
 

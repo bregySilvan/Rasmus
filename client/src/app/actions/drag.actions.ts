@@ -4,7 +4,7 @@ import { IElement } from '../../../../interfaces';
 import { IDragInfo } from '../state/drag.reducer';
 
 const START: 'DRAG: START' = 'DRAG: START';
-const DROP: 'DRAG: START' = 'DRAG: START';
+const DROP: 'DRAG: DROP' = 'DRAG: DROP';
 const STOP: 'DRAG: STOP' = 'DRAG: STOP';
 const HOVER_DRAGGABLE_ITEM_ENTER: 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER' = 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER';
 const HOVER_DRAGGABLE_ITEM_LEAVE: 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE' = 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE';

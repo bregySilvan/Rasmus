@@ -30,9 +30,10 @@ export class DataService {
         });
     }
     
-    public saveElements(elements: IListElement[], callback: (error: any) => void): void {
+    public saveElements(elements: IElement[], callback: (error: any) => void): void {
         console.warn('saving element on server::');
         this._saveQueued(this.elementsFilePath, elements, callback);
+    }
 
     private _getQueued(filePath: string, keys: string[], callback: (error: any, data: any) => void) {
         this.queueService.addToQueue((next) => {
@@ -43,7 +44,7 @@ export class DataService {
         });
     }
 
-    private _saveQueued(filePath: string, elements: IListElement[], callback: (error: any) => void) {
+    private _saveQueued(filePath: string, elements: IElement[], callback: (error: any) => void) {
         this.queueService.addToQueue((next) => {
             this._save(filePath, elements, (err: any) => {
                 callback(err);
@@ -71,7 +72,7 @@ export class DataService {
         });  
     }
 
-    private _save(file: string, elements: IListElement[], callback: (error: any) => void): void {
+    private _save(file: string, elements: IElement[], callback: (error: any) => void): void {
         if (!elements || !elements.length) {
             return callback(new Error('no object given for save operation to file: ' + file));
         }
@@ -82,7 +83,7 @@ export class DataService {
         }
     }
 
-    private _saveNoChecks(file: string, elements: IListElement[], callback: (error?: any) => void) {
+    private _saveNoChecks(file: string, elements: IElement[], callback: (error?: any) => void) {
         this._checkJsonFile(file, (error?: any) => {
             if (error) {
                 return callback(error);
@@ -102,7 +103,7 @@ export class DataService {
         });
     }
 
-    private _updateJson(file: string, objs: IListElement[], callback: (error?: any) => void): void {
+    private _updateJson(file: string, objs: IElement[], callback: (error?: any) => void): void {
         fse.readJSON(file, async (error: Error, jsonData: any) => {
             jsonData = jsonData || {};
             objs.forEach(obj => jsonData[obj.key] = obj);

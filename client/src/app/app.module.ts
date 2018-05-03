@@ -4,8 +4,6 @@ import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { CUSTOM_ROUTES } from './routes';
 import { RASMUS_COMPONENTS } from './components/index';
-import { AdvertisementComponent } from './components/advertisement.component';
-import { ListElementComponent } from './components/list-element.component';
 import { RASMUS_PROVIDERS } from './services/index';
 import { StoreModule } from '@ngrx/store';
 import { AppReducer } from './app.state';

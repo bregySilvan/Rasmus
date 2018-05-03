@@ -5,7 +5,7 @@ import { LogService } from './log.service';
 import 'rxjs/add/operator/catch'
 import { _throw } from 'rxjs/observable/throw';
 import { Subscription } from 'rxjs';
-import { IListElement } from '../../../../interfaces';
+import { IElement } from '../../../../interfaces';
 
 const POST_HEADERS: http.Headers = new http.Headers({
   'Content-Type': 'application/json'
@@ -64,7 +64,7 @@ export class RequestService {
     });
   }
   //: Observable<http.Response>
-  public post(url: string, payload?: IListElement[]) {
+  public post(url: string, payload?: IElement[]) {
     this.logService.log('POST in srequestservice with requestservice:: ', url);
     let body = payload ? JSON.stringify(payload) : '';
     let options: http.RequestOptions = new http.RequestOptions({ headers: this.postHeaders });

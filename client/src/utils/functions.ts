@@ -21,7 +21,7 @@ export function unionDistinct<T>(update: Array<T>, old: Array<T>, isSameObj: (va
   return { unionArr, hasChanged };
 }
 
-export function unionElementsDistinct(update: Array<IComparable>, old: Array<IComparable>): { unionArr: Array<IComparable>, hasChanged: boolean } {
+export function unionElementsDistinct<T extends IComparable>(update: Array<T>, old: Array<T>): { unionArr: Array<T>, hasChanged: boolean } {
   let hasChanged = false;
   let unionArr = old.concat();
 

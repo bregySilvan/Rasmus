@@ -6,8 +6,8 @@ import { EventEmitter } from 'protractor';
 @Component({
   // tslint:disable-next-line:component-selector
   selector: 'ras-element',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  templateUrl: './element.component.html',
+  styleUrls: ['./element.component.css']
 })
 export class ElementComponent implements OnInit {
 
