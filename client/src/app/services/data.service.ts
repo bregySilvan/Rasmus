@@ -1,4 +1,5 @@
-import { IListElement, ElementTypes, IBoard } from '../../../../interfaces';
+
+import { IElement, ElementTypes, IBoard } from '../../../../interfaces';
 import { Injectable } from '@angular/core';
 import { IDatabaseService } from '../base/database.service.base';
 import { IHost } from '../state/network.reducer';
@@ -52,5 +53,3 @@ export class DataService implements IDatabaseService {
               private logService: LogService) {
     
   }
-
-}

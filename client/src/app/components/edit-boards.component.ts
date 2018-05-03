@@ -1,5 +1,6 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { IListElement, IBoard } from '../../../../interfaces';
+
+import { IElement, IBoard } from '../../../../interfaces';
+import { Component, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { RouterService } from '../services/router.service';
 import { Store } from '@ngrx/store';
 import * as networkActions from '../actions/network.actions';
@@ -9,6 +10,7 @@ import { LogService } from '../services/log.service';
 import { DataService } from '../services/data.service';
 import { IHost } from '../state/network.reducer';
 import { LOCAL_ADDRESS } from '../../../../config';
+import { Subscription } from 'rxjs';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -16,19 +18,22 @@ import { LOCAL_ADDRESS } from '../../../../config';
   templateUrl: './edit-boards.component.html',
   styleUrls: ['./edit-boards.component.css']
 })
-export class EditBoardsComponent {
+export class EditBoardsComponent implements OnInit, OnDestroy {
 
-  public defaultAdvertisementKey = '1';
   private isDetecting = false;
 
   elements: IListElement[] = [];
   host = LOCAL_ADDRESS;
 
+  private elementSub: Subscription = new Subscription();
+  public availableElements: IElement[] = [];
+  public elementsInBoard: IElement[] = [];
+
+
   public onGetBoards(event: any): void {
     this.dataService.getBoards(this.host, []).subscribe(x => this.logService.log(x),
-      err => this.logService.log(err));
-  }
-
+                                                        err => this.logService.log(err));
+    
   public onGetElements(event: any): void {
     this.dataService.getElements(this.host, []).subscribe(x => this.logService.log(x),
       err => this.logService.log(err));
@@ -45,6 +50,10 @@ export class EditBoardsComponent {
     let element2: IListElement = { key: 'mySecondElement', type: 'advertisement' };
     this.dataService.saveElements(this.host, [element1, element2]);//.subscribe(x => this.logService.warn('saved some elements and it acuztally responded'));;
   }
+  
+  public onItemDrop(event: any) {
+    this.logService.log('item drop occured, event: ', event);
+  }
 
   constructor(private routerService: RouterService,
     private store$: Store<IAppStore>,
@@ -55,10 +64,17 @@ export class EditBoardsComponent {
   }
 
   ngOnInit() {
-    this.store$.select(x => x.element).subscribe(x => {
-      //  this.changeRef.detectChanges();
-      this.elements = x.availableElements;
+    this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
+      this.logService.log('elements: ', x.availableElements);
+      this.availableElements = x.availableElements.concat();
+      this.elementsInBoard = x.availableElements.concat();
     });
+
+
+  }
+
+  ngOnDestroy() {
+    this.elementSub.unsubscribe();
   }
 
 }

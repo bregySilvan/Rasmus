@@ -10,10 +10,12 @@ import { LogService } from './log.service';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
 import * as elementActions from '../actions/element.actions';
+import { UpdateDragContainerAction, HoverDraggableItemEnterAction, HoverDraggableItemLeaveAction } from '../actions/drag.actions';
+import { IDragInfo } from '../state/drag.reducer';
 
 
 @Injectable()
-export class ElementService {
+export class DragService {
 
     public constructor(private requestService: RequestService,
                        private logService: LogService,
@@ -21,20 +23,19 @@ export class ElementService {
 
     }
 
-    public tryElementsUpdate(elements: IElement[]) {
-      this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
+    public isDroppable(sourceParentKey: string, targetParentKey: string): boolean {
+        return true;
     }
 
-    public tryBoardsUpdate(boards: IBoard[]) {
-      this.store$.dispatch(new elementActions.TryUpdateBoardsAction(boards));
+    public update(info: IDragInfo) {
+        this.store$.dispatch(new UpdateDragContainerAction(info));
     }
 
-    public saveElements(elements: IElement[]) {
-      this.store$.dispatch(new elementActions.UpdateElementsAction(elements));
+    public dragHoverEnter(info: IDragInfo) {
+        this.store$.dispatch(new HoverDraggableItemEnterAction(info.dragContainerKey));
     }
 
-    public saveBoards(boards: IBoard[]) {
-      this.store$.dispatch(new elementActions.UpdateBoardsAction(boards));
+    public dragHoverLeave() {
+        this.store$.dispatch(new HoverDraggableItemLeaveAction());
     }
-
 }

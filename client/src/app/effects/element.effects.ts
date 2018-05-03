@@ -10,21 +10,20 @@ import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mergeMap'
 import { IHost } from '../state/network.reducer';
 import { ElementService } from '../services/element.service';
-import { IListElement, IBoard } from '../../../../interfaces';
 import { Observable } from 'rxjs/Observable';
-import { applyChanges } from '../../utils/functions';
 import { AUTO_DATA_LOADING } from '../../../../config';
 import { DataService } from '../services/data.service';
+import { IElement, IBoard } from '../../../../interfaces';
+import { unionElementsDistinct } from '../../utils/functions';
 
 @Injectable()
 export class ElementEffects {
 
-  @Effect()
+  @Effect({ dispatch: false })
   //@ts-ignore
   loadElementsFromNewHost$ = this.actions$.ofType(networkActions.ActionTypes.HOSTS_UPDATE)
     .filter(x => AUTO_DATA_LOADING)
     .mergeMap(x => [new elementActions.LoadAvailableBoardsAction(), new elementActions.LoadAvailableElementsAction()]);
-
 
   @Effect()
   //@ts-ignore
@@ -59,7 +58,7 @@ export class ElementEffects {
       });
     });
 
-  @Effect()
+  @Effect({ dispatch: false})
   //@ts-ignore
   loadAvailableBoards$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_BOARDS)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
@@ -82,19 +81,19 @@ export class ElementEffects {
       currentBoards: state.element.availableBoards,
       updatedBoards: payload
     }))
-    .map(x => applyChanges<IBoard>(x.updatedBoards, x.currentBoards, this.elementService.areEqualBoards))
+    .map(x => unionElementsDistinct(x.updatedBoards, x.currentBoards))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateBoardsAction(x.unionArr));
 
   @Effect()
   //@ts-ignore
   tryUpdateElements$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_ELEMENTS)
-    .map<any, IListElement[]>(toPayload)
+    .map<any, IElement[]>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentElements: state.element.availableElements,
       updatedElements: payload
     }))
-    .map(x => applyChanges<IListElement>(x.updatedElements, x.currentElements, this.elementService.areEqualElements))
+    .map(x => unionElementsDistinct(x.updatedElements, x.currentElements))
     .filter(x => x.hasChanged)
     .map(x => new elementActions.UpdateElementsAction(x.unionArr));
 

@@ -1,4 +1,4 @@
-import { IListElement, ElementTypes, IBoard, IAdvertisement } from '../../interfaces';
+import { IElement, ElementTypes, IBoard, IAdvertisement } from '../../interfaces';
 import * as fse from 'fs-extra';
 import { QueueService } from './queue-service';
 
@@ -21,19 +21,18 @@ export class DataService {
         });
     }
 
-    public getElements(keys: string[], callback: (error: Error, elements: IListElement[]) => void): void {
+    public getElements(keys: string[], callback: (error: Error, elements: IElement[]) => void): void {
         this._getQueued(this.elementsFilePath, keys, (error: any, data: any) => {
             if(error) {
                 return callback(error, []);
             }
-            callback(error, Object.keys(data).map(key => <IListElement>data[key]));
+            callback(error, Object.keys(data).map(key => <IElement>data[key]));
         });
     }
-
+    
     public saveElements(elements: IListElement[], callback: (error: any) => void): void {
         console.warn('saving element on server::');
         this._saveQueued(this.elementsFilePath, elements, callback);
-    }
 
     private _getQueued(filePath: string, keys: string[], callback: (error: any, data: any) => void) {
         this.queueService.addToQueue((next) => {
@@ -121,9 +120,6 @@ export class DataService {
     // @toDo: take filepaths from constructor.
     // }
 }
-
-
-
 
 
 

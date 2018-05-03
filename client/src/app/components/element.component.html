@@ -1,0 +1,13 @@
+<div *ngIf="element !== null">
+
+
+  <div *ngIf="element.type === 'advertisement'">
+
+    <ras-advertisement [advertisement]="element"></ras-advertisement>
+  </div>
+
+  <div *ngIf="element.type !== 'advertisement'">
+
+    <h6>its not an advertisement--</h6>
+  </div>
+</div>

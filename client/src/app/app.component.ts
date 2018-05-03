@@ -12,7 +12,7 @@ import { AUTO_DATA_LOADING } from '../../../config';
 export class AppComponent implements OnInit {
   title = 'app';
 
-  public navigateToEditBoard(): void {
+  public navigateToEditBoards(): void {
     this._navigateTo('edit-boards');
   }
 
