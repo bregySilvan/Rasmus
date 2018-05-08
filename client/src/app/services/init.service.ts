@@ -17,4 +17,8 @@ export class InitService {
     public registerElement(element: IElement) {
         this.elementService.tryElementsUpdate([element]);
     }
+
+    public log(...text: any[]) {
+        this.logService.log(...text);
+    }
 }

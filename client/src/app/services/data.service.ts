@@ -26,10 +26,6 @@ export class DataService implements IDatabaseService {
     this.requestService.post(URL, elements);
   }
 
-  getAllBoards(host: string): Observable<IBoard[]> {
-    return this.getBoards(host, []);
-  }
-
   getAllElements(host: string): Observable<IElement[]> {
     return this.getElements(host, []);
   }
@@ -38,13 +34,6 @@ export class DataService implements IDatabaseService {
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.elements);
     return this.requestService.get(URL, { keys: keys }).map(res => res.json()).catch((error: any) => {
     //  this.logService.log('error=? ', error);
-      return Observable.create([]);
-    });
-  }
-
-  public getBoards(host: string, keys: string[]): Observable<IBoard[]> {
-    let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.boards);
-    return this.requestService.get(URL, { keys: keys }).map(res => res.json()).catch((error: any) => {
       return Observable.create([]);
     });
   }

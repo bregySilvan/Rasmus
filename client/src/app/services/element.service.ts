@@ -29,4 +29,7 @@ export class ElementService {
       this.store$.dispatch(new elementActions.UpdateElementsAction(elements));
     }
 
+    public loadAvailableElemens() {
+      this.store$.dispatch(new elementActions.LoadAvailableElementsAction());
+    }
 }

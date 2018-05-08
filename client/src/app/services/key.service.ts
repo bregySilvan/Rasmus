@@ -11,7 +11,7 @@ export class KeyService {
     }
 
     public newKey(): string {
-        // pls reimplement this using real random shit but should be fine for now
+        // pls reimplement this using real random generator but should be fine for now
         return '' + Date.now() + '_' + ('' + Math.random()).substring(1, 7);
     }
 }

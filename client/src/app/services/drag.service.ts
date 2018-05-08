@@ -36,7 +36,7 @@ export class DragService {
     }
 
     public dragHoverEnter(info: IDragInfo) {
-        this.store$.dispatch(new HoverDraggableItemEnterAction(info.dragContainerKey));
+        this.store$.dispatch(new HoverDraggableItemEnterAction(info));
     }
 
     public dragHoverLeave() {

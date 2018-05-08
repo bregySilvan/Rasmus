@@ -12,6 +12,8 @@ import { IHost } from '../state/network.reducer';
 import { LOCAL_ADDRESS } from '../../../../config';
 import { Subscription } from 'rxjs';
 import { KeyService } from '../services/key.service';
+import { ElementService } from '../services/element.service';
+import { NetworkService } from '../services/network.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -25,25 +27,24 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
 
   elements: IElement[] = [];
   host = LOCAL_ADDRESS;
+  firstListKey = this.newItemKey();
+  secondListKey = this.newItemKey();
 
   private elementSub: Subscription = new Subscription();
   public availableElements: IElement[] = [];
   public elementsInBoard: IElement[] = [];
 
-
-  public onGetBoards(event: any): void {
-    this.dataService.getBoards(this.host, []).subscribe(x => this.logService.log(x),
-                                                        err => this.logService.log(err));
-  }
-    
   public onGetElements(event: any): void {
-    this.dataService.getElements(this.host, []).subscribe(x => this.logService.log(x),
-      err => this.logService.log(err));
+    this.elementService.loadAvailableElemens();
+   // this.dataService.getElements(this.host, []).subscribe(x => this.logService.log(x),
+  //    err => this.logService.log(err));
   }
 
   public onSaveBoards(event: any) {
-    let board1: IBoard = { key: 'myFirstBoard', elementKeys: ['myFirstElement', 'mySecondElement'], type: 'board' };
-    let board2: IBoard = { key: 'mySecondBoard', elementKeys: ['myFirstElement', 'mySecondElement'], type: 'board' };
+    let element1: IElement = { key: 'myFirstElement', type: 'advertisement' };
+    let element2: IElement = { key: 'mySecondElement', type: 'advertisement' };
+    let board1: IBoard = { key: 'myFirstBoard', elements: [element1, element2], type: 'board' };
+    let board2: IBoard = { key: 'mySecondBoard', elements: [element1, element2], type: 'board' };
     this.dataService.saveBoards(this.host, [board1, board2]);//.subscribe(x => this.logService.warn('saved some boards and it acuztally responded'));
   }
 
@@ -61,6 +62,8 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
     private store$: Store<IAppStore>,
     private logService: LogService,
     private keyService: KeyService,
+    private elementService: ElementService,
+    private networkService: NetworkService,
     private changeRef: ChangeDetectorRef,
     private dataService: DataService) {
   }
@@ -77,11 +80,18 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
       this.availableElements = usedAvailableElements.concat();
       this.elementsInBoard = usedAvailableElements.concat();
     });
+  }
+  
+  public getSecondListEl(): IElement {
+    return <IBoard>{ key: this.secondListKey, elements: this.availableElements, type: 'board' };
+  }
 
-
+  public getFirstListEl(): IElement {
+    return <IBoard>{ key: this.secondListKey, elements: this.availableElements, type: 'board' };
   }
 
   ngOnDestroy() {
+
     this.elementSub.unsubscribe();
   }
 

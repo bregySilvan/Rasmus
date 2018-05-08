@@ -15,18 +15,18 @@ export interface IDragSettings {
 }
 
 export interface IDragState {
-  currentDragInfo: IDragInfo;
-  isDragging: boolean;
-  canDrop: boolean;
-  hoveringItemParentKey?: string;
+  currentDragInfo?: IDragInfo;
+  isDragging?: boolean;
+  canDrop?: boolean;
+  hoveringItem?: IDragInfo;
 }
 
 const initialListElement: IDragInfo = { element: { type: 'empty', key: '42' }, index: -1, dragContainerKey: NO_ITEM_KEY };
 
 const initialState: IDragState = {
-  currentDragInfo: initialListElement,
-  isDragging: false,
-  canDrop: false
+ // currentDragInfo: initialListElement,
+  //isDragging: false,
+ // canDrop: false
 };
 
 export function dragReducer(state: IDragState = initialState, action: actions.DragActionTypes): IDragState {
@@ -50,19 +50,19 @@ export function dragReducer(state: IDragState = initialState, action: actions.Dr
       return Object.assign({}, state, {
         isDragging: false,
         canDrop: false,
-        hoveringItemParentKey: undefined
+        hoveringItem: undefined
       });
 
     case actions.ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER:
       return Object.assign({}, state, {
         canDrop: true, // add check if can drop here..
-        hoveringItemParentKey: action.payload,
+        hoveringItem: action.payload,
       });
 
     case actions.ActionTypes.HOVER_DRAGGABLE_ITEM_LEAVE:
       return Object.assign({}, state, {
         canDrop: false,
-        hoveringItemParentKey: undefined
+        hoveringItem: undefined
       });
 
     default:

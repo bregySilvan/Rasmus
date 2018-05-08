@@ -1,35 +1,32 @@
 <button (click)="onSaveElements($event)">saveElements()</button>
-<button (click)="onSaveBoards($event)">saveBoards()</button>
-<br/>
 <button (click)="onGetElements($event)">getElements()</button>
-<button (click)="onGetBoards($event)">getBoards()</button>
+<br/>
+<br/>
 
-
-
-<div id="top-row" class="row blue">
+<div class="row blue">
   <div class="four"></div>
-  <ras-option class="two border" id="select-adv-countper-site-cb">select adv coiunt</ras-option>
-  <ras-option class="two border" id="select-board-cb">select board</ras-option>
+  <ras-option class="two border">select adv coiunt</ras-option>
+  <ras-option class="two border">select board</ras-option>
 </div>
 
 <div class="row">
 
   <div class="two container border">
-    <ras-element-list [elements]="availableElements" [isDragDropEnabled]="true" class="ui"></ras-element-list>
+    <ras-element-list [element]="getFirstListEl()" [isDragDropEnabled]="true"></ras-element-list>
   </div>
 
   <div class="six">
     <div class="one"></div>
 
-    <div id="inner center wrapper" class="six">
-      <div id="inner inner top spacer"></div>
-      <div id="inner elementliostwrapper">
-        <ras-element-list [elements]="elementsInBoard" [isDragDropEnabled]="true"></ras-element-list>
+    <div class="six">
+      <div></div>
+      <div>
+        <ras-element-list [element]="getSecondListEl()" [isDragDropEnabled]="true"></ras-element-list>
       </div>
-      <div id="inner inner footer"></div>
+      <div> </div>
     </div>
     <div class="one"></div>
-    <div id="general footer" class="row">
+    <div class="row">
         footer
         <div class="five"></div>
         <div class="three">

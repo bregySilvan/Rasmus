@@ -4,7 +4,7 @@ import { timer } from 'rxjs/observable/timer';
 import { interval } from 'rxjs/observable/interval';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL_MS, PARALLEL_REQUEST_LIMIT, HOST_DETECTION_INTERVAL_MS } from '../../../../config';
+import { SERVER_ADDRESSES, LOCAL_ADDRESS, LOCAL_SUBNET_MASK, KEEP_ALIVE_INTERVAL_MS, PARALLEL_REQUEST_LIMIT, HOST_DETECTION_INTERVAL_MS, AUTO_HOST_DETECTION } from '../../../../config';
 import { IHost } from '../state/network.reducer';
 import { NetworkService } from '../services/network.service';
 import { LogService } from '../services/log.service';
@@ -35,6 +35,7 @@ export class NetworkEffects {
   @Effect()
   //@ts-ignore
   startDetection$ = this.actions$.ofType(networkActions.ActionTypes.START_DETECTION)
+  .filter(x => AUTO_HOST_DETECTION)
     .do(() => this.networkService.calculatePossibleAddresses(LOCAL_ADDRESS, LOCAL_SUBNET_MASK))
     .delay(1200)
    // .map(() => [new networkActions.CheckPossibleHostsAction(), new networkActions.KeepAliveActiveHostsAction()]);

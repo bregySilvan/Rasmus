@@ -25,17 +25,25 @@ export class ElementListComponent extends GlobalEditable {
   @Input() alignment: ListAlignments = 'vertical';
   @Input() isDragDropEnabled = true; //is for future purposes.
 
-  onElementDrop(event: any) {
-    this.logService.log('onDrop in elementList emitted', event);
+
+  get elements(): IElement[] {
+    if (this.element && this.element.type === 'board') {
+      return (<IBoard>this.element).elements;
+    }
+    return [];
   }
 
-  constructor(private logService: LogService,
-              store$: Store<IAppStore>,
-              initService: InitService) {
-
-        super(initService, store$);
+  get key(): string {
+    if (this.element && this.element.type === 'board') {
+      return (<IBoard>this.element).key;
+    }
+    return '';
   }
 
+  constructor(
+    store$: Store<IAppStore>,
+    initService: InitService) {
 
-
+    super(initService, store$);
+  }
 }

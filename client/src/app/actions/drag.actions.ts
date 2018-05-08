@@ -29,9 +29,9 @@ export class DragStartAction implements Action {
 
 export class DropAction implements Action {
     type: typeof ActionTypes.DROP = ActionTypes.DROP;
-    payload: string;
-    constructor(targetParentKey: string) {
-        this.payload = targetParentKey;
+    payload: IDragInfo;
+    constructor(hoverItem: IDragInfo) {
+        this.payload = hoverItem;
     }
 }
 
@@ -44,9 +44,9 @@ export class DragStopAction implements Action {
 
 export class HoverDraggableItemEnterAction implements Action {
     type: typeof ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER = ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER;
-    payload: string;
-    constructor(hoveringItemKey: string) {
-        this.payload = hoveringItemKey;
+    payload: IDragInfo;
+    constructor(hoverItem: IDragInfo) {
+        this.payload = hoverItem;
     }
 }
 

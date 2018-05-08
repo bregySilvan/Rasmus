@@ -3,7 +3,7 @@
   <div *ngFor="let element of elements; let i = index" class="list-element">
 
       <div *ngIf="isDragDropEnabled">
-      <ras-drag [element]="element" [index]="i" [dragContainerKey]="key()">
+      <ras-drag [element]="element" [index]="i" [dragContainerKey]="key">
       </ras-drag>
     </div>
     <div *ngIf="!isDragDropEnabled">

@@ -16,7 +16,7 @@ export interface IAdvertisement extends IElement {
 }
 
 export interface IBoard extends IElement {
-  elementKeys: string[];
+  elements: IElement[];
 }
 
 export type ElementTypes = 'advertisement' | 'board' | 'empty'; // empty is used for developping.

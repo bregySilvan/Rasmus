@@ -46,6 +46,7 @@ export function buildRequestUrl(host: string, port: number, location: string) {
   return `http://${host}:${port}${location}`;
 }
 
-export function findElement(element: IElement, elements: IElement[]): IElement | null {
+export function findElement(element: IElement | null, elements: IElement[]): IElement | null {
+  if(element === null) return null;
   return elements.find(e => e.key === element.key) || null;
 }

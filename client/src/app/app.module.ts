@@ -29,9 +29,10 @@ import { NgDragDropModule } from 'ng-drag-drop';
     EffectsModule.run(RouterEffects),
     EffectsModule.run(DebugEffect),
     EffectsModule.run(NetworkEffects),
-    EffectsModule.run(ElementEffects)
+    EffectsModule.run(ElementEffects),
+    EffectsModule.run(NetworkEffects)
   ],
-  providers: [RASMUS_PROVIDERS],
+  providers: RASMUS_PROVIDERS,
   bootstrap: [AppComponent]
 })
 export class AppModule { }
