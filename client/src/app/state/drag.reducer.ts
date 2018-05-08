@@ -42,8 +42,8 @@ export function dragReducer(state: IDragState = initialState, action: actions.Dr
     case actions.ActionTypes.DROP:
       return Object.assign({}, state, {
         isDragging: false,
-        canDrop: false,
-        hoveringItemParentKey: undefined
+       // canDrop: false,
+      //  hoveringItemParentKey: undefined
       });
 
     case actions.ActionTypes.STOP:

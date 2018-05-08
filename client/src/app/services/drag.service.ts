@@ -10,7 +10,7 @@ import { LogService } from './log.service';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
 import * as elementActions from '../actions/element.actions';
-import { UpdateDragContainerAction, HoverDraggableItemEnterAction, HoverDraggableItemLeaveAction } from '../actions/drag.actions';
+import { UpdateDragContainerAction, HoverDraggableItemEnterAction, HoverDraggableItemLeaveAction, DragStartAction } from '../actions/drag.actions';
 import { IDragInfo } from '../state/drag.reducer';
 
 
@@ -21,6 +21,10 @@ export class DragService {
                        private logService: LogService,
                        private store$: Store<IAppStore>) {
 
+    }
+
+    public dragStart(info: IDragInfo) {
+        this.store$.dispatch(new DragStartAction(info));
     }
 
     public isDroppable(sourceParentKey: string, targetParentKey: string): boolean {

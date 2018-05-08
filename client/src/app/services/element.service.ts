@@ -25,16 +25,8 @@ export class ElementService {
       this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
     }
 
-    public tryBoardsUpdate(boards: IBoard[]) {
-      this.store$.dispatch(new elementActions.TryUpdateBoardsAction(boards));
-    }
-
     public saveElements(elements: IElement[]) {
       this.store$.dispatch(new elementActions.UpdateElementsAction(elements));
-    }
-
-    public saveBoards(boards: IBoard[]) {
-      this.store$.dispatch(new elementActions.UpdateBoardsAction(boards));
     }
 
 }

@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
     this._navigateTo('main');
   }
 
-  public _navigateTo(url: string): void {
+  private _navigateTo(url: string): void {
     url = url.startsWith('/') ? url : '/'+url;
     this.routerService.navigateTo(url);
   }

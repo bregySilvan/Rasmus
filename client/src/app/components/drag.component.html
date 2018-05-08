@@ -1,3 +1,10 @@
-
-<ras-element [dragData]="element" [element]="element" (onDragStart)="onElementDragStart($event)" (onDragEnter)="onElementDragEnter($event)" (onDrop)="onElementDrop($event)" [draggable] droppable>
+<ras-element 
+    [dragData]="element" 
+    [element]="element" 
+    (onDragStart)="onElementDragStart($event)" 
+    (onDragEnter)="onElementDragEnter($event)"
+    (onDragLeave)="onElementDragLeave($event)" 
+    (onDrop)="onElementDrop($event)" 
+    [draggable] 
+    droppable>
 </ras-element>

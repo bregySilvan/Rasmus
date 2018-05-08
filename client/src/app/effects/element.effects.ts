@@ -23,16 +23,7 @@ export class ElementEffects {
   //@ts-ignore
   loadElementsFromNewHost$ = this.actions$.ofType(networkActions.ActionTypes.HOSTS_UPDATE)
     .filter(x => AUTO_DATA_LOADING)
-    .mergeMap(x => [new elementActions.LoadAvailableBoardsAction(), new elementActions.LoadAvailableElementsAction()]);
-
-  @Effect()
-  //@ts-ignore
-  $saveBoards = this.actions$.ofType(elementActions.ActionTypes.SAVE_BOARDS)
-    .map<any, IBoard[]>(toPayload)
-    .withLatestFrom(this.store$, (payload, state: IAppStore) => ({ hosts: state.network.hosts, boards: payload }))
-    .map(x => ({ hosts: x.hosts.filter(host => host.isAlive), boards: x.boards }))
-    .do(x => x.hosts.forEach(host => this.dataService.saveBoards(host.ipAddress, x.boards)));
-
+    .map(x =>  new elementActions.LoadAvailableElementsAction());
 
   @Effect()
   //@ts-ignore
@@ -57,33 +48,6 @@ export class ElementEffects {
         });
       });
     });
-
-  @Effect({ dispatch: false})
-  //@ts-ignore
-  loadAvailableBoards$ = this.actions$.ofType(elementActions.ActionTypes.LOAD_AVAILABLE_BOARDS)
-    .withLatestFrom(this.store$, (payload, state: IAppStore) => (state.network))
-    .map(x => x.hosts.filter((host: IHost) => host.isAlive))
-    .filter(activeHosts => !!activeHosts.length)
-    .do(activeHosts => {
-      activeHosts.forEach((host: IHost) => {
-        let sub = this.dataService.getAllBoards(host.ipAddress).subscribe((boards: IBoard[]) => {
-          this.store$.dispatch((new elementActions.TryUpdateBoardsAction(boards)));
-          sub.unsubscribe();
-        });
-      });
-    });
-
-  @Effect()
-  //@ts-ignore
-  tryUpdateBoards$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_BOARDS)
-    .map<any, IBoard[]>(toPayload)
-    .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
-      currentBoards: state.element.availableBoards,
-      updatedBoards: payload
-    }))
-    .map(x => unionElementsDistinct<IBoard>(x.updatedBoards, x.currentBoards))
-    .filter(x => x.hasChanged)
-    .map(x => new elementActions.UpdateBoardsAction(x.unionArr));
 
   @Effect()
   //@ts-ignore

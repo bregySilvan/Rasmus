@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
-declare var window, console: any;
+declare var console: any;
 
 @Injectable()
 export class LogService {
 
   public warn(...text: any[]): void {
     console.warn(...text);
-  }y
+  }
 
   public log(...text: any[]): void {
     console.log(...text);

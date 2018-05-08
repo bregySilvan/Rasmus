@@ -1,20 +1,13 @@
 import * as actions from '../actions/edit.actions';
 import { IHost } from './network.reducer';
-import { IElement, IBoard } from '../../../../interfaces';
-
-export interface IContainer {
-    elements: IElement[];
-    key: string;
-}
+import { IElement } from '../../../../interfaces';
 
 export interface IEditState {
-    activeContainers: IContainer[];
-    editableContainer?: IContainer;
-    editableElement?: IElement;
+    elements?: IElement[];
 }
 
 const initialState: IEditState = {
-    activeContainers: []
+
 };
 
 

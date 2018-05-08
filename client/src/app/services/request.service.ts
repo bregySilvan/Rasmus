@@ -59,7 +59,7 @@ export class RequestService {
     let options = { params: payload };
     let a: http.BaseRequestOptions
     return this.httpClient.get(url).catch((error: http.Response | any) => {
-      this.logService.error(error);
+     // this.logService.error(error);
       return _throw('Error when GET on ' + url + ' options: ' + JSON.stringify(options));
     });
   }
@@ -70,7 +70,7 @@ export class RequestService {
     let options: http.RequestOptions = new http.RequestOptions({ headers: this.postHeaders });
     return this.httpClient.post(url, body, options).subscribe(
       data => this.logService.log(data),
-      err => this.logService.error(err),
+      err => { },// this.logService.error(err),
       () => this.logService.warn('completed post request'));
   }
 }
