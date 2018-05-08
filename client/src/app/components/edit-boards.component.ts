@@ -11,6 +11,7 @@ import { DataService } from '../services/data.service';
 import { IHost } from '../state/network.reducer';
 import { LOCAL_ADDRESS } from '../../../../config';
 import { Subscription } from 'rxjs';
+import { KeyService } from '../services/key.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -59,16 +60,22 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
   constructor(private routerService: RouterService,
     private store$: Store<IAppStore>,
     private logService: LogService,
+    private keyService: KeyService,
     private changeRef: ChangeDetectorRef,
     private dataService: DataService) {
+  }
 
+  public newItemKey(): string {
+    return this.keyService.newKey();
   }
 
   ngOnInit() {
     this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
-      this.logService.log('elements: ', x.availableElements);
-      this.availableElements = x.availableElements.concat();
-      this.elementsInBoard = x.availableElements.concat();
+      let usedAvailableElements = x.availableElements.filter(element => element.type === 'advertisement');
+      
+      this.logService.log('elements: ', usedAvailableElements);
+      this.availableElements = usedAvailableElements.concat();
+      this.elementsInBoard = usedAvailableElements.concat();
     });
 
 

@@ -32,7 +32,7 @@ export const KEEP_ALIVE_INTERVAL_MS = 20 * 1000;
 export const HOST_DETECTION_INTERVAL_MS = 62 * 1000;
 export const DEFAULT_PORT = 5001;
 export const AUTO_HOST_DETECTION = false;
-export const AUTO_DATA_LOADING = false;
+export const AUTO_DATA_LOADING = true;
 export const PARALLEL_REQUEST_LIMIT = 500;
 
 

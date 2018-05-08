@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { IComparable } from '../../../interfaces';
+import { IComparable, IElement } from '../../../interfaces';
 
 export function unionDistinct<T>(update: Array<T>, old: Array<T>, isSameObj: (val1: T, val2: T) => boolean): { unionArr: Array<T>, hasChanged: boolean } {
   let hasChanged = false;
@@ -46,3 +46,6 @@ export function buildRequestUrl(host: string, port: number, location: string) {
   return `http://${host}:${port}${location}`;
 }
 
+export function findElement(element: IElement, elements: IElement[]): IElement | null {
+  return elements.find(e => e.key === element.key) || null;
+}

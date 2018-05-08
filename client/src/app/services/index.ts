@@ -5,6 +5,8 @@ import { LogService } from './log.service';
 import { NetworkService } from './network.service';
 import { DataService } from './data.service';
 import { DragService } from './drag.service';
+import { KeyService } from './key.service';
+import { InitService } from './init.service';
 
 
 export const RASMUS_PROVIDERS = [
@@ -14,5 +16,7 @@ export const RASMUS_PROVIDERS = [
   LogService,
   NetworkService,
   DataService,
-  DragService
+  DragService,
+  KeyService,
+  InitService
 ];
