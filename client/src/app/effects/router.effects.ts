@@ -21,9 +21,11 @@ export class RouterEffects {
   @Effect()
   // @ts-ignore
   startNavigation$ = this.actions$.ofType(routerActions.ActionTypes.START_NAVIGATION)
-  .withLatestFrom(this.store$, (action, state) => ({
+  .map<any, string>(toPayload)
+  .debounceTime(120)
+  .withLatestFrom(this.store$, (payload, state) => ({
     router: state.router,
-    requestedUrl: action.payload
+    requestedUrl: payload
   }))
   .filter(x => x.requestedUrl !== x.router.currentUrl && !x.router.isNavigating)
   .map(x => new routerActions.NavigateTo(x.requestedUrl));

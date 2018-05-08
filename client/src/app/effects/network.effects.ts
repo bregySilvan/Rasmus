@@ -16,6 +16,7 @@ import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { unionDistinct } from '../../utils/functions';
+
 @Injectable()
 export class NetworkEffects {
 
@@ -29,7 +30,9 @@ export class NetworkEffects {
     }))
     .map(x => unionDistinct(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
     .filter(x => x.hasChanged)
-    .map(x => new networkActions.HostsUpdateAction(x.unionArr));
+    .map(x => x.unionArr)
+    .bufferTime(300)
+    .map(x => new networkActions.HostsUpdateAction(_.flatten(x)));
 
 
   @Effect()

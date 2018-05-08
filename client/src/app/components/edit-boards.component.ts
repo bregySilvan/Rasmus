@@ -36,8 +36,6 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
 
   public onGetElements(event: any): void {
     this.elementService.loadAvailableElemens();
-   // this.dataService.getElements(this.host, []).subscribe(x => this.logService.log(x),
-  //    err => this.logService.log(err));
   }
 
   public onSaveBoards(event: any) {
@@ -53,9 +51,31 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
     let element2: IElement = { key: 'mySecondElement', type: 'advertisement' };
     this.dataService.saveElements(this.host, [element1, element2]);//.subscribe(x => this.logService.warn('saved some elements and it acuztally responded'));;
   }
+
+
+  public newItemKey(): string {
+    return this.keyService.newKey();
+  }
+
+  ngOnInit() {
+    this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
+      let usedAvailableElements = x.availableElements.filter(element => element.type === 'advertisement');
+      
+      this.availableElements = usedAvailableElements.concat();
+      this.elementsInBoard = usedAvailableElements.concat();
+    });
+  }
   
-  public onItemDrop(event: any) {
-    this.logService.log('item drop occured, event: ', event);
+  public getSecondListEl(): IElement {
+    return <IBoard>{ key: this.secondListKey, elements: this.availableElements, type: 'board' };
+  }
+
+  public getFirstListEl(): IElement {
+    return <IBoard>{ key: this.secondListKey, elements: this.elementsInBoard, type: 'board' };
+  }
+
+  ngOnDestroy() {
+    this.elementSub.unsubscribe();
   }
 
   constructor(private routerService: RouterService,
@@ -68,31 +88,5 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
     private dataService: DataService) {
   }
 
-  public newItemKey(): string {
-    return this.keyService.newKey();
-  }
-
-  ngOnInit() {
-    this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
-      let usedAvailableElements = x.availableElements.filter(element => element.type === 'advertisement');
-      
-      this.logService.log('elements: ', usedAvailableElements);
-      this.availableElements = usedAvailableElements.concat();
-      this.elementsInBoard = usedAvailableElements.concat();
-    });
-  }
-  
-  public getSecondListEl(): IElement {
-    return <IBoard>{ key: this.secondListKey, elements: this.availableElements, type: 'board' };
-  }
-
-  public getFirstListEl(): IElement {
-    return <IBoard>{ key: this.secondListKey, elements: this.availableElements, type: 'board' };
-  }
-
-  ngOnDestroy() {
-
-    this.elementSub.unsubscribe();
-  }
 
 }

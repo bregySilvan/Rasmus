@@ -65,7 +65,7 @@ export class RequestHandlerService {
         //   console.warn('req.body', JSON.stringify(req.body));
         //   console.warn('req.params', JSON.stringify(req.params));
 
-        let elements: IListElement[] = req.body;
+        let elements: IElement[] = req.body;
         this.dataService.saveElements(elements, (error: Error) => {
             let responseData = 'saved element Successfully';
             let responseInfo = { response: responseData, error: error };
