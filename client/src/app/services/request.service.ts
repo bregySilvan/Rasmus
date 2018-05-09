@@ -66,12 +66,12 @@ export class RequestService {
   }
   //: Observable<http.Response>
   public post(url: string, payload?: IElement[]) {
-    this.logService.log('POST in srequestservice with requestservice:: ', url);
+    this.logService.log(this, 'POST in srequestservice with requestservice:: ', url);
     let body = payload ? JSON.stringify(payload) : '';
     let options: http.RequestOptions = new http.RequestOptions({ headers: this.postHeaders });
     return this.httpClient.post(url, body, options).subscribe(
-      data => this.logService.log(data),
-      err => { },// this.logService.error(err),
-      () => this.logService.warn('completed post request'));
+      data => this.logService.log(this, data),
+      err => { },// this.logService.error(this, err),
+      () => this.logService.warn(this, 'completed post request'));
   }
 }

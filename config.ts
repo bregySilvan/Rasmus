@@ -24,8 +24,8 @@ export const NO_ITEM_KEY = 'THIS_IS_NOT_AN_ITEM_KEY';
 
 //export const LOCAL_ADDRESS = '192.168.1.254';
 //export const LOCAL_ADDRESS = '192.168.1.254';
-//export const LOCAL_ADDRESS = '10.1.34.116';
-export const LOCAL_ADDRESS = '10.1.38.110';
+export const LOCAL_ADDRESS = '10.1.34.106';
+//export const LOCAL_ADDRESS = '10.1.38.110';
 
 export const LOCAL_SUBNET_MASK = "255.255.255.0";
 export const KEEP_ALIVE_INTERVAL_MS = 20 * 1000;

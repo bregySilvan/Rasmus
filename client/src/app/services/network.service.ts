@@ -64,7 +64,7 @@ export class NetworkService {
       });
     }, (error) => {
       if (error) {
-      //  this.logService.error('failed to reach host: ');
+      //  this.logService.error(this, 'failed to reach host: ');
       }
     });
   }

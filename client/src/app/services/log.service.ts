@@ -5,19 +5,23 @@ declare var console: any;
 @Injectable()
 export class LogService {
 
-  public warn(...text: any[]): void {
-    console.warn(...text);
+  public warn(callee: Object, ...text: any[]): void {
+    this._print(callee, 'warn', ...text);
   }
 
-  public log(...text: any[]): void {
-    console.log(...text);
+  public log(callee: Object, ...text: any[]): void {
+    this._print(callee, 'log', ...text);
   }
 
-  public error(...text: any[]): void {
-    console.error(...text);
+  public error(callee: Object, ...text: any[]): void {
+    this._print(callee, 'error', ...text);
   }
 
-  public info(...text: any[]): void {
-    console.info(...text);
+  public info(callee: Object, ...text: any[]): void {
+    this._print(callee, 'info', ...text);
+  }
+
+  private _print(callee: Object, method: 'warn' | 'log' | 'error' | 'info', ...text) {
+    console[method](callee.constructor.name,'->', ...text);
   }
 }

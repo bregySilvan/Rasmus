@@ -12,7 +12,12 @@ export class DebugEffect {
   noDebugActionTypes = [
     'ELEMENT: TRY_UPDATE_ELEMENTS',
     'ELEMENT: TRY_UPDATE_BOARDS',
-    'NETWORK: TRY_UPDATE_HOSTS'
+    'NETWORK: TRY_UPDATE_HOSTS',
+   // 'DRAG: UPDATE_DRAG_CONTAINER',
+   // 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER',
+   // 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE',
+
+
   ]
 
   //@ts-ignore
@@ -21,7 +26,7 @@ export class DebugEffect {
     .do(x => {
       
       if(this.noDebugActionTypes.indexOf(x.action.type) === -1) {
-        this.logger.log(new Date().toISOString(), x);
+        this.logger.log(this, new Date().toISOString(), x);
       }
       
     });

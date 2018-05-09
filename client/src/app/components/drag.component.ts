@@ -4,9 +4,8 @@ import { Store } from '@ngrx/store';
 import { IAppStore } from '../app.state';
 import { LogService } from '../services/log.service';
 import { NO_ITEM_KEY } from '../../../../config';
-import { IDragInfo } from '../state/drag.reducer';
+import { IDragInfo, dragReducer } from '../state/drag.reducer';
 import { DragService } from '../services/drag.service';
-import { HoverDraggableItemEnterAction } from '../actions/drag.actions';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -30,10 +29,12 @@ export class DragComponent {
     }
 
     public onElementDrop(event: any) {
-        this.dragService.update(this._buildDragInfo(event.dragData));
+        this.logService.warn(this, 'onElementDrop Emitted', event.dragData);
+        this.dragService.drop(this._buildDragInfo(event.dragData));
     }
 
     public onElementDragEnter(event: any) {
+        this.logService.warn(this, 'ONELEMENT DRAG ENTER=>>', event.dragData);
         this.dragService.dragHoverEnter(this._buildDragInfo(event.dragData));
     }
 

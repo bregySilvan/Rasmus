@@ -21,7 +21,7 @@ export class ElementComponent implements OnInit {
 
   ngOnInit() {
     if(!this.element)
-      this.logService.log('received invalid element in ListElement comp: ', this.element);
+      this.logService.log(this, 'received invalid element in ListElement comp: ', this.element);
   }
 
 }

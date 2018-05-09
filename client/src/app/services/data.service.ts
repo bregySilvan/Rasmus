@@ -16,7 +16,7 @@ export class DataService implements IDatabaseService {
   saveBoards(host: string, boards: IBoard[]): void {
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.boards);
     this.requestService.post(URL, boards);//.catch(err => {
-    //  this.logService.error(err);
+    //  this.logService.error(this, err);
     //    return Observable.create(err);
     //   });
   }
@@ -34,7 +34,7 @@ export class DataService implements IDatabaseService {
 
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.elements);
     return this.requestService.get(URL, { keys: keys }).map(res => res.json()).catch((error: any) => {
-      this.logService.log('error=? ', error);
+      this.logService.log(this, 'error=? ', error);
       return Observable.create([]);
     });
   }

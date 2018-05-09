@@ -6,17 +6,20 @@ import { IDragInfo } from '../state/drag.reducer';
 const START: 'DRAG: START' = 'DRAG: START';
 const DROP: 'DRAG: DROP' = 'DRAG: DROP';
 const STOP: 'DRAG: STOP' = 'DRAG: STOP';
-const HOVER_DRAGGABLE_ITEM_ENTER: 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER' = 'DRAG: HOVER_DRAGGABLE_ITEM_ENTER';
+const HOVER_ITEM: 'DRAG: HOVER_ITEM' = 'DRAG: HOVER_ITEM';
 const HOVER_DRAGGABLE_ITEM_LEAVE: 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE' = 'DRAG: HOVER_DRAGGABLE_ITEM_LEAVE';
 const UPDATE_DRAG_CONTAINER: 'DRAG: UPDATE_DRAG_CONTAINER' = 'DRAG: UPDATE_DRAG_CONTAINER';
+const DROP_STATE_CHANGE: 'DRAG: DROP_STATE_CHANGE' = 'DRAG: DROP_STATE_CHANGE';
+const DROP_STATE_CHANGE_DONE: 'DRAG: DROP_STATE_CHANGE_DONE' = 'DRAG: DROP_STATE_CHANGE_DONE';
 
 export const ActionTypes = {
-  START: type(START),
-  DROP: type(DROP),
-  STOP: type(STOP),
-  HOVER_DRAGGABLE_ITEM_ENTER: type(HOVER_DRAGGABLE_ITEM_ENTER),
-  HOVER_DRAGGABLE_ITEM_LEAVE: type(HOVER_DRAGGABLE_ITEM_LEAVE),
-  UPDATE_DRAG_CONTAINER: type(UPDATE_DRAG_CONTAINER)
+    START: type(START),
+    DROP: type(DROP),
+    STOP: type(STOP),
+    HOVER_ITEM: type(HOVER_ITEM),
+    UPDATE_DRAG_CONTAINER: type(UPDATE_DRAG_CONTAINER),
+    DROP_STATE_CHANGE: type(DROP_STATE_CHANGE),
+    DROP_STATE_CHANGE_DONE: type(DROP_STATE_CHANGE_DONE)
 }
 
 export class DragStartAction implements Action {
@@ -42,18 +45,11 @@ export class DragStopAction implements Action {
     }
 }
 
-export class HoverDraggableItemEnterAction implements Action {
-    type: typeof ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER = ActionTypes.HOVER_DRAGGABLE_ITEM_ENTER;
-    payload: IDragInfo;
-    constructor(hoverItem: IDragInfo) {
-        this.payload = hoverItem;
-    }
-}
-
-export class HoverDraggableItemLeaveAction implements Action {
-    type: typeof ActionTypes.HOVER_DRAGGABLE_ITEM_LEAVE = ActionTypes.HOVER_DRAGGABLE_ITEM_LEAVE;
-    constructor() {
-        //
+export class HoverItemAction implements Action {
+    type: typeof ActionTypes.HOVER_ITEM = ActionTypes.HOVER_ITEM;
+    payload: { newState: boolean; dragInfo?: IDragInfo };
+    constructor(newState: boolean, dragInfo?: IDragInfo) {
+        this.payload = { newState, dragInfo };
     }
 }
 
@@ -65,9 +61,27 @@ export class UpdateDragContainerAction implements Action {
     }
 }
 
+export class DropStateChangeAction implements Action {
+    type: typeof ActionTypes.DROP_STATE_CHANGE = ActionTypes.DROP_STATE_CHANGE;
+    payload: boolean;
+    constructor(newState: boolean) {
+        this.payload = newState;
+    }
+}
+//DROP_STATE_CHANGE_DONE
+
+export class DropStateChangeDoneAction implements Action {
+    type: typeof ActionTypes.DROP_STATE_CHANGE_DONE = ActionTypes.DROP_STATE_CHANGE_DONE;
+    payload: { newState: boolean; dragInfo?: IDragInfo };
+    constructor(newState: boolean, dragInfo?: IDragInfo) {
+        this.payload = { newState, dragInfo };
+    }
+}
+
 export type DragActionTypes = DragStartAction
-        | DropAction
-        | DragStopAction
-        | HoverDraggableItemEnterAction
-        | HoverDraggableItemLeaveAction
-        | UpdateDragContainerAction;
+    | DropAction
+    | DragStopAction
+    | HoverItemAction
+    | UpdateDragContainerAction
+    | DropStateChangeAction
+    | DropStateChangeDoneAction;

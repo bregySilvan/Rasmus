@@ -19,7 +19,7 @@ export class GlobalEditable implements OnInit {
                 //@ts-ignore
                 this.store$.select(x => x.element.availableElements).subscribe(elements => this.element = findElement(this.element, elements));
                 this.initService.log(' selected available elements in base comp');
-            }, 30)
+            }, 120)
         }
     }
 

@@ -44,9 +44,9 @@ export class ElementEffects {
     .filter(activeHosts => !!activeHosts.length)
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
-        this.logService.log('host:: ', host);
+        this.logService.log(this, 'host:: ', host);
         let sub = this.dataService.getAllElements(host.ipAddress).subscribe((elements: IElement[]) => {
-          this.logService.warn('loaded available elements:: ', elements);
+          this.logService.warn(this, 'loaded available elements:: ', elements);
           this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
           sub.unsubscribe();
         });
@@ -57,10 +57,10 @@ export class ElementEffects {
   //@ts-ignore
   tryUpdateElements$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_ELEMENTS)
     .map<any, IElement[]>(toPayload)
-    //.bufferTime(60)
+    .bufferTime(60)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentElements: state.element.availableElements,
-      updatedElements: payload
+      updatedElements: _.flatten(payload)
     }))
     .map(x => unionElementsDistinct<IElement>(x.updatedElements, x.currentElements))
     .filter(x => x.hasChanged)

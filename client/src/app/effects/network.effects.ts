@@ -32,7 +32,7 @@ export class NetworkEffects {
     }))
     .map(x => unionDistinct(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
     .filter(x => x.hasChanged)
-    .do(x => this.logService.warn('try update Hosts triggered..'))
+    .do(x => this.logService.warn(this, 'try update Hosts triggered..'))
     .map(x => new networkActions.HostsUpdateAction(x.unionArr));
 
 
@@ -43,7 +43,7 @@ export class NetworkEffects {
     .do(() => this.networkService.calculatePossibleAddresses(LOCAL_ADDRESS, LOCAL_SUBNET_MASK))
     .delay(1200)
    // .map(() => [new networkActions.CheckPossibleHostsAction(), new networkActions.KeepAliveActiveHostsAction()]);
-   .flatMap(x => ([
+   .mergeMap(x => ([
      new networkActions.CheckPossibleHostsAction(),
      new networkActions.KeepAliveActiveHostsAction()]));
      

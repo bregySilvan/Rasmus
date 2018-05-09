@@ -19,6 +19,6 @@ export class InitService {
     }
 
     public log(...text: any[]) {
-        this.logService.log(...text);
+        this.logService.log(this, ...text);
     }
 }

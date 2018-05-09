@@ -10,7 +10,8 @@ import { LogService } from './log.service';
 import { IAppStore } from '../app.state';
 import { Store } from '@ngrx/store';
 import * as elementActions from '../actions/element.actions';
-import { UpdateDragContainerAction, HoverDraggableItemEnterAction, HoverDraggableItemLeaveAction, DragStartAction } from '../actions/drag.actions';
+import * as dragActions from '../actions/drag.actions';
+import { UpdateDragContainerAction, DragStartAction, DropAction } from '../actions/drag.actions';
 import { IDragInfo } from '../state/drag.reducer';
 
 
@@ -31,15 +32,15 @@ export class DragService {
         return true;
     }
 
-    public update(info: IDragInfo) {
-        this.store$.dispatch(new UpdateDragContainerAction(info));
+    public drop(info: IDragInfo) {
+        this.store$.dispatch(new dragActions.DropAction(info));
     }
 
     public dragHoverEnter(info: IDragInfo) {
-        this.store$.dispatch(new HoverDraggableItemEnterAction(info));
+        this.store$.dispatch(new dragActions.HoverItemAction(true, info));
     }
 
     public dragHoverLeave() {
-        this.store$.dispatch(new HoverDraggableItemLeaveAction());
+        this.store$.dispatch(new dragActions.HoverItemAction(false, undefined));
     }
 }

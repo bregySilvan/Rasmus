@@ -24,10 +24,10 @@ export class AdvertisementComponent implements OnInit {
 
   ngOnInit() {
     if(!this.advertisement) {
-      this.logService.log('received invalid element in advertisement comp: ', this.advertisement);
+      this.logService.log(this, 'received invalid element in advertisement comp: ', this.advertisement);
     }
 
-    //this.logService.log('element: ', this.advertisement);
+    //this.logService.log(this, 'element: ', this.advertisement);
 
     
     

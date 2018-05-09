@@ -43,13 +43,13 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
     let element2: IElement = { key: 'mySecondElement', type: 'advertisement' };
     let board1: IBoard = { key: 'myFirstBoard', elements: [element1, element2], type: 'board' };
     let board2: IBoard = { key: 'mySecondBoard', elements: [element1, element2], type: 'board' };
-    this.dataService.saveBoards(this.host, [board1, board2]);//.subscribe(x => this.logService.warn('saved some boards and it acuztally responded'));
+    this.dataService.saveBoards(this.host, [board1, board2]);//.subscribe(x => this.logService.warn(this, 'saved some boards and it acuztally responded'));
   }
 
   public onSaveElements(event: any) {
     let element1: IElement = { key: 'myFirstElement', type: 'advertisement' };
     let element2: IElement = { key: 'mySecondElement', type: 'advertisement' };
-    this.dataService.saveElements(this.host, [element1, element2]);//.subscribe(x => this.logService.warn('saved some elements and it acuztally responded'));;
+    this.dataService.saveElements(this.host, [element1, element2]);//.subscribe(x => this.logService.warn(this, 'saved some elements and it acuztally responded'));;
   }
 
 
