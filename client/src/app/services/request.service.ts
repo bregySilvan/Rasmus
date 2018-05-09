@@ -56,10 +56,11 @@ export class RequestService {
   }
 
   public get(url: string, payload?: any): Observable<http.Response> {
+    this.logService.warn('getting ', url);
     let options = { params: payload };
     let a: http.BaseRequestOptions
     return this.httpClient.get(url).catch((error: http.Response | any) => {
-     // this.logService.error(error);
+      this.logService.error(error);
       return _throw('Error when GET on ' + url + ' options: ' + JSON.stringify(options));
     });
   }

@@ -71,7 +71,7 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
   }
 
   public getFirstListEl(): IElement {
-    return <IBoard>{ key: this.secondListKey, elements: this.elementsInBoard, type: 'board' };
+    return <IBoard>{ key: this.firstListKey, elements: this.elementsInBoard, type: 'board' };
   }
 
   ngOnDestroy() {

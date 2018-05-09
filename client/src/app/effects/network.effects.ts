@@ -14,6 +14,7 @@ import * as networkActions from '../actions/network.actions';
 import { map, switchMap, filter } from 'rxjs/operators';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/bufferTime';
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 import { unionDistinct } from '../../utils/functions';
 
@@ -24,15 +25,15 @@ export class NetworkEffects {
   //@ts-ignore
   hostUpdate$ = this.actions$.ofType(networkActions.ActionTypes.TRY_UPDATE_HOSTS)
     .map<any, IHost[]>(toPayload)
+    .bufferTime(300)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentHosts: state.network.hosts,
-      updatedHost: payload
+      updatedHost: _.flatten(payload)
     }))
     .map(x => unionDistinct(x.updatedHost, x.currentHosts, this.networkService.areEqualHosts))
     .filter(x => x.hasChanged)
-    .map(x => x.unionArr)
-    .bufferTime(300)
-    .map(x => new networkActions.HostsUpdateAction(_.flatten(x)));
+    .do(x => this.logService.warn('try update Hosts triggered..'))
+    .map(x => new networkActions.HostsUpdateAction(x.unionArr));
 
 
   @Effect()

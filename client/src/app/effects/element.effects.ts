@@ -8,6 +8,7 @@ import * as networkActions from '../actions/network.actions';
 import 'rxjs/add/operator/withLatestFrom'
 import 'rxjs/add/operator/do'
 import 'rxjs/add/operator/mergeMap'
+import 'rxjs/add/operator/bufferTime'
 import { IHost } from '../state/network.reducer';
 import { ElementService } from '../services/element.service';
 import { Observable } from 'rxjs/Observable';
@@ -15,6 +16,8 @@ import { AUTO_DATA_LOADING } from '../../../../config';
 import { DataService } from '../services/data.service';
 import { IElement, IBoard } from '../../../../interfaces';
 import { unionElementsDistinct } from '../../utils/functions';
+import * as _ from 'lodash';
+
 
 @Injectable()
 export class ElementEffects {
@@ -43,6 +46,7 @@ export class ElementEffects {
       activeHosts.forEach((host: IHost) => {
         this.logService.log('host:: ', host);
         let sub = this.dataService.getAllElements(host.ipAddress).subscribe((elements: IElement[]) => {
+          this.logService.warn('loaded available elements:: ', elements);
           this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
           sub.unsubscribe();
         });
@@ -53,6 +57,7 @@ export class ElementEffects {
   //@ts-ignore
   tryUpdateElements$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_ELEMENTS)
     .map<any, IElement[]>(toPayload)
+    //.bufferTime(60)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentElements: state.element.availableElements,
       updatedElements: payload

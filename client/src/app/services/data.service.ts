@@ -31,9 +31,10 @@ export class DataService implements IDatabaseService {
   }
 
   public getElements(host: string, keys: string[]): Observable<IElement[]> {
+
     let URL = buildRequestUrl(host, DEFAULT_PORT, LOCATIONS.elements);
     return this.requestService.get(URL, { keys: keys }).map(res => res.json()).catch((error: any) => {
-    //  this.logService.log('error=? ', error);
+      this.logService.log('error=? ', error);
       return Observable.create([]);
     });
   }
