@@ -21,16 +21,14 @@ export class NetworkEffects {
   @Effect()
   //@ts-ignore
   onDrop$ = this.actions$.ofType(dragActions.ActionTypes.DROP)
-    .map<any, string>(toPayload)
+    .map<any, IDragInfo>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
      // canDrop: state.drag.canDrop,
       canDrop: true,
-      index: state.drag.targetItem.index,
-      dragContainerKey: state.drag.targetItem.dragContainerKey,
-      element: state.drag.currentDragInfo.element
+      dragInfo: payload
     }))
-    .filter(x => x.canDrop && x.element.type !== 'empty' && x.index > -1)
-    .map(x => (<IDragInfo>{ dragContainerKey: x.dragContainerKey, element: x.element, index: x.index }))
+    .filter(x => x.canDrop && x.dragInfo.element.type !== 'empty' && x.dragInfo.index > -1)
+   // .map(x => (<IDragInfo>{ dragContainerKey: x.dragContainerKey, element: x.element, index: x.index }))
     .map(x => new dragActions.UpdateDragContainerAction(x));
 
   @Effect()

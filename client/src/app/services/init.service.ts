@@ -18,6 +18,10 @@ export class InitService {
         this.elementService.tryElementsUpdate([element]);
     }
 
+    public updateElement(element: IElement) {
+        this.elementService.tryElementsUpdate([element]);
+    }
+
     public log(...text: any[]) {
         this.logService.log(this, ...text);
     }

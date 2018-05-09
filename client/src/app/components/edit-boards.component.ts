@@ -27,9 +27,11 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
 
   elements: IElement[] = [];
   host = LOCAL_ADDRESS;
-  firstListKey = this.newItemKey();
-  secondListKey = this.newItemKey();
-
+  //firstListKey = this.newItemKey();
+ // secondListKey = this.newItemKey();
+ secondListKey = 'secondListKey';
+ firstListKey = 'firstListKey';
+ 
   private elementSub: Subscription = new Subscription();
   public availableElements: IElement[] = [];
   public elementsInBoard: IElement[] = [];
