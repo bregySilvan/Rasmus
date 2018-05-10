@@ -16,20 +16,20 @@ import * as _ from 'lodash';
 import { NO_ITEM_KEY } from '../../../../config';
 
 @Injectable()
-export class NetworkEffects {
+export class DragEffects {
 
   @Effect()
   //@ts-ignore
   onDrop$ = this.actions$.ofType(dragActions.ActionTypes.DROP)
     .map<any, IDragInfo>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
-     // canDrop: state.drag.canDrop,
+   //   canDrop: state.drag.canDrop,
       canDrop: true,
       dragInfo: payload
     }))
+    .do( x => this.logService.warn(this, 'drop action effect triggered'))
     .filter(x => x.canDrop && x.dragInfo.element.type !== 'empty' && x.dragInfo.index > -1)
-   // .map(x => (<IDragInfo>{ dragContainerKey: x.dragContainerKey, element: x.element, index: x.index }))
-    .map(x => new dragActions.UpdateDragContainerAction(x));
+    .map(x => new dragActions.UpdateDragContainerAction(x.dragInfo));
 
   @Effect()
   //@ts-ignore

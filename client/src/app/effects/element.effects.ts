@@ -26,7 +26,7 @@ export class ElementEffects {
   //@ts-ignore
   loadElementsFromNewHost$ = this.actions$.ofType(networkActions.ActionTypes.HOSTS_UPDATE)
     .filter(x => AUTO_DATA_LOADING)
-    .map(x =>  new elementActions.LoadAvailableElementsAction());
+    .map(x => new elementActions.LoadAvailableElementsAction());
 
   @Effect()
   //@ts-ignore
@@ -44,26 +44,29 @@ export class ElementEffects {
     .filter(activeHosts => !!activeHosts.length)
     .do(activeHosts => {
       activeHosts.forEach((host: IHost) => {
-        this.logService.log(this, 'host:: ', host);
         let sub = this.dataService.getAllElements(host.ipAddress).subscribe((elements: IElement[]) => {
-          this.logService.warn(this, 'loaded available elements:: ', elements);
+        //  this.logService.warn(this, 'loaded available elements:: ', elements);
           this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
           sub.unsubscribe();
         });
       });
     });
 
+  bb = 0;
   @Effect()
   //@ts-ignore
   tryUpdateElements$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_ELEMENTS)
     .map<any, IElement[]>(toPayload)
-    .bufferTime(60)
+     .bufferTime(3000)
+     .do(x => this.logService.log(this ,'before flatten:: ', x))
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       currentElements: state.element.availableElements,
       updatedElements: _.flatten(payload)
     }))
+    .do(x => this.logService.log(this ,'after flatten:: ', x))
     .map(x => unionElementsDistinct<IElement>(x.updatedElements, x.currentElements))
     .filter(x => x.hasChanged)
+    .do(x => this.logService.log(this ,'after elements distinct:: ', x))
     .map(x => new elementActions.UpdateElementsAction(x.unionArr));
 
   constructor(private actions$: Actions,

@@ -22,6 +22,6 @@ export class LogService {
   }
 
   private _print(callee: Object, method: 'warn' | 'log' | 'error' | 'info', ...text) {
-    console[method](callee.constructor.name,'->', ...text);
+    console[method](callee.constructor.name+': ', ...text);
   }
 }

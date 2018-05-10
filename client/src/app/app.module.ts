@@ -14,6 +14,7 @@ import { NetworkEffects } from './effects/network.effects';
 import { HttpModule } from '@angular/http';
 import { ElementEffects } from './effects/element.effects';
 import { NgDragDropModule } from 'ng-drag-drop';
+import { DragEffects } from './effects/drag.effects';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { NgDragDropModule } from 'ng-drag-drop';
     EffectsModule.run(DebugEffect),
     EffectsModule.run(NetworkEffects),
     EffectsModule.run(ElementEffects),
-    EffectsModule.run(NetworkEffects)
+    EffectsModule.run(NetworkEffects),
+    EffectsModule.run(DragEffects)
   ],
   providers: RASMUS_PROVIDERS,
   bootstrap: [AppComponent]

@@ -9,7 +9,7 @@ import { IAppStore } from '../app.state';
 import { LogService } from '../services/log.service';
 import { DataService } from '../services/data.service';
 import { IHost } from '../state/network.reducer';
-import { LOCAL_ADDRESS } from '../../../../config';
+import { LOCAL_ADDRESS, ALL_AVAILABLE_ADS_LIST } from '../../../../config';
 import { Subscription } from 'rxjs';
 import { KeyService } from '../services/key.service';
 import { ElementService } from '../services/element.service';
@@ -29,12 +29,13 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
   host = LOCAL_ADDRESS;
   //firstListKey = this.newItemKey();
  // secondListKey = this.newItemKey();
- secondListKey = 'secondListKey';
- firstListKey = 'firstListKey';
+
+ firstListKey = ALL_AVAILABLE_ADS_LIST;
+ secondListKey = ALL_AVAILABLE_ADS_LIST+1;
  
   private elementSub: Subscription = new Subscription();
-  public availableElements: IElement[] = [];
-  public elementsInBoard: IElement[] = [];
+  public elementListLeft: IElement[] = [];
+  public elementListRight: IElement[] = [];
 
   public onGetElements(event: any): void {
     this.elementService.loadAvailableElemens();
@@ -62,9 +63,9 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
       let usedAvailableElements = x.availableElements.filter(element => element.type === 'advertisement');
-      
-      this.availableElements = usedAvailableElements.concat();
-      this.elementsInBoard = usedAvailableElements.concat();
+      this.elementListLeft = { }
+      this.availableElements = usedAvailableElements;
+      this.elementsInBoard = usedAvailableElements;
     });
   }
   

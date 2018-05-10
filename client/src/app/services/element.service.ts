@@ -21,7 +21,7 @@ export class ElementService {
 
     }
 
-    public tryElementsUpdate(elements: IElement[]) {
+    public tryUpdateElements(elements: IElement[]) {
       this.store$.dispatch(new elementActions.TryUpdateElementsAction(elements));
     }
 

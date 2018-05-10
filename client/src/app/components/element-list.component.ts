@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { IElement, ElementTypes, IBoard } from '../../../../interfaces';
 import { Store } from '@ngrx/store';
 import { IAppStore } from '../app.state';
@@ -42,8 +42,9 @@ export class ElementListComponent extends GlobalEditable {
 
   constructor(
     store$: Store<IAppStore>,
-    initService: InitService) {
+    initService: InitService,
+    changeRef: ChangeDetectorRef) {
 
-    super(initService, store$);
+    super(initService, store$, changeRef);
   }
 }

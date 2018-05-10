@@ -15,11 +15,11 @@ export class InitService {
     }
 
     public registerElement(element: IElement) {
-        this.elementService.tryElementsUpdate([element]);
+        this.elementService.tryUpdateElements([element]);
     }
 
     public updateElement(element: IElement) {
-        this.elementService.tryElementsUpdate([element]);
+        this.elementService.tryUpdateElements([element]);
     }
 
     public log(...text: any[]) {
