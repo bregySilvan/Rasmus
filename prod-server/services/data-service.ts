@@ -1,17 +1,42 @@
 import { IElement, ElementTypes, IBoard, IAdvertisement } from '../../interfaces';
 import * as fse from 'fs-extra';
 import { QueueService } from './queue-service';
+import { SOURCE_FOLDER_PATH } from '../prod-server.conf';
 
 export class DataService {
 
     private elementsFilePath = './var/elements.json';
     private boardsFilePath = './var/boards.json';
+   // private picturesFilePath = SOURCE_FOLDER_PATH;
+   private picturesFilePath = 'D:/Github/rasmus2/prod-server/var/question1.jpg';
+//
+
     private queueService: QueueService;
 
     constructor() {
         this.queueService = new QueueService();
     }
-    
+
+    public listFileNames(path: string, endings: string[], callback: (error: any, filenames: string[]) => void) {
+        fse.readdir(path, (error, files) => {
+            if(error) {
+                return callback(error, []);
+            }
+            if(endings) {
+                endings = endings.map(ending => ending.startsWith('.') ? ending : '.'+ending);
+                files = files.filter(file =>  {
+                    let currentEnding = file.substring(file.lastIndexOf('.'));
+                    return endings.includes(currentEnding);
+                });
+            }
+            return callback(null, files);
+        })
+    }
+
+    public readPicture(path: string): any {
+        return fse.readFileSync(path);
+    }
+
     public getBoards(keys: string[], callback: (error: Error, boards: IBoard[]) => void) {
         this._getQueued(this.boardsFilePath, keys, (error: any, data: any) => {
             if(error) {
