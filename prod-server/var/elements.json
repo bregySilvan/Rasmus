@@ -1,0 +1,45 @@
+{
+    "1223": {
+        "key": "1223",
+        "type": "advertisement",
+        "name": "preferred banner",
+        "description": "some ad description this is",
+        "imageURL": "https://i.imgur.com/IUxU35q.jpg"
+    },
+    "233": {
+        "key": "233",
+        "type": "advertisement",
+        "name": "To not to use at work",
+        "description": "some ad description this is",
+        "imageURL": "https://www.webwire.com/prmedia/7/220577/220577-1-m.jpg?201832564846"
+    },
+    "344": {
+        "key": "344",
+        "type": "advertisement",
+        "name": "Finished last wedn.",
+        "description": "some ad description this is",
+        "imageURL": "https://www.planwallpaper.com/static/images/001_week-in-pictures-08.jpg"
+    },
+    "455": {
+        "key": "455",
+        "type": "advertisement",
+        "name": "Some nice stuff",
+        "description": "some ad description this is",
+        "imageURL": "http://hanassets.nd.gov/images/product/test.png"
+    },
+    "566": {
+        "key": "566",
+        "type": "advertisement",
+        "name": "I know what you did...",
+        "description": "some ad description this is",
+        "imageURL": "https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png"
+    },
+    "5664323": {
+        "key": "5664323",
+        "type": "advertisement",
+        "name": "I know what you did...",
+        "description": "some ad description this is",
+        "imageURL": "https://www.centraltest.com/sites/all/files/platforme-evaluation-en-450x290.png"
+
+    }
+}
