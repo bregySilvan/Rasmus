@@ -1,28 +1,33 @@
 import * as actions from '../actions/element.actions';
 import { IHost } from './network.reducer';
-import { IElement, IBoard } from '../../../../interfaces';
+import { IElement, IBoard, IContainer } from '../../../../interfaces';
 import { element } from 'protractor';
 import { ALL_AVAILABLE_ADS_LIST } from '../../../../config';
 
 
-const usedLists: IBoard[] = [
+const usedLists: IContainer[] = [
   {
     key: ALL_AVAILABLE_ADS_LIST,
-    type: 'board',
+    type: 'container',
     elements: [],
+    contentType: 'advertisement'
   },
   {
     key: ALL_AVAILABLE_ADS_LIST+1,
-    type: 'board',
+    type: 'container',
     elements: [],
+    contentType: 'advertisement'
   }
-]
+];
+
 export interface IElementState {
     availableElements: IElement[];
+    containers: IContainer[];
 }
 
 const initialState: IElementState = {
-    availableElements: usedLists
+    availableElements: [],
+    containers: usedLists
 };
 
 

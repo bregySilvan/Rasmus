@@ -31,7 +31,9 @@ export class DebugEffect {
       
     });
 
-  constructor(private store: Store<IAppStore>, private actions$: Actions, private logger: LogService) {
+  constructor(private store$: Store<IAppStore>, 
+              private actions$: Actions, 
+              private logger: LogService) {
   }
 
 }

@@ -11,12 +11,27 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/debounceTime';
 import { IDragInfo } from '../state/drag.reducer';
-import { IBoard } from '../../../../interfaces';
+import { IBoard, IElement } from '../../../../interfaces';
 import * as _ from 'lodash';
 import { NO_ITEM_KEY } from '../../../../config';
 
 @Injectable()
 export class DragEffects {
+
+
+  @Effect()
+  //@ts-ignore
+  onDrop$ = this.actions$.ofType(elementActions.ActionTypes.UPDATE_ELEMENTS)
+    .map<any, IElement[]>(toPayload)
+    .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
+      //   canDrop: state.drag.canDrop,
+         availableElements: state.element.availableElements.filter(el => el.type === 'container'),
+         update: payload
+       }))
+    .map( x => {
+      
+    })
+
 
   @Effect()
   //@ts-ignore

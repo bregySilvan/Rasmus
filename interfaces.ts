@@ -15,8 +15,12 @@ export interface IAdvertisement extends IElement {
   imageURL: string;
 }
 
+export interface IContainer extends IBoard {
+  contentType: ElementTypes;
+}
+
 export interface IBoard extends IElement {
   elements: IElement[];
 }
 
-export type ElementTypes = 'advertisement' | 'board' | 'empty'; // empty is used for developping.
+export type ElementTypes = 'advertisement' | 'board' | 'empty' | 'container'; // empty is used for developping.

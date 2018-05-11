@@ -33,12 +33,12 @@ export class DragComponent implements OnChanges {
     }
 
     public onElementDrop(event: any) {
-        this.logService.warn(this, 'onElementDrop Emitted', event.dragData);
+     //   this.logService.warn(this, 'onElementDrop Emitted', event.dragData);
         this.dragService.drop(this._buildDragInfo(event.dragData));
     }
 
     public onElementDragEnter(event: any) {
-        this.logService.warn(this, 'ONELEMENT DRAG ENTER=>>', event.dragData);
+    //    this.logService.warn(this, 'ONELEMENT DRAG ENTER=>>', event.dragData);
         this.dragService.dragHoverEnter(this._buildDragInfo(event.dragData));
     }
 
@@ -52,7 +52,7 @@ export class DragComponent implements OnChanges {
 
     ngOnChanges(changes: {[handler in keyof (GlobalEditable)]: SimpleChange}): void {
         if(changes.element && !_.isEqual(changes.element.previousValue, changes.element.currentValue)) {
-            this.elementService.tryUpdateElements(changes.element.currentValue);
+          //  this.elementService.tryUpdateElements(changes.element.currentValue);
          //   this.changeRef.markForCheck();
         }
     }

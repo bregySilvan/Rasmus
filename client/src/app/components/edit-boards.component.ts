@@ -34,8 +34,8 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
  secondListKey = ALL_AVAILABLE_ADS_LIST+1;
  
   private elementSub: Subscription = new Subscription();
-  public elementListLeft: IElement[] = [];
-  public elementListRight: IElement[] = [];
+  public elementListLeft: IElement | null = null;
+  public elementListRight: IElement | null = null;
 
   public onGetElements(event: any): void {
     this.elementService.loadAvailableElemens();
@@ -62,19 +62,17 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
-      let usedAvailableElements = x.availableElements.filter(element => element.type === 'advertisement');
-      this.elementListLeft = { }
-      this.availableElements = usedAvailableElements;
-      this.elementsInBoard = usedAvailableElements;
+      this.elementListLeft = x.availableElements.find(element => element.key === this.firstListKey) || null;
+      this.elementListRight = x.availableElements.find(element => element.key === this.secondListKey) || null;
     });
   }
   
-  public getSecondListEl(): IElement {
-    return <IBoard>{ key: this.secondListKey, elements: this.availableElements, type: 'board' };
+  public getFirstListEl(): IElement | null {
+    return this.elementListLeft
   }
 
-  public getFirstListEl(): IElement {
-    return <IBoard>{ key: this.firstListKey, elements: this.elementsInBoard, type: 'board' };
+  public getSecondListEl(): IElement | null {
+    return this.elementListRight;
   }
 
   ngOnDestroy() {
