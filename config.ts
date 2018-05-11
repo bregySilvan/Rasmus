@@ -6,6 +6,7 @@ export interface ILocationMap {
     elements: string;
     board_$id: string;
     boards: string;
+    show: string;
     activeBoard: string;
     isAlive: string;
 }
@@ -17,7 +18,8 @@ export const LOCATIONS: ILocationMap = {
     board_$id: 'board/:id',
     boards: 'boards',
     activeBoard: 'active-board',
-    isAlive: 'is-alive'
+    isAlive: 'is-alive',
+    show: 'show'
 }
 
 export const NO_ITEM_KEY = 'THIS_IS_NOT_AN_ITEM_KEY';

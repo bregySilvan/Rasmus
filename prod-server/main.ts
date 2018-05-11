@@ -1,13 +1,7 @@
 
 import * as _ from 'lodash';
 import { Server } from './classes/server';
-import { DEFAULT_PORT } from '../config';
-//import { IListElement } from '../interfaces';
-//import * as fse from 'fs-extra';
+import { DEFAULT_PORT } from './prod-server.conf';
 
-//var a: IListElement = { type: 'advertisement', key: 'myFirstFuckingKey'};
-//var file = './log.json';
-//fse.createFileSync(file);
-//fse.writeJsonSync(file, a);
 new Server().start(DEFAULT_PORT);
 
