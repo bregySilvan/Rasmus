@@ -13,7 +13,7 @@ export class CustomRouter {
     constructor(private _app?: express.Express) {
         this._app = _app || express();
         this._router = express.Router();
-        this._requestHandler = new RequestHandlerService(this);
+        this._requestHandler = new RequestHandlerService();
         this._activeLocations = [];
         this._activateRoutes();
         this._app.use(this._router);
@@ -28,13 +28,14 @@ export class CustomRouter {
 
         // get
         
-        this.addRoute(LOCATIONS.startShow, 'get', this._requestHandler.onGetScripts);
 
         this.addRoute(LOCATIONS.scripts, 'get', this._requestHandler.onGetScripts);
 
         this.addRoute(LOCATIONS.pictureRoutes, 'get', this._requestHandler.onGetPictureRoutes);
 
         this.addRoute(LOCATIONS.show, 'get', this._requestHandler.onGetShow);
+
+        this.addRoute(LOCATIONS.startShow, 'get', this._requestHandler.onStartShow);
 
         this.addRoute(LOCATIONS.picture_$id, 'get', this._requestHandler.onGetPicture_$id);
     }
@@ -50,9 +51,6 @@ export class CustomRouter {
     public activatePictureRoutes(path: string) {
         return this._requestHandler.addPictureRoutes(path);
     }
-
-
-
 
 }
 

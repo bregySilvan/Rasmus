@@ -1,4 +1,5 @@
 
+import * as ip from 'ip';
 
 export interface ILocationMap {
     element: string;
@@ -11,6 +12,7 @@ export interface ILocationMap {
     scripts: string;
     pictureRoutes: string;
     startShow: string;
+
     picture_$id: string;
 }
 
@@ -23,13 +25,14 @@ export const LOCATIONS: ILocationMap = {
     isAlive: 'is-alive',
     show: 'show',
     scripts: 'scripts',
-    pictureRoutes: 'picture-routes',
+   // pictureRoutes: 'start-show/routes',
+   pictureRoutes: 'picture-routes',
     startShow: 'start-show',
     picture_$id: 'picture/:id'
 }
 
 export const NO_ITEM_KEY = 'THIS_IS_NOT_AN_ITEM_KEY';
-
+console.log('ip: ', ip.address());
 export const LOCAL_ADDRESS = '192.168.1.254';
 //export const LOCAL_ADDRESS = '192.168.1.254';
 //export const LOCAL_ADDRESS = '10.1.34.116';
