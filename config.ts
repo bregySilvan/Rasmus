@@ -32,8 +32,7 @@ export const LOCATIONS: ILocationMap = {
 }
 
 export const NO_ITEM_KEY = 'THIS_IS_NOT_AN_ITEM_KEY';
-console.log('ip: ', ip.address());
-export const LOCAL_ADDRESS = '192.168.1.254';
+export const LOCAL_ADDRESS = ip.address();
 //export const LOCAL_ADDRESS = '192.168.1.254';
 //export const LOCAL_ADDRESS = '10.1.34.116';
 //export const LOCAL_ADDRESS = '10.1.38.110';
