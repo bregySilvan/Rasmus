@@ -27,7 +27,6 @@ export class CustomRouter {
     private _activateRoutes() {
 
         // get
-        
 
         this.addRoute(LOCATIONS.scripts, 'get', this._requestHandler.onGetScripts);
 
@@ -40,16 +39,12 @@ export class CustomRouter {
         this.addRoute(LOCATIONS.picture_$id, 'get', this._requestHandler.onGetPicture_$id);
     }
 
-    public addRoute(location: string, method: 'post' | 'get', 
+    public addRoute(location: string, method: 'post' | 'get',
         requestHandlerFn: (req: express.Request, res: express.Response, next: express.NextFunction) => void): void {
 
             location = location.startsWith('/') ? location : `/${location}`;
             this._activeLocations.push(`${method.toUpperCase()}: ${location}`);
             this._router[method](location, requestHandlerFn.bind(this._requestHandler));
-    }
-
-    public activatePictureRoutes(path: string) {
-        return this._requestHandler.addPictureRoutes(path);
     }
 
 }

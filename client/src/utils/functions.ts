@@ -46,3 +46,6 @@ export function buildRequestUrl(host: string, port: number, location: string) {
   return `http://${host}:${port}${location}`;
 }
 
+export function rndName(): string {
+  return '' + Date.now() + '_' + ('' + Math.random()).substring(4, 8);
+}

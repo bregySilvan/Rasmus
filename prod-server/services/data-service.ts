@@ -7,9 +7,6 @@ export class DataService {
 
     private elementsFilePath = './var/elements.json';
     private boardsFilePath = './var/boards.json';
-   // private picturesFilePath = SOURCE_FOLDER_PATH;
-   private picturesFilePath = 'D:/Github/rasmus2/prod-server/var/question1.jpg';
-//
 
     private queueService: QueueService;
 
@@ -54,7 +51,7 @@ export class DataService {
             callback(error, Object.keys(data).map(key => <IElement>data[key]));
         });
     }
-    
+
     public saveElements(elements: IElement[], callback: (error: any) => void): void {
         console.warn('saving element on server::');
         this._saveQueued(this.elementsFilePath, elements, callback);
@@ -94,7 +91,7 @@ export class DataService {
 
             callback(null, requestedAvailableKeys.map(key => jsonData[key]));
 
-        });  
+        });
     }
 
     private _save(file: string, elements: IElement[], callback: (error: any) => void): void {
@@ -116,7 +113,6 @@ export class DataService {
             return this._updateJson(file, elements, callback);
         });
     }
-
 
     private _checkJsonFile(file: string, callback: (error?: any) => void): void {
         fse.exists(file, async (exists: boolean) => {
@@ -141,10 +137,6 @@ export class DataService {
             });
         });
     }
-
-    //  constructor(private elementFilePath: string) {
-    // @toDo: take filepaths from constructor.
-    // }
 }
 
 

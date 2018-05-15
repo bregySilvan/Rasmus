@@ -5,12 +5,13 @@ import { DataService } from './data-service';
 import * as _ from 'lodash';
 import { LOCAL_ADDRESS, DEFAULT_PORT, LOCATIONS } from '../../config';
 import { CustomRouter } from '../classes/router';
-import { RELOAD_PICTURES_INTERVAL_MS, PICTURE_CHANGE_INTERVAL_MS, FULL_SITE_ADDRESSES } from '../prod-server.conf';
+import { UPDATE_PICTURE_ROUTES_CLIENT, PICTURE_CHANGE_INTERVAL_MS, SOURCE_FOLDER_PATH, FULL_SITE_ADDRESSES } from '../prod-server.conf';
+import { ENAMETOOLONG } from 'constants';
+import { ifError } from 'assert';
 
 export class RequestHandlerService {
 
     private dataService: DataService;
-    private activePictureRoutes: string[] = [];
 
     public constructor() {
         this.dataService = new DataService();
@@ -28,9 +29,9 @@ export class RequestHandlerService {
         }
 
         headers.push('Access-Control-Allow-Origin: https://steinbock77.ch');
-        console.log('responding to request: ');
-        console.log('status:', status);
-        console.log('response: ', response);
+    //    console.log('responding to request: ');
+      //  console.log('status:', status);
+       // console.log('response: ', response);
 
         res.header(headers.join(','));
         res.status(200);
@@ -38,6 +39,77 @@ export class RequestHandlerService {
         res.end();
 
         next();
+    }
+
+ 
+    public onGetScripts(req: express.Request, res: express.Response, next: express.NextFunction) {
+        let message = `function foo() { alert('bar'); }`
+        let responseInfo = { response: message, error: null };
+        let responseStati = { bad: 403, good: 200 };
+        let headers = ['Content-Type: text/html'];
+        this._respond(res, responseInfo, responseStati, next, headers);
+    }
+
+    public onGetPicture_$id(req: express.Request, res: express.Response, next: express.NextFunction) {
+        this.dataService.listFileNames(SOURCE_FOLDER_PATH, ['.gif', '.png', '.jpg'], (err: any,  fileNames: string[]) => {
+            let pictureName = req.params.id;
+            let error = err;
+            let picturePath = fileNames.find(fileName => fileName === pictureName);
+            console.log('fileNamesé ', fileNames);
+            console.log('requested path: ', pictureName);
+            let message = '';
+            if (!picturePath) {
+                error = 'PICTURE NOT FOUND::';
+            } else {
+                message = this.dataService.readPicture(SOURCE_FOLDER_PATH+'/'+picturePath);
+            }
+            let responseInfo = { response: message, error: null };
+            let responseStati = { bad: 403, good: 200 };
+            let headers = ['Content-Type: image/gif'];
+            this._respond(res, responseInfo, responseStati, next, headers);
+        });
+    }
+
+    public onGetPictureRoutes(req: express.Request, res: express.Response, next: express.NextFunction) {
+        this.dataService.listFileNames(SOURCE_FOLDER_PATH, ['.gif', '.png', '.jpg'], (error: any,  fileNames: string[]) => {
+
+            let displayInfos: { type: 'picture' | 'site', url: string }[]  = [];
+            let activeRoutes = fileNames.map(file => '/'+file);
+            fileNames.forEach(name => displayInfos.push({url: '/'+name, type: 'picture'}));
+            FULL_SITE_ADDRESSES.forEach(url => displayInfos.push({url: url, type: 'site'}));
+
+            let message = JSON.stringify(displayInfos);
+            let responseInfo = { response: message, error: error };
+            let responseStati = { bad: 403, good: 200 };
+            let headers = ['Content-Type: text/html'];
+            this._respond(res, responseInfo, responseStati, next, headers);
+        });
+    }
+
+    public onGetShow(req: express.Request, res: express.Response, next: express.NextFunction) {
+
+
+        let message = `<html>
+        <head>
+        <title>Title of the document</title>
+        <script src="http://${LOCAL_ADDRESS}:5001/scripts"></script>
+        <script>function onClick() { window.setTimeout(function() { foo(); }, 3000);  }</script>
+        </head>
+
+        <body>
+
+        <p><button onclick="onClick()">click me</button></p>
+        <p><img src="http://${LOCAL_ADDRESS}:5001/picture"</p>
+
+
+        </body>
+
+        </html>`
+        let responseData = ``;
+        let responseInfo = { response: message, error: null };
+        let responseStati = { bad: 403, good: 200 };
+        let headers = ['Content-Type: text/html'];
+        this._respond(res, responseInfo, responseStati, next, headers);
     }
 
     public onStartShow(req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -62,13 +134,13 @@ export class RequestHandlerService {
         function createPicture(url) {
             var pic = document.createElement("img");
             pic.setAttribute("src", url);
-            pic.style.height = "100%";
+            pic.style.width = "100%";
             document.body.innerHTML = "";
             document.body.appendChild(pic);
         }
 
         function showNextPicture() {
-            
+
             if(document.env.isUpdating) {
                 return;
             }
@@ -89,7 +161,7 @@ export class RequestHandlerService {
                 var serverUrl = 'http://localhost:5001/picture';
                 var imageUrl = serverUrl+displayInfo.url;
                 createPicture(imageUrl);
-                
+
             } else if(displayInfo.type === 'site') {
                 createIframe(displayInfo.url);
             } else {
@@ -115,121 +187,47 @@ export class RequestHandlerService {
         }
 
         function startShow() {
-            window.setInterval(updatePictureRoutes, ${RELOAD_PICTURES_INTERVAL_MS});
+            window.setInterval(updatePictureRoutes, ${UPDATE_PICTURE_ROUTES_CLIENT});
             updatePictureRoutes();
             window.setTimeout(function() {
                 showNextPicture();
                 window.setInterval(showNextPicture, ${PICTURE_CHANGE_INTERVAL_MS});
             }, 2000);
-            
+
         }
-        
+
         startShow();
-        
+
         </script>
         </head>
-        
+
         <body style="overflow: hidden">
-        
+
         <img height="100%" id="activePicture"><img>
-   
+
         <iframe id="activeIFrame" width="100%" height="100%"></iframe>
-        
+
         </body>
-        
+
         </html>`;
 
 
-
-
-
         let responseInfo = { response: message, error: null };
         let responseStati = { bad: 403, good: 200 };
         let headers = ['Content-Type: text/html'];
         this._respond(res, responseInfo, responseStati, next, headers);
     }
-    public onGetScripts(req: express.Request, res: express.Response, next: express.NextFunction) {
-        let message = `function foo() { alert('bar'); }`
-        let responseInfo = { response: message, error: null };
-        let responseStati = { bad: 403, good: 200 };
-        let headers = ['Content-Type: text/html'];
-        this._respond(res, responseInfo, responseStati, next, headers);
-    }
-
-    public onGetPicture_$id(req: express.Request, res: express.Response, next: express.NextFunction) {
-        let pictureName = '/' + req.params.id;
-        let error = null;
-        let picturePath = this.activePictureRoutes.find(path => path.substring(path.lastIndexOf('/')) === pictureName);
-
-        if (!picturePath) {
-            error = 'PICTURE NOT FOUND::';
-        }
-        let message = this.dataService.readPicture(picturePath);
-        let responseInfo = { response: message, error: null };
-        let responseStati = { bad: 403, good: 200 };
-        let headers = ['Content-Type: image/gif'];
-        this._respond(res, responseInfo, responseStati, next, headers);
-    }
-
-    public onGetPictureRoutes(req: express.Request, res: express.Response, next: express.NextFunction) {
-        let displayInfos: { type: 'picture' | 'site', url: string }[]  = [];
-
-        let activeRoutes =  this.activePictureRoutes.map(route => route.substring(route.lastIndexOf('/')));
-        activeRoutes.forEach(route => displayInfos.push({url: route, type: 'picture'}));
-        FULL_SITE_ADDRESSES.forEach(url => displayInfos.push({url: url, type: 'site'}));
-
-        let message = JSON.stringify(displayInfos);
-        let responseInfo = { response: message, error: null };
-        let responseStati = { bad: 403, good: 200 };
-        let headers = ['Content-Type: text/html'];
-        this._respond(res, responseInfo, responseStati, next, headers);
-    }
-
-    public addPictureRoutes(folder: string) {
-        this.dataService.listFileNames(folder, ['.jpg', '.gif', '.png'], (err: any, files: string[]) => {
-            files.forEach(file => {
-                this.activePictureRoutes.push(`${folder}/${file}`);
-            });
-        });
-    }
-
-    public onGetShow(req: express.Request, res: express.Response, next: express.NextFunction) {
-
-
-        let message = `<html>
-        <head>
-        <title>Title of the document</title>
-        <script src="http://${LOCAL_ADDRESS}:5001/scripts"></script>
-        <script>function onClick() { window.setTimeout(function() { foo(); }, 3000);  }</script>
-        </head>
-        
-        <body>
-        
-        <p><button onclick="onClick()">click me</button></p>
-        <p><img src="http://${LOCAL_ADDRESS}:5001/picture"</p>
-
-        
-        </body>
-        
-        </html>`
-        let responseData = ``;
-        let responseInfo = { response: message, error: null };
-        let responseStati = { bad: 403, good: 200 };
-        let headers = ['Content-Type: text/html'];
-        this._respond(res, responseInfo, responseStati, next, headers);
-    }
-
 
     /*
         // payload: { element: IListElement }
         public onPostElements(req: express.Request, res: express.Response, next: express.NextFunction) {
             console.warn('onPostElementèèèè!!!!!');
-            
+
             // console.warn(req);
             //   console.warn('req.query', JSON.stringify(req.query));
             //   console.warn('req.body', JSON.stringify(req.body));
             //   console.warn('req.params', JSON.stringify(req.params));
-    
+
             let elements: IElement[] = req.body;
             this.dataService.saveElements(elements, (error: Error) => {
                 let responseData = 'saved element Successfully';
@@ -238,13 +236,13 @@ export class RequestHandlerService {
                 this._respond(res, responseInfo, responseStati, next);
             });
         }
-    
+
         public onGetIsAlive(req: express.Request, res: express.Response, next: express.NextFunction) {
             let responseInfo = { response: { isAlive: true }, error: null };
             let responseStati = { good: 200, bad: 400 };
             this._respond(res, responseInfo, responseStati, next);
         }
-    
+
         // payload: { keys?: string }
         public onGetElements(req: express.Request, res: express.Response, next: express.NextFunction) {
             console.log('req.query:: ', req.query);
@@ -256,7 +254,7 @@ export class RequestHandlerService {
                 this._respond(res, responseInfo, responseStati, next);
             });
         }
-    
+
         // payload: { keys?: string }
         public onGetBoards(req: express.Request, res: express.Response, next: express.NextFunction) {
             console.log('req.query:: ', req.query);
@@ -272,7 +270,7 @@ export class RequestHandlerService {
             });
         }
     }
-    
-    
+
+
     */
 }

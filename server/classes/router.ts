@@ -37,7 +37,7 @@ export class CustomRouter {
         this._addRoute(LOCATIONS.isAlive, 'get', this._requestHandler.onGetIsAlive);
     }
 
-    private _addRoute(location: string, method: 'post' | 'get', 
+    private _addRoute(location: string, method: 'post' | 'get',
         requestHandlerFn: (req: express.Request, res: express.Response, next: express.NextFunction) => void): void {
 
             location = location.startsWith('/') ? location : `/${location}`;

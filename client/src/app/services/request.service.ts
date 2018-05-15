@@ -12,7 +12,7 @@ const POST_HEADERS: http.Headers = new http.Headers({
  // 'Access-Control-Allow-Origin': ['*']
 });
 /*
-interface RequestOptionsArgs { 
+interface RequestOptionsArgs {
   url?: string | null
   method?: string | RequestMethod | null
   search?: string | URLSearchParams | {...}
