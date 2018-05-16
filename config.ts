@@ -1,4 +1,4 @@
-
+import * as ip from 'ip';
 
 export interface ILocationMap {
     element_$id: string;
@@ -23,7 +23,7 @@ export const LOCATIONS: ILocationMap = {
 export const NO_ITEM_KEY = 'THIS_IS_NOT_AN_ITEM_KEY';
 
 //export const LOCAL_ADDRESS = '192.168.1.254';
-export const LOCAL_ADDRESS = '192.168.1.254';
+export const LOCAL_ADDRESS = ip.address();
 //export const LOCAL_ADDRESS = '10.1.34.106';
 //export const LOCAL_ADDRESS = '10.1.38.110';
 

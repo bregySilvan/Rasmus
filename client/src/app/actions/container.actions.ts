@@ -12,8 +12,8 @@ export const ActionTypes = {
 
 export class UpdateContainersAction implements Action {
     type: typeof ActionTypes.UPDATE_CONTAINERS = ActionTypes.UPDATE_CONTAINERS;
-    payload: IContainer[];
-    constructor(containers: IContainer[]) {
+    payload: IElement[];
+    constructor(containers: IElement[]) {
         this.payload = containers;
     }
 }

@@ -23,7 +23,7 @@ export abstract class GlobalEditable implements OnInit, OnChanges {
         if(changes.element) {
             //console.warn('element changed::  ', changes.element.currentValue);
         }
-        if(changes.element && !_.isEqual(changes.element.previousValue, changes.element.currentValue)) {
+        if(changes.element && changes.element.currentValue !== null && !_.isEqual(changes.element.previousValue, changes.element.currentValue)) {
             this.initService.updateElement(changes.element.currentValue);
          //   this.changeRef.markForCheck();
         }

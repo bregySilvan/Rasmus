@@ -72,7 +72,7 @@ export class NetworkEffects {
 
     @Effect({ dispatch: false })
   //@ts-ignore
-  checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS)
+    checkPossibleHosts$ = this.actions$.ofType(networkActions.ActionTypes.CHECK_POSSIBLE_HOSTS)
     .withLatestFrom(this.store$, (action, state: IAppStore) => ({
       hosts: state.network.hosts,
       checkAllTimeout: HOST_DETECTION_INTERVAL_MS,

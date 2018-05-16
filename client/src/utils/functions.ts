@@ -26,6 +26,9 @@ export function unionElementsDistinct<T extends IComparable>(update: Array<T>, o
   let unionArr = old.concat();
 
   update.forEach((updatedObj) => {
+    if(!updatedObj) {
+      return;
+    }
     let index = old.findIndex(oldObj => updatedObj.key === oldObj.key);
     if (index > -1) {
       if (!_.isEqual(updatedObj, old[index])) {
@@ -37,7 +40,7 @@ export function unionElementsDistinct<T extends IComparable>(update: Array<T>, o
       hasChanged = true;
     }
   });
-
+  unionArr = unionArr.filter(el => !!el);
   return { unionArr, hasChanged };
 }
 

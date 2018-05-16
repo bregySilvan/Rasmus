@@ -11,26 +11,26 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/debounceTime';
 import { IDragInfo } from '../state/drag.reducer';
-import { IBoard, IElement } from '../../../../interfaces';
+import { IBoard, IElement, IContainer } from '../../../../interfaces';
 import * as _ from 'lodash';
 import { NO_ITEM_KEY } from '../../../../config';
+import { Container } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable()
 export class DragEffects {
 
 
-  @Effect()
+ /* @Effect()
   //@ts-ignore
-  onDrop$ = this.actions$.ofType(elementActions.ActionTypes.UPDATE_ELEMENTS)
+  updateContainers$ = this.actions$.ofType(elementActions.ActionTypes.UPDATE_ELEMENTSUPDATE_ELEMENTS)
     .map<any, IElement[]>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
-      //   canDrop: state.drag.canDrop,
-         availableElements: state.element.availableElements.filter(el => el.type === 'container'),
+         oldElements: state.element.elements.filter(el => el.type === 'container'),
          update: payload
        }))
     .map( x => {
       
-    })
+    })*/
 
 
   @Effect()
@@ -43,7 +43,7 @@ export class DragEffects {
       dragInfo: payload
     }))
     .do( x => this.logService.warn(this, 'drop action effect triggered'))
-    .filter(x => x.canDrop && x.dragInfo.element.type !== 'empty' && x.dragInfo.index > -1)
+    .filter(x => x.canDrop && x.dragInfo.element.type === 'container' && x.dragInfo.index > -1)
     .map(x => new dragActions.UpdateDragContainerAction(x.dragInfo));
 
   @Effect()
@@ -52,21 +52,20 @@ export class DragEffects {
     .map<any, IDragInfo>(toPayload)
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
       dragInfo: payload,
-      elements: state.element.availableElements,
+      containers: state.element.containers as IContainer[],
     }))
     .map(x => {
-      let element = x.elements.find(element => element.key === x.dragInfo.dragContainerKey);
-      if (element && element.type === 'board') {
-        let newElement = _.cloneDeep(element) as IBoard;
-        newElement.elements[x.dragInfo.index] = x.dragInfo.element;
-        return newElement;
+      let container = x.containers.find(element => element.key === x.dragInfo.dragContainerKey);
+      if (container) {
+        let newContainer = _.cloneDeep(container);
+        newContainer.elements[x.dragInfo.index] = x.dragInfo.element;
+        return newContainer;
       } else {
         this.logService.warn(this, 'failed to update drag container');
       }
       return null;
     })
-    .map(x => x ? [x] : [])
-    .map(x => new elementActions.TryUpdateElementsAction(x));
+    .map(x => new elementActions.TryUpdateElementsAction(x ? [x] : []));
 
   @Effect()
   //@ts-ignore

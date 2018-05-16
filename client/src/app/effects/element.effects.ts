@@ -52,19 +52,18 @@ export class ElementEffects {
       });
     });
 
-  bb = 0;
   @Effect()
   //@ts-ignore
   tryUpdateElements$ = this.actions$.ofType(elementActions.ActionTypes.TRY_UPDATE_ELEMENTS)
     .map<any, IElement[]>(toPayload)
-     .bufferTime(3000)
+     .bufferTime(700)
   //   .do(x => this.logService.log(this ,'before flatten:: ', x))
     .withLatestFrom(this.store$, (payload, state: IAppStore) => ({
-      currentElements: state.element.availableElements,
+      currentElements: state.element.allElements,
       updatedElements: _.flatten(payload)
     }))
   //  .do(x => this.logService.log(this ,'after flatten:: ', x))
-    .map(x => unionElementsDistinct<IElement>(x.updatedElements, x.currentElements))
+    .map(x => unionElementsDistinct(x.updatedElements, x.currentElements))
     .filter(x => x.hasChanged)
  //   .do(x => this.logService.log(this ,'after elements distinct:: ', x))
     .map(x => new elementActions.UpdateElementsAction(x.unionArr));

@@ -44,6 +44,7 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
   public onSaveBoards(event: any) {
     let element1: IElement = { key: 'myFirstElement', type: 'advertisement' };
     let element2: IElement = { key: 'mySecondElement', type: 'advertisement' };
+
     let board1: IBoard = { key: 'myFirstBoard', elements: [element1, element2], type: 'board' };
     let board2: IBoard = { key: 'mySecondBoard', elements: [element1, element2], type: 'board' };
     this.dataService.saveBoards(this.host, [board1, board2]);//.subscribe(x => this.logService.warn(this, 'saved some boards and it acuztally responded'));
@@ -62,8 +63,15 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.elementSub = this.store$.select(x => x.element).subscribe(x =>  {
-      this.elementListLeft = x.availableElements.find(element => element.key === this.firstListKey) || null;
-      this.elementListRight = x.availableElements.find(element => element.key === this.secondListKey) || null;
+      let leftList = x.advertisements.find(element => element && element.key === this.firstListKey) || null;
+      let rightList = x.advertisements.find(element => element && element.key === this.secondListKey) || null;
+
+      if(leftList) {
+        this.elementListLeft = leftList;
+      }
+      if(rightList) {//
+        this.elementListRight = rightList;
+      }
     });
   }
   
