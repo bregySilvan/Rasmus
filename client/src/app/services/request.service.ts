@@ -6,6 +6,7 @@ import 'rxjs/add/operator/catch'
 import { _throw } from 'rxjs/observable/throw';
 import { Subscription } from 'rxjs';
 import { IElement } from '../../../../interfaces';
+import { LOCAL_ADDRESS } from '../../../../config';
 
 const POST_HEADERS: http.Headers = new http.Headers({
   'Content-Type': 'application/json'
@@ -52,10 +53,14 @@ export class RequestService {
   }
 
   public readFile(file: string): Observable<any> {
+    
     return this.httpClient.get(file).map(res => res.json());
   }
 
   public get(url: string, payload?: any): Observable<http.Response> {
+    if(url.indexOf(LOCAL_ADDRESS) !== -1) {
+      url = url.replace(LOCAL_ADDRESS, 'localhost');
+    }
     this.logService.warn('getting ', url);
     let options = { params: payload };
     let a: http.BaseRequestOptions
@@ -66,6 +71,9 @@ export class RequestService {
   }
   //: Observable<http.Response>
   public post(url: string, payload?: IElement[]) {
+    if(url.indexOf(LOCAL_ADDRESS) !== -1) {
+      url = url.replace(LOCAL_ADDRESS, 'localhost');
+    }
     this.logService.log(this, 'POST in srequestservice with requestservice:: ', url);
     let body = payload ? JSON.stringify(payload) : '';
     let options: http.RequestOptions = new http.RequestOptions({ headers: this.postHeaders });

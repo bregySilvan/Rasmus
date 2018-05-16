@@ -38,7 +38,8 @@ const initialState: IElementState = {
 };
 
 function filterAndUnion(current: IElement[], update: IElement[], type: ElementTypes): IElement[] {
-  current = current.filter(el => el.type === type)
+  update = update.filter(el => el.type === type);
+  
   return unionElementsDistinct(update, current).unionArr;
 }
 
@@ -48,13 +49,13 @@ export function elementReducer(state: IElementState = initialState, action: acti
     case actions.ActionTypes.UPDATE_ELEMENTS:
     
       let allElements = action.payload.filter(el => !!el);
-      console.warn('allEls:: ', allElements);
+
       return Object.assign({}, state, {
-        advertisemenets: filterAndUnion(state.allElements, allElements, 'advertisement'),
-        containers: filterAndUnion(state.allElements, allElements, 'container'),
-        empty: filterAndUnion(state.allElements, allElements, 'empty'),
-        boards: filterAndUnion(state.allElements, allElements, 'board'),
-        allElements: allElements
+        advertisemenets: filterAndUnion(state.advertisements, allElements, 'advertisement'),
+        containers: filterAndUnion(state.containers, allElements, 'container'),
+        empty: filterAndUnion(state.empty, allElements, 'empty'),
+        boards: filterAndUnion(state.boards, allElements, 'board'),
+        allElements: unionElementsDistinct(state.allElements, allElements).unionArr
       });
 
     default:

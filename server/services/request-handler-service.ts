@@ -24,7 +24,7 @@ export class RequestHandlerService {
 // Set to true if you need the website to include cookies in the requests sent
 // to the API (e.g. in case you use sessions)
 //res.setHeader('Access-Control-Allow-Credentials', true);
-    private _respond(res: express.Response, responseInfo: { response: any, error?: Error }, responseStati: { bad: number, good: number }, next: express.NextFunction) {
+    private _respond(res: express.Response, responseInfo: { response: any, error?: string | undefined }, responseStati: { bad: number, good: number }, next: express.NextFunction) {
         let response, status;
         if (responseInfo.error) {
             status = responseStati.bad;
@@ -33,11 +33,12 @@ export class RequestHandlerService {
             status = responseStati.good;
             response = responseInfo.response;
         }
-        res.set({
-            'accept': 'application/json',
-            'access-control-allow-origin': 'http://localhost:4200',
-            'Access-Control-Allow-Headers': ['X-Requested-With', 'content-type'],
-            'Access-Control-Allow-Credentials': true
+        res.header(['accept: application/json', 'access-control-allow-origin: http://localhost:4200']);
+     //   res.set({
+       //     'accept': 'application/json',
+       //     'access-control-allow-origin': 'http://localhost:5001',
+       //     'Access-Control-Allow-Headers': ['X-Requested-With', 'content-type'],
+          //  'Access-Control-Allow-Credentials': true
          //  'Access-Control-Allow-Origin': 'http://localhost:4200',
          // 'Access-Control-Allow-Origin': ['http://127.0.0.1:'+DEFAULT_PORT, 'http://localhost:'+DEFAULT_PORT, 'http://192.168.1.254:'+DEFAULT_PORT],
          // 'Access-Control-Allow-Methods': ['get', 'post'],
@@ -46,7 +47,7 @@ export class RequestHandlerService {
          // 'Access-Control-Allow-Headers': 'Access-Control-Allow-Origin',//Origin, Content-Type, X-Auth-Token'
          // 'Access-Control-Allow-Headers':'Origin, Content-Type, X-Auth-Token',
          // 'Access-Control-Request-Headers'
-        });
+      //  });
 
         res.status(200);
         res.json(response);
@@ -68,14 +69,14 @@ export class RequestHandlerService {
         let elements: IElement[] = req.body;
         this.dataService.saveElements(elements, (error: Error) => {
             let responseData = 'saved element Successfully';
-            let responseInfo = { response: responseData, error: error };
+            let responseInfo = { response: responseData, error: ''+error };
             let responseStati = { bad: 403, good: 200 };
             this._respond(res, responseInfo, responseStati, next);
         });
     }
 
     public onGetIsAlive(req: express.Request, res: express.Response, next: express.NextFunction) {
-        let responseInfo = { response: { isAlive: true }, error: null };
+        let responseInfo = { response: { isAlive: true }, error: '' };
         let responseStati = { good: 200, bad: 400 };
         this._respond(res, responseInfo, responseStati, next);
     }
@@ -86,7 +87,7 @@ export class RequestHandlerService {
         let keys: string[] = Object.keys(req.query).map((key) => req.query[key]);
         this.dataService.getElements(keys, (error: Error, elements: IElement[]) => {
             let responseData = elements;
-            let responseInfo = { response: responseData, error: error };
+            let responseInfo = { response: responseData, error: ''+ error };
             let responseStati = { bad: 403, good: 200 };
             this._respond(res, responseInfo, responseStati, next);
         });
@@ -101,7 +102,7 @@ export class RequestHandlerService {
         }
         this.dataService.getBoards(keys, (error: Error, boards: IBoard[]) => {
             let responseData = boards;
-            let responseInfo = { response: responseData, error: error };
+            let responseInfo = { response: responseData, error: ''+error };
             let responseStati = { bad: 403, good: 200 };
             this._respond(res, responseInfo, responseStati, next);
         });
