@@ -1,8 +1,9 @@
 import * as actions from '../actions/element.actions';
 import { IHost } from './network.reducer';
-import { IElement, IBoard, IContainer } from '../../../../interfaces';
+import { IElement, IBoard, IContainer, ElementTypes } from '../../../../interfaces';
 import { element } from 'protractor';
 import { ALL_AVAILABLE_ADS_LIST } from '../../../../config';
+import { unionDistinct, unionElementsDistinct } from '../../utils/functions';
 
 
 const usedLists: IContainer[] = [
@@ -19,7 +20,7 @@ const usedLists: IContainer[] = [
     contentType: 'advertisement'
   }
 ];
-// 'advertisement' | 'board' | 'empty' | 'container'
+
 export interface IElementState {
     allElements: IElement[];
     advertisements: IElement[];
@@ -36,22 +37,26 @@ const initialState: IElementState = {
     allElements: []
 };
 
+function filterAndUnion(current: IElement[], update: IElement[], type: ElementTypes): IElement[] {
+  current = current.filter(el => el.type === type)
+  return unionElementsDistinct(update, current).unionArr;
+}
 
 export function elementReducer(state: IElementState = initialState, action: actions.ElementActions): IElementState {
-  console.warn('elemnent reducer,,', action);
   switch (action.type) {
 
     case actions.ActionTypes.UPDATE_ELEMENTS:
     
       let allElements = action.payload.filter(el => !!el);
+      console.warn('allEls:: ', allElements);
       return Object.assign({}, state, {
-        elements: allElements.filter(el => el.type === 'advertisement'),
-        containers: allElements.filter(el => el.type === 'container'),
-        empty: allElements.filter(el => el.type === 'empty'),
-        boards: allElements.filter(el => el.type === 'board'),
+        advertisemenets: filterAndUnion(state.allElements, allElements, 'advertisement'),
+        containers: filterAndUnion(state.allElements, allElements, 'container'),
+        empty: filterAndUnion(state.allElements, allElements, 'empty'),
+        boards: filterAndUnion(state.allElements, allElements, 'board'),
         allElements: allElements
       });
-// 'advertisement' | 'board' | 'empty' | 'container'
+
     default:
       return Object.assign({}, state);
   }
