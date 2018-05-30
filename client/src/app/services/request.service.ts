@@ -9,8 +9,8 @@ import { IElement } from '../../../../interfaces';
 import { LOCAL_ADDRESS } from '../../../../config';
 
 const POST_HEADERS: http.Headers = new http.Headers({
-  'Content-Type': 'application/json'
- // 'Access-Control-Allow-Origin': ['*']
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': ['*']
 });
 /*
 interface RequestOptionsArgs { 

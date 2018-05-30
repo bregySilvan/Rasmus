@@ -58,7 +58,7 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
 
 
   public newItemKey(): string {
-    return this.keyService.newKey();
+    return this.keyService.newKey('advertisement');
   }
 
   ngOnInit() {
@@ -69,7 +69,7 @@ export class EditBoardsComponent implements OnInit, OnDestroy {
       if(leftList) {
         this.elementListLeft = leftList;
       }
-      if(rightList) {//
+      if(rightList) {
         this.elementListRight = rightList;
       }
     });

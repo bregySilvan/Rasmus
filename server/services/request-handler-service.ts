@@ -24,7 +24,7 @@ export class RequestHandlerService {
 // Set to true if you need the website to include cookies in the requests sent
 // to the API (e.g. in case you use sessions)
 //res.setHeader('Access-Control-Allow-Credentials', true);
-    private _respond(res: express.Response, responseInfo: { response: any, error?: string | undefined }, responseStati: { bad: number, good: number }, next: express.NextFunction) {
+    private _respond(res: express.Response, responseInfo: { response: any, error?: any }, responseStati: { bad: number, good: number }, next: express.NextFunction) {
         let response, status;
         if (responseInfo.error) {
             status = responseStati.bad;
@@ -33,7 +33,8 @@ export class RequestHandlerService {
             status = responseStati.good;
             response = responseInfo.response;
         }
-        res.header(['accept: application/json', 'access-control-allow-origin: http://localhost:4200']);
+      res.header(['accept: application/json', 'access-control-allow-origin: *']);
+       // res.header(['accept: application/json']);
      //   res.set({
        //     'accept': 'application/json',
        //     'access-control-allow-origin': 'http://localhost:5001',
@@ -87,7 +88,7 @@ export class RequestHandlerService {
         let keys: string[] = Object.keys(req.query).map((key) => req.query[key]);
         this.dataService.getElements(keys, (error: Error, elements: IElement[]) => {
             let responseData = elements;
-            let responseInfo = { response: responseData, error: ''+ error };
+            let responseInfo = { response: responseData, error: error };
             let responseStati = { bad: 403, good: 200 };
             this._respond(res, responseInfo, responseStati, next);
         });

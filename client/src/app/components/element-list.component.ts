@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
-import { IElement, ElementTypes, IBoard } from '../../../../interfaces';
+import { IElement, ElementTypes, IBoard, IContainer } from '../../../../interfaces';
 import { Store } from '@ngrx/store';
 import { IAppStore } from '../app.state';
 import * as router from '../actions/router.actions';
@@ -27,15 +27,20 @@ export class ElementListComponent extends GlobalEditable {
 
 
   get elements(): IElement[] {
-    if (this.element && this.element.type === 'board') {
-      return (<IBoard>this.element).elements;
+    if(this.element) {
+      if(this.element.type === 'board') {
+        return (<IBoard>this.element).elements;
+      }
+      else if(this.element.type === 'container') {
+        return (<IContainer>this.element).elements;
+      }
     }
     return [];
   }
 
   get key(): string {
-    if (this.element && this.element.type === 'board') {
-      return (<IBoard>this.element).key;
+    if (this.element) {
+      return this.element.key;
     }
     return '';
   }

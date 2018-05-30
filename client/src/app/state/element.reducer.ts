@@ -7,18 +7,7 @@ import { unionDistinct, unionElementsDistinct } from '../../utils/functions';
 
 
 const usedLists: IContainer[] = [
-  {
-    key: ALL_AVAILABLE_ADS_LIST,
-    type: 'container',
-    elements: [],
-    contentType: 'advertisement'
-  },
-  {
-    key: ALL_AVAILABLE_ADS_LIST+1,
-    type: 'container',
-    elements: [],
-    contentType: 'advertisement'
-  }
+
 ];
 
 export interface IElementState {
@@ -51,7 +40,7 @@ export function elementReducer(state: IElementState = initialState, action: acti
       let allElements = action.payload.filter(el => !!el);
 
       return Object.assign({}, state, {
-        advertisemenets: filterAndUnion(state.advertisements, allElements, 'advertisement'),
+        advertisements: filterAndUnion(state.advertisements, allElements, 'advertisement'),
         containers: filterAndUnion(state.containers, allElements, 'container'),
         empty: filterAndUnion(state.empty, allElements, 'empty'),
         boards: filterAndUnion(state.boards, allElements, 'board'),

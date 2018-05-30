@@ -22,10 +22,13 @@ export class DataService {
     }
 
     public getElements(keys: string[], callback: (error: Error, elements: IElement[]) => void): void {
+        console.log('getting elements yay:');
         this._getQueued(this.elementsFilePath, keys, (error: any, data: any) => {
             if(error) {
+                console.log(error);
                 return callback(error, []);
             }
+            console.log('received shit..');
             callback(error, Object.keys(data).map(key => <IElement>data[key]));
         });
     }
@@ -37,8 +40,8 @@ export class DataService {
 
     private _getQueued(filePath: string, keys: string[], callback: (error: any, data: any) => void) {
         this.queueService.addToQueue((next) => {
-            this._get(filePath, keys, (err: any, data: any[]) => {
-                callback(err, data);
+            this._get(filePath, keys, (err: any, data2: any[]) => {
+                callback(err, data2);
                 next();
             });
         });
@@ -55,18 +58,23 @@ export class DataService {
 
     private _get(filePath: string, keys: string[], callback: (error: Error, data: any[]) => void) {
         fse.readJSON(filePath, async (readFileError: Error, jsonData: any) => {
-            let requestedAvailableKeys = [];
+            let requestedAvailableKeys: string[] = [];
             if (readFileError || !jsonData) {
                 return callback(new Error('no data found at ' + filePath) , requestedAvailableKeys);
             }
 
             let jsonDataKeys = Object.keys(jsonData);
+            console.log('jsonData:: ', jsonData);
             if (!keys || !keys.length) {
+                console.log('no keys given, jsoNDataKeys:: ', jsonDataKeys);
                 requestedAvailableKeys = jsonDataKeys;
             } else {
+                console.log('keys before filter:: ')
                 requestedAvailableKeys = keys.filter(key => !!jsonData[key]);
+                console.log('keys after filter', requestedAvailableKeys);
             }
 
+            console.log('returning data:: ', requestedAvailableKeys.map(key => jsonData[key]));
             callback(null, requestedAvailableKeys.map(key => jsonData[key]));
 
         });  
