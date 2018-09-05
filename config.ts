@@ -20,6 +20,7 @@ export const LOCATIONS: ILocationMap = {
     isAlive: 'is-alive'
 }
 
+export const PICTURE_LOCATION = 'D:\\Github\\rasmus2\\server\\pics';
 export const NO_ITEM_KEY = 'THIS_IS_NOT_AN_ITEM_KEY';
 
 export const LOCAL_ADDRESS = '192.168.1.254';
